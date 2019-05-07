@@ -1,11 +1,20 @@
+image: mcr.microsoft.com/dotnet/core/sdk
+
 stages:
     - build
+    - publish-artifacts
 
 server-build:
     stage: build
-    image: mcr.microsoft.com/dotnet/core/sdk
+    before_script:
+    - dotnet tool install -g dotnet-ef
     script:
     - dotnet build
+    - dotnet ef database update
+    artifacts:
+        name: server-database
+        paths:
+        - deployment.db
 
 client-build:
     stage: build
@@ -14,4 +23,36 @@ client-build:
     - cd Frontend
     - npm ci
     script:
-    - npm run build
+    - npm run build-production
+    artifacts:
+        name: frontend-resources
+        paths:
+        - wwwroot
+
+linux-publish:
+    stage: publish-artifacts
+    dependencies:
+    - client-build
+    - server-build
+    script:
+    - dotnet publish -c Release -r linux-x64 -o deployment-tracker/
+    - cp deployment.db deployment-tracker/
+    artifacts:
+        name: deployment-tracker-linux-x64
+        paths:
+        - deployment-tracker/
+        expire_in: 1 week
+
+windows-publish:
+    stage: publish-artifacts
+    dependencies:
+    - client-build
+    - server-build
+    script:
+    - dotnet publish -c Release -r win-x64 -o deployment-tracker/
+    - cp deployment.db deployment-tracker/
+    artifacts:
+        name: deployment-tracker-windows-x64
+        paths:
+        - deployment-tracker/
+        expire_in: 1 week

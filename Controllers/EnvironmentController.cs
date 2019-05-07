@@ -55,9 +55,6 @@ namespace deployment_tracker.Controllers
         {
             var creator = new NewEnvironment(Context, environment);
 
-            Console.WriteLine("Testttxs");
-
-
             await creator.Create();
 
             if (creator.Succeeded) {
