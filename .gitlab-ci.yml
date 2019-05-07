@@ -1,0 +1,17 @@
+stages:
+    - build
+
+server-build:
+    stage: build
+    image: mcr.microsoft.com/dotnet/core/sdk
+    script:
+    - dotnet build
+
+client-build:
+    stage: build
+    image: node
+    before_script:
+    - cd Frontend
+    - npm ci
+    script:
+    - npm run build
