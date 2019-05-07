@@ -29,15 +29,24 @@ namespace deployment_tracker.Actions.Deployments
 
         public async Task Create() {
             if (IsValidNewDeployment()) {
-                var newDeployment = new Deployment {
-                    BranchName = Deployment.BranchName,
-                    PublicURL = Deployment.PublicURL
-                };
+                var matchingDeployment = Context.Deployments
+                    .Include(d => d.DeployedEnvironment)
+                    .SingleOrDefault(deployment => deployment.BranchName == Deployment.BranchName);
+                Deployment newDeployment;
+                
+                if (matchingDeployment != null) {
+                    newDeployment = matchingDeployment;
+                } else {
+                    newDeployment = new Deployment {
+                        BranchName = Deployment.BranchName
+                    };
+                    newDeployment.DeployedEnvironment = Context.Environments.Single(env => env.Id == Deployment.EnvironmentId);
 
+                    Context.Deployments.Add(newDeployment);
+                }
+
+                newDeployment.PublicURL = Deployment.PublicURL;
                 newDeployment.Status = DeploymentStatus.RUNNING;
-                newDeployment.DeployedEnvironment = Context.Environments.Single(env => env.Id == Deployment.EnvironmentId);
-
-                Context.Deployments.Add(newDeployment);
                 
                 await Context.SaveChangesAsync();
 
@@ -72,13 +81,6 @@ namespace deployment_tracker.Actions.Deployments
 
             if (!Context.Environments.Any(env => env.Id == Deployment.EnvironmentId)) {
                 Error = "The specified environment does not exist.";
-                return false;
-            }
-
-            var matchingDeployment = Context.Deployments.Any(deployment => deployment.BranchName == Deployment.BranchName || deployment.PublicURL == Deployment.PublicURL);
-
-            if (matchingDeployment) {
-                Error = "A deployment with the same details already exists.";
                 return false;
             }
 

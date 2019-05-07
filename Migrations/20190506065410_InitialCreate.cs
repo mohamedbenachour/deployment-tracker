@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace deployment_tracker.Migrations
 {
@@ -12,7 +13,9 @@ namespace deployment_tracker.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true)
+                    HostName = table.Column<string>(maxLength: 50, nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -26,8 +29,16 @@ namespace deployment_tracker.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     DeployedEnvironmentId = table.Column<int>(nullable: true),
-                    BranchName = table.Column<string>(nullable: true),
-                    Status = table.Column<int>(nullable: false)
+                    BranchName = table.Column<string>(maxLength: 200, nullable: false),
+                    PublicURL = table.Column<string>(maxLength: 150, nullable: false),
+                    Status = table.Column<string>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    CreatedBy_Name = table.Column<string>(maxLength: 150, nullable: false),
+                    CreatedBy_UserName = table.Column<string>(maxLength: 50, nullable: false),
+                    CreatedBy_Timestamp = table.Column<DateTime>(nullable: false),
+                    ModifiedBy_Name = table.Column<string>(maxLength: 150, nullable: false),
+                    ModifiedBy_UserName = table.Column<string>(maxLength: 50, nullable: false),
+                    ModifiedBy_Timestamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

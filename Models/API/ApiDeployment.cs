@@ -23,7 +23,11 @@ namespace deployment_tracker.Models.API {
         public string BranchName { get; set; }
         public string PublicURL { get; set; }
         public int EnvironmentId { get; set; }
-        public DeploymentStatus Status { get; set; }
+        public string Status { get; set; }
+        public string TeardownUrl { get; set; }
+
+        public AuditDetail ModifiedBy { get; set; }
+        public AuditDetail CreatedBy { get; set; }
 
         public static ApiDeployment FromInternal(Deployment toConvert) {
             return new ApiDeployment {
@@ -31,7 +35,9 @@ namespace deployment_tracker.Models.API {
                 BranchName = toConvert.BranchName,
                 PublicURL = toConvert.PublicURL,
                 EnvironmentId = toConvert.DeployedEnvironment.Id,
-                Status = toConvert.Status,
+                Status = toConvert.Status.ToString(),
+                CreatedBy = toConvert.CreatedBy,
+                ModifiedBy = toConvert.ModifiedBy
             };
         }
     }

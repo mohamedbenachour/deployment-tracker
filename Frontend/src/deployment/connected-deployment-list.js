@@ -6,17 +6,22 @@ import {
 
 import DeploymentList from './deployment-list';
 
-import { getDeployments, getLoading } from '../environment/selectors';
+import { getLoading } from '../environment/selectors';
+import { getVisibleDeployments, getBranchNameFilter, getShowDestroyed } from './selectors';
 
-import { deploymentAddClicked } from './actions';
+import { deploymentAddClicked, deploymentSearch, deploymentShowDestroyed } from './actions';
 
 const mapStateToProps = (state) => ({
-    deployments: getDeployments(state),
+    deployments: getVisibleDeployments(state),
     isLoading: getLoading(state),
+    branchNameFilter: getBranchNameFilter(state),
+    showDestroyed: getShowDestroyed(state),
 });
 
 const mapDispatchToInputProps = dispatch => bindActionCreators({
     addDeployment: deploymentAddClicked,
+    onSearch: deploymentSearch,
+    onShowDestroyedChange: deploymentShowDestroyed,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToInputProps)(DeploymentList);

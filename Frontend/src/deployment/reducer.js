@@ -10,6 +10,8 @@ import {
     DEPLOYMENT_NEW,
     DEPLOYMENT_SAVE_STARTED,
     DEPLOYMENT_SAVE_FAILED,
+    DEPLOYMENT_SEARCH,
+    DEPLOYMENT_SHOW_DESTROYED
 } from './action-types';
 
 const getLoadingData = (loading = false) => ({
@@ -22,6 +24,10 @@ const defaultState = {
     addingADeployment: false,
     saveInProgress: false,
     deploymentBeingAdded: null,
+    filters: {
+        branchName: '',
+        showDestroyed: false,
+    }
 };
 
 const deploymentReducer = (state = defaultState, action) => {
@@ -50,6 +56,18 @@ const deploymentReducer = (state = defaultState, action) => {
 
             break;
         
+        case DEPLOYMENT_SEARCH:
+            nextState = produce(state, draftState => {
+                draftState.filters.branchName = action.searchName;
+            });
+            break;
+
+        case DEPLOYMENT_SHOW_DESTROYED:
+            nextState = produce(state, draftState => {
+                draftState.filters.showDestroyed = action.value;
+            });
+            break;
+
         case DEPLOYMENT_ADD_BRANCH_NAME_CHANGE:
             nextState = produce(state, draftState => {
                 draftState.deploymentBeingAdded.branchName = action.branchName;
