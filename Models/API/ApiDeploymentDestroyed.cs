@@ -17,19 +17,11 @@
 
 using System.ComponentModel.DataAnnotations;
 
-using deployment_tracker.Models;
-
 namespace deployment_tracker.Models.API {
-    public class ApiNewDeployment {
-
+    public class ApiDeploymentDestroyed {
         [Required]
         public string BranchName { get; set; }
-
         [Required]
-        public string PublicURL { get; set; }
-
         public ApiUser User { get; set; }
-
-        public int EnvironmentId { get; set; }
     }
 }

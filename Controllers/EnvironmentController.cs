@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using deployment_tracker.Actions.Environment;
 using Microsoft.EntityFrameworkCore;
+using deployment_tracker.Services.DeploymentManagement;
 
 
 namespace deployment_tracker.Controllers
@@ -20,15 +21,17 @@ namespace deployment_tracker.Controllers
     public class EnvironmentController : Controller
     {
         private DeploymentAppContext Context { get; }
+        private IDeploymentManager DeploymentManager { get; }
 
-        public EnvironmentController(DeploymentAppContext context) {
+        public EnvironmentController(DeploymentAppContext context, IDeploymentManager deploymentManager) {
             Context = context;
+            DeploymentManager = deploymentManager;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<ApiEnvironment>> Environments()
         {
-            var environments = new ListEnvironments(Context).Fetch();
+            var environments = new ListEnvironments(Context, DeploymentManager).Fetch();
 
             return Ok(environments);
         }
@@ -51,6 +54,9 @@ namespace deployment_tracker.Controllers
         public async Task<ActionResult<ApiEnvironment>> CreateEnvironment(ApiNewEnvironment environment)
         {
             var creator = new NewEnvironment(Context, environment);
+
+            Console.WriteLine("Testttxs");
+
 
             await creator.Create();
 

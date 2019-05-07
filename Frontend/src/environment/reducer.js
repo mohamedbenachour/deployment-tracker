@@ -102,7 +102,13 @@ const environmentReducer = (state = defaultState, action) => {
             nextState = produce(state, draftState => {
                 const environmentAddedTo = draftState.environments.data.find((env) => env.id === action.deployment.environmentId);
 
-                environmentAddedTo.deployments.push(action.deployment);
+                const existingDeploymentIndex = environmentAddedTo.deployments.findIndex((deployment) => deployment.id === action.deployment.id);
+
+                if (existingDeploymentIndex !== -1) {
+                    environmentAddedTo.deployments.splice(existingDeploymentIndex, 1, action.deployment);
+                } else {
+                    environmentAddedTo.deployments.push(action.deployment);
+                }
             });
 
         default:

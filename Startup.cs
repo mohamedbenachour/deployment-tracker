@@ -26,8 +26,13 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
 
 using deployment_tracker.Models;
+using deployment_tracker.Services;
+using deployment_tracker.Services.Identity;
+using deployment_tracker.Services.Identity.Mock;
+using deployment_tracker.Services.DeploymentManagement;
 using Microsoft.EntityFrameworkCore;
 
 namespace deployment_tracker
@@ -52,9 +57,20 @@ namespace deployment_tracker
             });
 
 
-            var connection = "Data Source=deployment.db";
+           // Add identity types
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddDefaultTokenProviders();
+
+            // Identity Services
+            services.AddTransient<IUserStore<ApplicationUser>, MockUserStore>();
+            services.AddTransient<IRoleStore<ApplicationRole>, MockRoleStore>();
+
+            services.AddTransient<IDeploymentManager, JenkinsDeploymentManager>();
+
+            services.AddScoped<IRequestState, RequestState>();
+
             services.AddDbContext<DeploymentAppContext>
-                (options => options.UseSqlite(connection));
+                (options => options.UseSqlite(Configuration.GetSection("ConnectionStrings")["Application"]));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -76,6 +92,7 @@ namespace deployment_tracker
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

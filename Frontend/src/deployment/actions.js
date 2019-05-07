@@ -8,6 +8,8 @@ import {
     DEPLOYMENT_ADD,
     DEPLOYMENT_SAVE_STARTED,
     DEPLOYMENT_SAVE_FAILED,
+    DEPLOYMENT_SEARCH,
+    DEPLOYMENT_SHOW_DESTROYED,
 } from './action-types';
 
 export const deploymentAddClicked = () => ({
@@ -31,6 +33,15 @@ export const deploymentBeingAddedBranchNameChanged = (branchName) => ({
     branchName,
 });
 
+export const deploymentSearch = (searchName) => ({
+    type: DEPLOYMENT_SEARCH,
+    searchName,
+});
+
+export const deploymentShowDestroyed = (value) => ({
+    type: DEPLOYMENT_SHOW_DESTROYED,
+    value,
+});
 
 export const deploymentBeingAddedPublicURLChanged = (publicURL) => ({
     type: DEPLOYMENT_ADD_PUBLIC_URL_CHANGE,
