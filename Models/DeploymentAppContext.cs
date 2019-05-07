@@ -105,6 +105,10 @@ namespace deployment_tracker.Models
         public string BranchName {get; set; }
 
         [Required]
+        [StringLength(100, MinimumLength = 3)]
+        public string SiteName { get; set; }
+
+        [Required]
         [StringLength(150, MinimumLength = 3)]
         public string PublicURL { get; set; }
 

@@ -14,7 +14,7 @@ namespace deployment_tracker.Actions.Deployments
     class DeploymentDestroyed {
         private DeploymentAppContext Context { get; }
 
-        private string BranchName { get; }
+        private string SiteName { get; }
 
         public bool Succeeded { get; private set; }
 
@@ -22,16 +22,16 @@ namespace deployment_tracker.Actions.Deployments
 
         public Deployment DestroyedDeployment { get; private set; }
 
-        public DeploymentDestroyed(DeploymentAppContext context, string branchName) {
+        public DeploymentDestroyed(DeploymentAppContext context, string siteName) {
             Context = context;
-            BranchName = branchName;         
+            SiteName = siteName;
         }
 
         public async Task Destroy() {
             if (IsValidDeployment()) {
                 var deployment = Context.Deployments
                 .Include(d => d.DeployedEnvironment)
-                .Single(d => d.BranchName == BranchName);
+                .Single(d => d.SiteName == SiteName);
 
                 deployment.Status = DeploymentStatus.DESTROYED;
                 
@@ -46,10 +46,10 @@ namespace deployment_tracker.Actions.Deployments
         }
 
         private bool IsValidDeployment() {
-            var matchingDeployment = Context.Deployments.Any(deployment => deployment.BranchName == BranchName);
+            var matchingDeployment = Context.Deployments.Any(deployment => deployment.SiteName == SiteName);
 
             if (!matchingDeployment) {
-                Error = "A deployment with the specified branch name does not exist.";
+                Error = "A deployment with the specified site name does not exist.";
                 return false;
             }
 

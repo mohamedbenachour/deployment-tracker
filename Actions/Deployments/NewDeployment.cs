@@ -38,7 +38,8 @@ namespace deployment_tracker.Actions.Deployments
                     newDeployment = matchingDeployment;
                 } else {
                     newDeployment = new Deployment {
-                        BranchName = Deployment.BranchName
+                        BranchName = Deployment.BranchName,
+                        SiteName = Deployment.SiteName,
                     };
                     newDeployment.DeployedEnvironment = Context.Environments.Single(env => env.Id == Deployment.EnvironmentId);
 
