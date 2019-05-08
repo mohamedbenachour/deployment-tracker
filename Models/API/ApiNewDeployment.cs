@@ -31,8 +31,6 @@ namespace deployment_tracker.Models.API {
         [Required]
         public string PublicURL { get; set; }
 
-        public ApiUser User { get; set; }
-
         public int EnvironmentId { get; set; }
     }
 }

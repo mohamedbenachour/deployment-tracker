@@ -4,11 +4,17 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+
 using deployment_tracker.Models;
 using deployment_tracker.Models.API;
 
 using deployment_tracker.Actions.Deployments;
 using deployment_tracker.Services;
+using deployment_tracker.Services.Identity;
+
+using Microsoft.AspNetCore.Authorization;
+
 
 using Microsoft.EntityFrameworkCore;
 
@@ -16,14 +22,17 @@ namespace deployment_tracker.Controllers
 {
     [Route("api/deployment")]
     [ApiController]
+    [Authorize]
     public class DeploymentController : Controller
     {
         private DeploymentAppContext Context { get; }
         private IRequestState CurrentRequestState { get; }
+        private UserManager<ApplicationUser> Users { get; }
 
-        public DeploymentController(DeploymentAppContext context, IRequestState requestState) {
+        public DeploymentController(DeploymentAppContext context, IRequestState requestState, UserManager<ApplicationUser> userManager) {
             Context = context;
             CurrentRequestState = requestState;
+            Users = userManager;
         }
 
         [HttpGet]
@@ -35,7 +44,7 @@ namespace deployment_tracker.Controllers
         [HttpPost]
         [Route("destroyed")]
         public async Task<ActionResult<ApiDeployment>> DeploymentDestroyed(ApiDeploymentDestroyed request) {
-            SetUser(request.User);
+            await SetUser();
             
             var destroyer = new DeploymentDestroyed(Context, request.SiteName);
 
@@ -51,7 +60,7 @@ namespace deployment_tracker.Controllers
         [HttpPost]
         public async Task<ActionResult<Deployment>> CreateDeployment(ApiNewDeployment deployment)
         {
-            SetUser(deployment.User);
+            await SetUser();
 
             var creator = new NewDeployment(Context, deployment);
 
@@ -64,11 +73,13 @@ namespace deployment_tracker.Controllers
             return BadRequest(creator.Error);
         }
 
-        private void SetUser(ApiUser user) {
+        private async Task SetUser() {
+            var user = HttpContext.User;
             if (user != null) {
+                var resolvedUser = await Users.GetUserAsync(user);
                 CurrentRequestState.SetUser(new User {
-                    Name = user.Name,
-                    Username = user.Username
+                    Name = resolvedUser.Name,
+                    Username = resolvedUser.UserName
                 });
             }
         }
