@@ -15,7 +15,11 @@ const renderStatus = (status) => {
 
 const renderTitle = ({ branchName, status, publicURL }) => {
     if (statusIsRunning(status)) {
-        return <a href={publicURL}>{`${branchName} - [Visit]`}</a>;
+        return (
+            <a href={publicURL} target="_blank">{`${branchName}`}
+                <Icon type="select" style={{ marginLeft: 10 }} />
+            </a>
+        );
     }
 
     return branchName;
@@ -38,7 +42,7 @@ const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }})
 
 const getActions = ({ teardownUrl, status }) => {
     if (statusIsRunning(status)) {
-        return [<a href={teardownUrl}><Icon style={{ color: 'red' }} type="stop" /></a>];
+        return [<a href={teardownUrl} target="_blank"><Icon style={{ color: 'red' }} type="stop" /></a>];
     }
 
     return [];
