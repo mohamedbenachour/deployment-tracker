@@ -74,6 +74,8 @@ namespace deployment_tracker
                 Logger.LogError("No identity source has been configured");
             }
 
+            services.AddSingleton<IDeploymentManager, JenkinsDeploymentManager>();
+
             services.AddScoped<IRequestState, RequestState>();
 
             services.AddDbContext<DeploymentAppContext>
