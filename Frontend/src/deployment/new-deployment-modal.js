@@ -23,10 +23,11 @@ const NewDeploymentModal = ({
     onOk,
     onCancel,
     onBranchNameChange,
+    onSiteNameChange,
     onPublicUrlChange,
     onEnvironmentChange,
     environments,
-    deploymentBeingAdded: { branchName, publicURL, environmentId }
+    deploymentBeingAdded: { branchName, siteName, publicURL, environmentId }
 }) => (
     <Modal
         visible={visible}
@@ -37,6 +38,8 @@ const NewDeploymentModal = ({
     >
         <Typography.Text>Branch Name</Typography.Text>
         <Input value={branchName} onChange={({ target: { value }}) => onBranchNameChange(value)} />
+        <Typography.Text>Site Name</Typography.Text>
+        <Input value={siteName} onChange={({ target: { value }}) => onSiteNameChange(value)} />
         <Typography.Text>Public URL</Typography.Text>
         <Input value={publicURL} onChange={({ target: { value }}) => onPublicUrlChange(value)} />
         <Typography.Text>Environment</Typography.Text>

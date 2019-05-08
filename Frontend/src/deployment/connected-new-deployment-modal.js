@@ -9,6 +9,7 @@ import NewDeploymentModal from './new-deployment-modal';
 import {
     deploymentBeingAdded,
     deploymentBeingAddedBranchNameChanged,
+    deploymentBeingAddedSiteNameChanged,
     deploymentBeingAddedPublicURLChanged,
     deploymentBeingAddedEnvironmentChanged,
     deploymentAddCancelled
@@ -31,6 +32,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToInputProps = dispatch => bindActionCreators({
     onBranchNameChange: deploymentBeingAddedBranchNameChanged,
+    onSiteNameChange: deploymentBeingAddedSiteNameChanged,
     onPublicUrlChange: deploymentBeingAddedPublicURLChanged,
     onEnvironmentChange: deploymentBeingAddedEnvironmentChanged,
     onOk: addDeployment,
