@@ -26,6 +26,9 @@ namespace deployment_tracker.Models.API {
         public string BranchName { get; set; }
 
         [Required]
+        public string SiteName { get; set; }
+
+        [Required]
         public string PublicURL { get; set; }
 
         public ApiUser User { get; set; }

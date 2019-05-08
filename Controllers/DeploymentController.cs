@@ -37,7 +37,7 @@ namespace deployment_tracker.Controllers
         public async Task<ActionResult<ApiDeployment>> DeploymentDestroyed(ApiDeploymentDestroyed request) {
             SetUser(request.User);
             
-            var destroyer = new DeploymentDestroyed(Context, request.BranchName);
+            var destroyer = new DeploymentDestroyed(Context, request.SiteName);
 
             await destroyer.Destroy();
 

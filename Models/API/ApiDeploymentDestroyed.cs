@@ -20,7 +20,7 @@ using System.ComponentModel.DataAnnotations;
 namespace deployment_tracker.Models.API {
     public class ApiDeploymentDestroyed {
         [Required]
-        public string BranchName { get; set; }
+        public string SiteName { get; set; }
         [Required]
         public ApiUser User { get; set; }
     }
