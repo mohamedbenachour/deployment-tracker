@@ -1,22 +1,34 @@
 import React from 'react';
 
-import { Menu } from 'antd';
+import { Menu, Button, Row, Col } from 'antd';
 
 const HeaderMenu = ({ currentSection, sectionChanged }) => (
-    <Menu
-        onSelect={({ key }) => sectionChanged(key)}
-        mode="horizontal"
-        selectedKeys={[currentSection]}
-        theme="dark"
-        style={{ lineHeight: '64px' }}
-    >
-        <Menu.Item key="deployments">
-            {"Deployments"}
-        </Menu.Item>
-        <Menu.Item key="environments">
-            {"Environments"}
-        </Menu.Item>
-    </Menu>
+    <React.Fragment>
+    <Row>
+      <Col span={8}>        <Menu
+            onSelect={({ key }) => sectionChanged(key)}
+            mode="horizontal"
+            selectedKeys={[currentSection]}
+            theme="dark"
+            style={{ lineHeight: '64px' }}
+        >
+            <Menu.Item key="deployments">
+                {"Deployments"}
+            </Menu.Item>
+            <Menu.Item key="environments">
+                {"Environments"}
+            </Menu.Item>
+        </Menu></Col>
+      <Col span={1} offset={14}>
+      <Button
+            icon="logout"
+            href="/Account/Logout">
+            {'Log Out'}
+        </Button>
+        </Col>
+    </Row>
+    </React.Fragment>
+
 );
 
 export default HeaderMenu;

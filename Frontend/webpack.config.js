@@ -5,6 +5,8 @@ module.exports = {
     mode: 'development',
     entry: {
         index: './src/index.js',
+        'account.login': './src/login.js',
+        'account.logout': './src/logout.js'
     },
     devtool: 'source-map',
     output: {
