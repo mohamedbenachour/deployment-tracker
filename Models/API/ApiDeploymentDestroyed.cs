@@ -21,7 +21,5 @@ namespace deployment_tracker.Models.API {
     public class ApiDeploymentDestroyed {
         [Required]
         public string SiteName { get; set; }
-        [Required]
-        public ApiUser User { get; set; }
     }
 }

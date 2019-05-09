@@ -4,6 +4,7 @@ import {
     DEPLOYMENT_ADD_CLICKED,
     DEPLOYMENT_ADD_CANCEL,
     DEPLOYMENT_ADD_BRANCH_NAME_CHANGE,
+    DEPLOYMENT_ADD_SITE_NAME_CHANGE,
     DEPLOYMENT_ADD_PUBLIC_URL_CHANGE,
     DEPLOYMENT_ADD_ENVIRONMENT_CHANGE,
     DEPLOYMENT_ADD,
@@ -51,7 +52,12 @@ const deploymentReducer = (state = defaultState, action) => {
         case DEPLOYMENT_ADD_CLICKED:
             nextState = produce(state, draftState => {
                 draftState.addingADeployment = true;
-                draftState.deploymentBeingAdded = { branchName: '', publicURL: 'https://', environmentId: null };
+                draftState.deploymentBeingAdded = {
+                    branchName: '',
+                    publicURL: 'https://',
+                    environmentId: null,
+                    siteName: '',
+                };
             });
 
             break;
@@ -71,6 +77,13 @@ const deploymentReducer = (state = defaultState, action) => {
         case DEPLOYMENT_ADD_BRANCH_NAME_CHANGE:
             nextState = produce(state, draftState => {
                 draftState.deploymentBeingAdded.branchName = action.branchName;
+            });
+
+            break;
+
+        case DEPLOYMENT_ADD_SITE_NAME_CHANGE:
+            nextState = produce(state, draftState => {
+                draftState.deploymentBeingAdded.siteName = action.siteName;
             });
 
             break;

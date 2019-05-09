@@ -15,12 +15,15 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { getCsrfToken } from './page-properties';
+
 function postJSON(URL, object, onSuccess, onFailure) {
     fetch(URL, {
         method: 'POST',
         body: JSON.stringify(object),
         headers: new Headers({
             'Content-Type': 'application/json',
+            'RequestVerificationToken': getCsrfToken(),
         }),
     }).then((response) => {
         if (response.ok) {

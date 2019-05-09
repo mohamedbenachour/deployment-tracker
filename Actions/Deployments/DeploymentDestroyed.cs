@@ -9,9 +9,11 @@ using deployment_tracker.Models.API;
 
 using Microsoft.EntityFrameworkCore;
 
+using deployment_tracker.Actions;
+
 namespace deployment_tracker.Actions.Deployments
 {
-    class DeploymentDestroyed {
+    class DeploymentDestroyed : IActionPerformer<Deployment> {
         private DeploymentAppContext Context { get; }
 
         private string SiteName { get; }
@@ -20,14 +22,14 @@ namespace deployment_tracker.Actions.Deployments
 
         public String Error { get; private set; }
 
-        public Deployment DestroyedDeployment { get; private set; }
+        public Deployment Result { get; private set; }
 
         public DeploymentDestroyed(DeploymentAppContext context, string siteName) {
             Context = context;
             SiteName = siteName;
         }
 
-        public async Task Destroy() {
+        public async Task Perform() {
             if (IsValidDeployment()) {
                 var deployment = Context.Deployments
                 .Include(d => d.DeployedEnvironment)
@@ -37,7 +39,7 @@ namespace deployment_tracker.Actions.Deployments
                 
                 await Context.SaveChangesAsync();
 
-                DestroyedDeployment = deployment;
+                Result = deployment;
 
                 Succeeded = true;
             } else {

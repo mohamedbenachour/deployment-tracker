@@ -8,6 +8,8 @@ using deployment_tracker.Models;
 
 using Microsoft.EntityFrameworkCore;
 
+using deployment_tracker.Actions;
+
 namespace deployment_tracker.Actions.Environment
 {
     class DeleteEnvironment {
@@ -24,7 +26,7 @@ namespace deployment_tracker.Actions.Environment
             EnvironmentID = environmentID;         
         }
 
-        public async Task Delete() {
+        public async Task Perform() {
             if (IsValidToDelete()) {
                 var environmentReference = Context.Environments.Single(env => env.Id == EnvironmentID);
 

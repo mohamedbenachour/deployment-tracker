@@ -1,6 +1,7 @@
 import {
     DEPLOYMENT_ADD_CLICKED,
     DEPLOYMENT_ADD_BRANCH_NAME_CHANGE,
+    DEPLOYMENT_ADD_SITE_NAME_CHANGE,
     DEPLOYMENT_ADD_PUBLIC_URL_CHANGE,
     DEPLOYMENT_ADD_ENVIRONMENT_CHANGE,
     DEPLOYMENT_ADD_CANCEL,
@@ -31,6 +32,11 @@ export const deploymentSaveFailed = () => ({
 export const deploymentBeingAddedBranchNameChanged = (branchName) => ({
     type: DEPLOYMENT_ADD_BRANCH_NAME_CHANGE,
     branchName,
+});
+
+export const deploymentBeingAddedSiteNameChanged = (siteName) => ({
+    type: DEPLOYMENT_ADD_SITE_NAME_CHANGE,
+    siteName,
 });
 
 export const deploymentSearch = (searchName) => ({

@@ -26,6 +26,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 
 using deployment_tracker.Models;
@@ -33,18 +34,22 @@ using deployment_tracker.Services;
 using deployment_tracker.Services.Identity;
 using deployment_tracker.Services.Identity.Mock;
 using deployment_tracker.Services.DeploymentManagement;
+using deployment_tracker.Services.Token;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace deployment_tracker
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
+            Logger = logger;
         }
 
         public IConfiguration Configuration { get; }
+        private ILogger Logger { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -62,10 +67,17 @@ namespace deployment_tracker
                 .AddDefaultTokenProviders();
 
             // Identity Services
-            services.AddTransient<IUserStore<ApplicationUser>, MockUserStore>();
-            services.AddTransient<IRoleStore<ApplicationRole>, MockRoleStore>();
+            if (Configuration.GetSection("IdentitySource")["Type"] == "MockStore") {
+                Logger.LogInformation("Using the MockStore identity source");
 
-            services.AddTransient<IDeploymentManager, JenkinsDeploymentManager>();
+                services.AddSingleton<IUserStore<ApplicationUser>, MockUserStore>();
+                services.AddTransient<IRoleStore<ApplicationRole>, MockRoleStore>();
+            } else {
+                Logger.LogError("No identity source has been configured");
+            }
+
+            services.AddSingleton<IDeploymentManager, JenkinsDeploymentManager>();
+            services.AddSingleton<ITokenVerifier, TokenVerifier>();
 
             services.AddScoped<IRequestState, RequestState>();
 
@@ -94,12 +106,7 @@ namespace deployment_tracker
             app.UseCookiePolicy();
             app.UseAuthentication();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvc();
         }
     }
 }

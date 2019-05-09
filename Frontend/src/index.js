@@ -1,7 +1,8 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 
 import { combineReducers } from 'redux';
+
+import bootstrapToPage from './utils/page-bootstrapper';
 
 import StandardLayout from './layout/standard-layout';
 
@@ -18,20 +19,15 @@ import deploymentsReducer from './deployment/reducer';
 
 import { loadEnvironmentList } from './environment/async-actions';
 
-const applicationStart = () => {
-    const rootReducer = combineReducers({ app: appReducer, environment: environmentsReducer, deployment: deploymentsReducer });
-    const store = createStore(rootReducer);
+const rootReducer = combineReducers({ app: appReducer, environment: environmentsReducer, deployment: deploymentsReducer });
+const store = createStore(rootReducer);
 
-    store.dispatch(loadEnvironmentList());
+store.dispatch(loadEnvironmentList());
 
-    ReactDom.render((
-        <Provider store={store}>
-            <StandardLayout header={<HeaderMenu />}>
-                <Content />
-            </StandardLayout>
-        </Provider>
-    ),
-    document.querySelector(".app-mount-point"));
-};
-
-document.addEventListener('DOMContentLoaded', applicationStart, { once: true });
+bootstrapToPage(
+    <Provider store={store}>
+        <StandardLayout header={<HeaderMenu />}>
+            <Content />
+        </StandardLayout>
+    </Provider>
+);

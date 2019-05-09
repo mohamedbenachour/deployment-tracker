@@ -8,10 +8,11 @@ using deployment_tracker.Models;
 using deployment_tracker.Models.API;
 
 using Microsoft.EntityFrameworkCore;
+using deployment_tracker.Actions;
 
 namespace deployment_tracker.Actions.Deployments
 {
-    class NewDeployment {
+    class NewDeployment : IActionPerformer<Deployment> {
         private DeploymentAppContext Context { get; }
 
         private ApiNewDeployment Deployment { get; }
@@ -20,14 +21,14 @@ namespace deployment_tracker.Actions.Deployments
 
         public String Error { get; private set; }
 
-        public Deployment CreatedDeployment { get; private set; }
+        public Deployment Result { get; private set; }
 
         public NewDeployment(DeploymentAppContext context, ApiNewDeployment deployment) {
             Context = context;
             Deployment = deployment;         
         }
 
-        public async Task Create() {
+        public async Task Perform() {
             if (IsValidNewDeployment()) {
                 var matchingDeployment = Context.Deployments
                     .Include(d => d.DeployedEnvironment)
@@ -36,10 +37,12 @@ namespace deployment_tracker.Actions.Deployments
                 
                 if (matchingDeployment != null) {
                     newDeployment = matchingDeployment;
+                    newDeployment.DeploymentCount = newDeployment.DeploymentCount + 1;
                 } else {
                     newDeployment = new Deployment {
                         BranchName = Deployment.BranchName,
                         SiteName = Deployment.SiteName,
+                        DeploymentCount = 1,
                     };
                     newDeployment.DeployedEnvironment = Context.Environments.Single(env => env.Id == Deployment.EnvironmentId);
 
@@ -51,7 +54,7 @@ namespace deployment_tracker.Actions.Deployments
                 
                 await Context.SaveChangesAsync();
 
-                CreatedDeployment = newDeployment;
+                Result = newDeployment;
 
                 Succeeded = true;
             } else {
