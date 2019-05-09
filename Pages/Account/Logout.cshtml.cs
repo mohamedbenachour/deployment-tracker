@@ -13,7 +13,6 @@ using deployment_tracker.Services.Identity;
 namespace deployment_tracker.Views.Account
 {
     [AllowAnonymous]
-    [IgnoreAntiforgeryToken]
     public class LogoutModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;

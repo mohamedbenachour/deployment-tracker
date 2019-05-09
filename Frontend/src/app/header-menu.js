@@ -2,6 +2,8 @@ import React from 'react';
 
 import { Menu, Button, Row, Col } from 'antd';
 
+import CsrfHiddenInput from '../utils/csrf-hidden-input';
+
 const HeaderMenu = ({ currentSection, sectionChanged }) => (
     <React.Fragment>
     <Row>
@@ -26,6 +28,7 @@ const HeaderMenu = ({ currentSection, sectionChanged }) => (
                 htmlType="submit">
                 {'Log Out'}
         </Button>
+        <CsrfHiddenInput />
       </form>
     </Col>
     </Row>

@@ -9,6 +9,8 @@ import {
 
 import withStyles from 'react-jss';
 
+import CsrfHiddenInput from '../utils/csrf-hidden-input';
+
 const styles = {
     loginForm: {
         padding: 15,
@@ -45,6 +47,7 @@ const LoginForm = ({ classes }) => (
         <div class={classes.formGroup}>
             <Button type="primary" icon="login" htmlType="submit">Log in</Button>
         </div>
+        <CsrfHiddenInput />
     </form>
 );
 

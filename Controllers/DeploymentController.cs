@@ -27,6 +27,7 @@ namespace deployment_tracker.Controllers
     [Route("api/deployment")]
     [ApiController]
     [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class DeploymentController : BaseApiController
     {
         private DeploymentAppContext Context { get; }
