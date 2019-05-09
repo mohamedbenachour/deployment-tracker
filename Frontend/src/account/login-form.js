@@ -1,6 +1,11 @@
 import React from 'react';
 
-import { Button, Input, Checkbox } from 'antd';
+import {
+    Button,
+    Input,
+    Checkbox,
+    Typography
+} from 'antd';
 
 import withStyles from 'react-jss';
 
@@ -24,7 +29,7 @@ const styles = {
 
 const LoginForm = ({ classes }) => (
     <form className={classes.loginForm} method="post">
-        <h4>Log In to Deployment Tracker</h4>
+        <Typography.Title level={3}>Log In to Deployment Tracker</Typography.Title>
         <hr />
         <div class={classes.formGroup}>
             <label for="Input_UserName">User Name</label>
