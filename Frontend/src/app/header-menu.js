@@ -20,12 +20,14 @@ const HeaderMenu = ({ currentSection, sectionChanged }) => (
             </Menu.Item>
         </Menu></Col>
       <Col span={1} offset={14}>
-      <Button
-            icon="logout"
-            href="/Account/Logout">
-            {'Log Out'}
+      <form action="/Account/Logout" method="post">
+        <Button
+                icon="logout"
+                htmlType="submit">
+                {'Log Out'}
         </Button>
-        </Col>
+      </form>
+    </Col>
     </Row>
     </React.Fragment>
 
