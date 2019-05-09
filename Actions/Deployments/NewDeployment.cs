@@ -36,10 +36,12 @@ namespace deployment_tracker.Actions.Deployments
                 
                 if (matchingDeployment != null) {
                     newDeployment = matchingDeployment;
+                    newDeployment.DeploymentCount = newDeployment.DeploymentCount + 1;
                 } else {
                     newDeployment = new Deployment {
                         BranchName = Deployment.BranchName,
                         SiteName = Deployment.SiteName,
+                        DeploymentCount = 1,
                     };
                     newDeployment.DeployedEnvironment = Context.Environments.Single(env => env.Id == Deployment.EnvironmentId);
 

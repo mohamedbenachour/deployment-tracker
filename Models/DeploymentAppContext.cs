@@ -98,7 +98,7 @@ namespace deployment_tracker.Models
         [Key]
         public int Id { get; set; }
 
-        public virtual DeploymentEnvironment DeployedEnvironment {get; set; }
+        public virtual DeploymentEnvironment DeployedEnvironment { get; set; }
 
         [Required]
         [StringLength(200, MinimumLength = 3)]
@@ -112,7 +112,9 @@ namespace deployment_tracker.Models
         [StringLength(150, MinimumLength = 3)]
         public string PublicURL { get; set; }
 
-        public DeploymentStatus Status {get; set;}
+        public DeploymentStatus Status { get; set; }
+
+        public int DeploymentCount { get; set; }
 
         [Timestamp]
         public byte[] RowVersion { get; set; }
