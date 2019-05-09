@@ -42,9 +42,11 @@ namespace deployment_tracker.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Deployment>>> Deployments()
+        public ActionResult<IEnumerable<Deployment>> Deployments()
         {
-            return await Context.Deployments.ToListAsync();
+            var deployments = new ListDeployments(Context, Hydrator).Fetch();
+
+            return Ok(deployments);
         }
 
         [HttpPost]
