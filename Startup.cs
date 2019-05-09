@@ -34,6 +34,8 @@ using deployment_tracker.Services;
 using deployment_tracker.Services.Identity;
 using deployment_tracker.Services.Identity.Mock;
 using deployment_tracker.Services.DeploymentManagement;
+using deployment_tracker.Services.Token;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace deployment_tracker
@@ -75,6 +77,7 @@ namespace deployment_tracker
             }
 
             services.AddSingleton<IDeploymentManager, JenkinsDeploymentManager>();
+            services.AddSingleton<ITokenVerifier, TokenVerifier>();
 
             services.AddScoped<IRequestState, RequestState>();
 

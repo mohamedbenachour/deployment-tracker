@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using deployment_tracker.Actions.Environment;
+using deployment_tracker.Actions.Deployments;
 using Microsoft.EntityFrameworkCore;
 using deployment_tracker.Services.DeploymentManagement;
 using Microsoft.AspNetCore.Identity;
@@ -34,7 +35,7 @@ namespace deployment_tracker.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ApiEnvironment>> Environments()
         {
-            var environments = new ListEnvironments(Context, DeploymentManager).Fetch();
+            var environments = new ListEnvironments(Context, new ApiDeploymentHydrator(DeploymentManager)).Fetch();
 
             return Ok(environments);
         }
@@ -44,7 +45,7 @@ namespace deployment_tracker.Controllers
         public async Task<ActionResult> DeleteEnvironment(int id) {
             var deletor = new DeleteEnvironment(Context, id);
 
-            await deletor.Delete();
+            await deletor.Perform();
 
             if (deletor.Succeeded) {
                 return Ok();
@@ -58,10 +59,10 @@ namespace deployment_tracker.Controllers
         {
             var creator = new NewEnvironment(Context, environment);
 
-            await creator.Create();
+            await creator.Perform();
 
             if (creator.Succeeded) {
-                return Ok(ApiEnvironment.FromInternal(creator.CreatedEnvironment));
+                return Ok(ApiEnvironment.FromInternal(creator.Result));
             }
 
             return BadRequest(creator.Error);

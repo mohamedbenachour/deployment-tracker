@@ -9,7 +9,11 @@ using Microsoft.AspNetCore.Identity;
 using deployment_tracker.Models;
 using deployment_tracker.Models.API;
 
+using deployment_tracker.Actions;
+
 using deployment_tracker.Actions.Deployments;
+
+using deployment_tracker.Services.DeploymentManagement;
 using deployment_tracker.Services;
 using deployment_tracker.Services.Identity;
 
@@ -23,16 +27,18 @@ namespace deployment_tracker.Controllers
     [Route("api/deployment")]
     [ApiController]
     [Authorize]
-    public class DeploymentController : Controller
+    public class DeploymentController : BaseApiController
     {
         private DeploymentAppContext Context { get; }
-        private IRequestState CurrentRequestState { get; }
-        private UserManager<ApplicationUser> Users { get; }
+        private ApiDeploymentHydrator Hydrator { get; }
 
-        public DeploymentController(DeploymentAppContext context, IRequestState requestState, UserManager<ApplicationUser> userManager) {
+        public DeploymentController(
+            DeploymentAppContext context,
+            IRequestState requestState,
+            UserManager<ApplicationUser> userManager,
+            IDeploymentManager deploymentManager) : base(requestState, userManager) {
             Context = context;
-            CurrentRequestState = requestState;
-            Users = userManager;
+            Hydrator = new ApiDeploymentHydrator(deploymentManager);
         }
 
         [HttpGet]
@@ -47,41 +53,20 @@ namespace deployment_tracker.Controllers
             await SetUser();
             
             var destroyer = new DeploymentDestroyed(Context, request.SiteName);
+            var apiHandler = new ApiActionHandler(destroyer, Hydrator);
 
-            await destroyer.Destroy();
-
-            if (destroyer.Succeeded) {
-                return Ok(ApiDeployment.FromInternal(destroyer.DestroyedDeployment));
-            }
-
-            return BadRequest(destroyer.Error);
+            return await Handle(apiHandler);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Deployment>> CreateDeployment(ApiNewDeployment deployment)
+        public async Task<ActionResult<ApiDeployment>> CreateDeployment(ApiNewDeployment deployment)
         {
             await SetUser();
 
             var creator = new NewDeployment(Context, deployment);
+            var apiHandler = new ApiActionHandler(creator, Hydrator);
 
-            await creator.Create();
-
-            if (creator.Succeeded) {
-                return Ok(ApiDeployment.FromInternal(creator.CreatedDeployment));
-            }
-
-            return BadRequest(creator.Error);
-        }
-
-        private async Task SetUser() {
-            var user = HttpContext.User;
-            if (user != null) {
-                var resolvedUser = await Users.GetUserAsync(user);
-                CurrentRequestState.SetUser(new User {
-                    Name = resolvedUser.Name,
-                    Username = resolvedUser.UserName
-                });
-            }
+            return await Handle(apiHandler);
         }
     }
 }

@@ -9,9 +9,11 @@ using deployment_tracker.Models.API;
 
 using Microsoft.EntityFrameworkCore;
 
+using deployment_tracker.Actions;
+
 namespace deployment_tracker.Actions.Environment
 {
-    class NewEnvironment {
+    public class NewEnvironment {
         private DeploymentAppContext Context { get; }
 
         private ApiNewEnvironment Environment { get; }
@@ -20,14 +22,14 @@ namespace deployment_tracker.Actions.Environment
 
         public String Error { get; private set; }
 
-        public DeploymentEnvironment CreatedEnvironment { get; private set; }
+        public DeploymentEnvironment Result { get; private set; }
 
         public NewEnvironment(DeploymentAppContext context, ApiNewEnvironment environment) {
             Context = context;
             Environment = environment;         
         }
 
-        public async Task Create() {
+        public async Task Perform() {
             if (IsValidNewEnvironment()) {
                 var newEnvironment = new DeploymentEnvironment {
                     Name = Environment.Name,
@@ -38,7 +40,7 @@ namespace deployment_tracker.Actions.Environment
                 
                 await Context.SaveChangesAsync();
 
-                CreatedEnvironment = newEnvironment;
+                Result = newEnvironment;
 
                 Succeeded = true;
             } else {
