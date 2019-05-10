@@ -35,6 +35,7 @@ using deployment_tracker.Services.Identity;
 using deployment_tracker.Services.Identity.Mock;
 using deployment_tracker.Services.DeploymentManagement;
 using deployment_tracker.Services.Token;
+using deployment_tracker.Hubs;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -85,6 +86,8 @@ namespace deployment_tracker
                 (options => options.UseSqlite(Configuration.GetSection("ConnectionStrings")["Application"]));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,6 +109,10 @@ namespace deployment_tracker
             app.UseCookiePolicy();
             app.UseAuthentication();
 
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<DeploymentHub>("/deploymentHub");
+            });
             app.UseMvc();
         }
     }

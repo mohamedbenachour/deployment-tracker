@@ -12,8 +12,10 @@ using deployment_tracker.Services;
 using deployment_tracker.Services.Identity;
 using deployment_tracker.Services.DeploymentManagement;
 using deployment_tracker.Services.Token;
+using deployment_tracker.Hubs;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -28,16 +30,19 @@ namespace deployment_tracker.Controllers
         private IRequestState CurrentRequestState { get; }
         private ITokenVerifier ExternalTokenVerifier { get; }
         private ApiDeploymentHydrator Hydrator { get; }
+        private ReportDeploymentChange Reporter { get; }
 
         public DeploymentExternalController(
             DeploymentAppContext context,
             IRequestState requestState,
             ITokenVerifier tokenVerifier,
-            IDeploymentManager deploymentManager) : base(requestState, null) {
+            IDeploymentManager deploymentManager,
+            IHubContext<DeploymentHub, IDeploymentClient> hubContext) : base(requestState, null) {
             Context = context;
             CurrentRequestState = requestState;
             ExternalTokenVerifier = tokenVerifier;
             Hydrator = new ApiDeploymentHydrator(deploymentManager);
+            Reporter = new ReportDeploymentChange(hubContext);
         }
 
         [HttpPost]
@@ -47,7 +52,7 @@ namespace deployment_tracker.Controllers
             SetUser(request.User);
             
             var destroyer = new DeploymentDestroyed(Context, request.SiteName);
-            var apiHandler = new ApiActionHandler(destroyer, Hydrator);
+            var apiHandler = new ApiActionHandler(destroyer, Hydrator, Reporter);
 
             return await Handle(apiHandler);
         }
@@ -59,7 +64,7 @@ namespace deployment_tracker.Controllers
             SetUser(deployment.User);
 
             var creator = new NewDeployment(Context, deployment);
-            var apiHandler = new ApiActionHandler(creator, Hydrator);
+            var apiHandler = new ApiActionHandler(creator, Hydrator, Reporter);
 
             return await Handle(apiHandler);
         }

@@ -4,7 +4,7 @@ import { List, Typography, Button, Icon } from 'antd';
 import NewEnvironmentModal from './connected-new-environment-modal';
 
 const renderEnvironmentItem = (environment) => (
-    <List.Item actions={[<Icon type="delete" />]}>
+    <List.Item actions={[]}>
         <List.Item.Meta 
             title={environment.name}
         />
