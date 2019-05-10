@@ -16,9 +16,11 @@ using deployment_tracker.Actions.Deployments;
 using deployment_tracker.Services.DeploymentManagement;
 using deployment_tracker.Services;
 using deployment_tracker.Services.Identity;
+using deployment_tracker.Hubs;
 
 using Microsoft.AspNetCore.Authorization;
 
+using Microsoft.AspNetCore.SignalR;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -32,14 +34,17 @@ namespace deployment_tracker.Controllers
     {
         private DeploymentAppContext Context { get; }
         private ApiDeploymentHydrator Hydrator { get; }
+        private ReportDeploymentChange Reporter { get; }
 
         public DeploymentController(
             DeploymentAppContext context,
             IRequestState requestState,
             UserManager<ApplicationUser> userManager,
-            IDeploymentManager deploymentManager) : base(requestState, userManager) {
+            IDeploymentManager deploymentManager,
+            IHubContext<DeploymentHub, IDeploymentClient> hubContext) : base(requestState, userManager) {
             Context = context;
             Hydrator = new ApiDeploymentHydrator(deploymentManager);
+            Reporter = new ReportDeploymentChange(hubContext);
         }
 
         [HttpGet]
@@ -56,7 +61,7 @@ namespace deployment_tracker.Controllers
             await SetUser();
             
             var destroyer = new DeploymentDestroyed(Context, request.SiteName);
-            var apiHandler = new ApiActionHandler(destroyer, Hydrator);
+            var apiHandler = new ApiActionHandler(destroyer, Hydrator, Reporter);
 
             return await Handle(apiHandler);
         }
@@ -67,7 +72,7 @@ namespace deployment_tracker.Controllers
             await SetUser();
 
             var creator = new NewDeployment(Context, deployment);
-            var apiHandler = new ApiActionHandler(creator, Hydrator);
+            var apiHandler = new ApiActionHandler(creator, Hydrator, Reporter);
 
             return await Handle(apiHandler);
         }

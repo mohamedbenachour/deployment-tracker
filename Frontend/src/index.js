@@ -19,10 +19,14 @@ import deploymentsReducer from './deployment/reducer';
 
 import { loadEnvironmentList } from './environment/async-actions';
 
+import DeploymentHubClient from './deployment/deployment-hub-client';
+
 const rootReducer = combineReducers({ app: appReducer, environment: environmentsReducer, deployment: deploymentsReducer });
 const store = createStore(rootReducer);
 
 store.dispatch(loadEnvironmentList());
+
+new DeploymentHubClient(store).start();
 
 bootstrapToPage(
     <Provider store={store}>
