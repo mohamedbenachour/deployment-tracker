@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using deployment_tracker.Services.DeploymentManagement;
 using Microsoft.AspNetCore.Identity;
 using deployment_tracker.Services.Identity;
+using deployment_tracker.Services;
 
 namespace deployment_tracker.Controllers
 {
@@ -23,12 +24,16 @@ namespace deployment_tracker.Controllers
     [ApiController]
     [Authorize]
     [AutoValidateAntiforgeryToken]
-    public class EnvironmentController : Controller
+    public class EnvironmentController : BaseApiController
     {
         private DeploymentAppContext Context { get; }
         private IDeploymentManager DeploymentManager { get; }
 
-        public EnvironmentController(DeploymentAppContext context, IDeploymentManager deploymentManager, IUserStore<ApplicationUser> userStore) {
+        public EnvironmentController(DeploymentAppContext context,
+        IDeploymentManager deploymentManager,
+        IRequestState requestState,
+        UserManager<ApplicationUser> userManager,
+        IUserStore<ApplicationUser> userStore) : base(requestState, userManager) {
             Context = context;
             DeploymentManager = deploymentManager;
         }
@@ -44,6 +49,8 @@ namespace deployment_tracker.Controllers
         [HttpDelete]
         [Route("{id}")]
         public async Task<ActionResult> DeleteEnvironment(int id) {
+            await SetUser();
+
             var deletor = new DeleteEnvironment(Context, id);
 
             await deletor.Perform();
@@ -58,6 +65,8 @@ namespace deployment_tracker.Controllers
         [HttpPost]
         public async Task<ActionResult<ApiEnvironment>> CreateEnvironment(ApiNewEnvironment environment)
         {
+            await SetUser();
+
             var creator = new NewEnvironment(Context, environment);
 
             await creator.Perform();

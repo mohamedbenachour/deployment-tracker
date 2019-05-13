@@ -11,7 +11,7 @@ namespace deployment_tracker.Services.DeploymentManagement {
         }
 
         public string GetTeardownUrl(ApiDeployment deployment) {
-            return $"{Configuration.BaseUrl}/{Configuration.TeardownProject}?{Configuration.TeardownSiteName}={deployment.BranchName}";
+            return $"{Configuration.BaseUrl}/job/{Configuration.TeardownProject}/parambuild?{Configuration.TeardownSiteName}={deployment.SiteName}&{Configuration.TeardownDestroySql}=true";
         }
     }
 

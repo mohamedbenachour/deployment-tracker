@@ -22,6 +22,8 @@ namespace deployment_tracker.Models.API {
         public int Id { get; set; }
         public string BranchName { get; set; }
         public string PublicURL { get; set; }
+
+        public string SiteName { get; set; }
         public int EnvironmentId { get; set; }
         public string Status { get; set; }
         public string TeardownUrl { get; set; }
@@ -35,6 +37,7 @@ namespace deployment_tracker.Models.API {
                 BranchName = toConvert.BranchName,
                 PublicURL = toConvert.PublicURL,
                 EnvironmentId = toConvert.DeployedEnvironment.Id,
+                SiteName = toConvert.SiteName,
                 Status = toConvert.Status.ToString(),
                 CreatedBy = toConvert.CreatedBy,
                 ModifiedBy = toConvert.ModifiedBy
