@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
@@ -30,7 +31,7 @@ namespace deployment_tracker
 
             var host = builder.Build();
 
-            if (isService)
+            if (isService && IsWindows())
             {
                 // To run the app without the CustomWebHostService change the
                 // next line to host.RunAsService();
@@ -42,11 +43,15 @@ namespace deployment_tracker
             }
         }
 
+        public static bool IsWindows() => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((hostingContext, logging) =>
                 {
-                    logging.AddEventLog();
+                    if (IsWindows()) {
+                        logging.AddEventLog();
+                    }
                 })
                 .UseStartup<Startup>();
     }
