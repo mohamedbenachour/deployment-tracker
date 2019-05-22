@@ -3,6 +3,8 @@ import { List, Typography, Button, Icon, Input, Checkbox } from 'antd';
 
 import { statusIsRunning } from './deployment-status';
 
+import { FormatAsLocalDateTimeString } from '../utils/date-time-formatting';
+
 import NewDeploymentModal from './connected-new-deployment-modal';
 
 const renderStatus = (status) => {
@@ -28,14 +30,12 @@ const renderTitle = ({ branchName, status, publicURL }) => {
 const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }}) => {
     const actualName = (name && name.length > 0) ? name : `(${userName})`;
     const deploymentText = statusIsRunning(status) ? 'Deployed' : 'Torndown';
-    const timestampDateText = new Date(timestamp).toDateString();
-    const timestampTimeText = new Date(timestamp).toLocaleTimeString();
 
     return (
         <React.Fragment>
             <Typography.Text>{`${deploymentText} by: `}</Typography.Text>
             <Typography.Text strong={true}>{actualName}</Typography.Text>
-            <Typography.Text>{` on ${timestampDateText} at ${timestampTimeText}`}</Typography.Text>
+            <Typography.Text>{` on ${FormatAsLocalDateTimeString(timestamp)}`}</Typography.Text>
         </React.Fragment>
     )
 };

@@ -27,6 +27,7 @@
     "@aspnet/signalr": "^1.1.4",
     "antd": "^3.18.1",
     "immer": "^3.1.1",
+    "luxon": "^1.15.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-jss": "^8.6.1",
