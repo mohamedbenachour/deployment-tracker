@@ -28,6 +28,8 @@ namespace deployment_tracker.Models.API {
         public string Status { get; set; }
         public string TeardownUrl { get; set; }
 
+        public Login SiteLogin { get; set; }
+
         public AuditDetail ModifiedBy { get; set; }
         public AuditDetail CreatedBy { get; set; }
 
@@ -40,7 +42,8 @@ namespace deployment_tracker.Models.API {
                 SiteName = toConvert.SiteName,
                 Status = toConvert.Status.ToString(),
                 CreatedBy = toConvert.CreatedBy,
-                ModifiedBy = toConvert.ModifiedBy
+                ModifiedBy = toConvert.ModifiedBy,
+                SiteLogin = toConvert.SiteLogin
             };
         }
     }
