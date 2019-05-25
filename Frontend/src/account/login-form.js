@@ -40,7 +40,7 @@ const LoginForm = ({ classes }) => (
             </div>
             <div class={classes.formGroup}>
                 <label for="Input_Password">Password</label>
-                <Input type="password" id="Input_Password" name="Input.Password" />
+                <Input.Password id="Input_Password" name="Input.Password" />
             </div>
             <div class={classes.formGroup}>
                 <Checkbox id="Input_RememberMe" name="Input.RememberMe" value="true">Remember Me?</Checkbox>
