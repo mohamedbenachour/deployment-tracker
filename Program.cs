@@ -17,7 +17,7 @@ namespace deployment_tracker
     {
         public static void Main(string[] args)
         {
-        var isService = !(Debugger.IsAttached || args.Contains("--console"));
+            var isService = IsService(args);
 
             if (isService)
             {
@@ -31,7 +31,7 @@ namespace deployment_tracker
 
             var host = builder.Build();
 
-            if (isService && IsWindows())
+            if (isService)
             {
                 // To run the app without the CustomWebHostService change the
                 // next line to host.RunAsService();
@@ -44,6 +44,9 @@ namespace deployment_tracker
         }
 
         public static bool IsWindows() => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+        public static bool IsService(string[] args)
+            => IsWindows() && !(Debugger.IsAttached || args.Contains("--console"));
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
