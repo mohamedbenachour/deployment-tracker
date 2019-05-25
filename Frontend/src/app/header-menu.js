@@ -2,35 +2,30 @@ import React from 'react';
 
 import { Menu, Button, Row, Col } from 'antd';
 
-import CsrfHiddenInput from '../utils/csrf-hidden-input';
+import LogoutButton from './logout-button';
 
 const HeaderMenu = ({ currentSection, sectionChanged }) => (
     <React.Fragment>
     <Row>
-      <Col span={8}>        <Menu
-            onSelect={({ key }) => sectionChanged(key)}
-            mode="horizontal"
-            selectedKeys={[currentSection]}
-            theme="dark"
-            style={{ lineHeight: '64px' }}
-        >
-            <Menu.Item key="deployments">
-                {"Deployments"}
-            </Menu.Item>
-            <Menu.Item key="environments">
-                {"Environments"}
-            </Menu.Item>
-        </Menu></Col>
-      <Col span={1} offset={14}>
-      <form action="/Account/Logout" method="post">
-        <Button
-                icon="logout"
-                htmlType="submit">
-                {'Log Out'}
-        </Button>
-        <CsrfHiddenInput />
-      </form>
-    </Col>
+        <Col span={16}>
+            <Menu
+                    onSelect={({ key }) => sectionChanged(key)}
+                    mode="horizontal"
+                    selectedKeys={[currentSection]}
+                    theme="dark"
+                    style={{ lineHeight: '64px' }}
+                >
+                    <Menu.Item key="deployments">
+                        {"Deployments"}
+                    </Menu.Item>
+                    <Menu.Item key="environments">
+                        {"Environments"}
+                    </Menu.Item>
+            </Menu>
+        </Col>
+        <Col span={1} offset={6}>
+            <LogoutButton />
+        </Col>
     </Row>
     </React.Fragment>
 
