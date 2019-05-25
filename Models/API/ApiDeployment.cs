@@ -18,7 +18,7 @@
 using deployment_tracker.Models;
 
 namespace deployment_tracker.Models.API {
-    public class ApiDeployment {
+    public class ApiDeployment : IBranchedDeployment, IDeployedSite {
         public int Id { get; set; }
         public string BranchName { get; set; }
         public string PublicURL { get; set; }

@@ -1,7 +1,7 @@
-using deployment_tracker.Models.API;
+using deployment_tracker.Models;
 
 namespace deployment_tracker.Services.DeploymentManagement {
     public interface IDeploymentManager {
-        string GetTeardownUrl(ApiDeployment deployment);
+        string GetTeardownUrl(IDeployedSite deployment);
     }
 }

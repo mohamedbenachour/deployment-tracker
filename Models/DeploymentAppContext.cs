@@ -94,7 +94,7 @@ namespace deployment_tracker.Models
         DESTROYED
     }
 
-    public class Deployment : IAuditable {
+    public class Deployment : IAuditable, IBranchedDeployment, IDeployedSite {
         [Key]
         public int Id { get; set; }
 
