@@ -32,7 +32,7 @@ namespace deployment_tracker.Actions.Deployments {
                 Hydrator.Hydrate(Result);
 
                 if (PostAction != null) {
-                    PostAction.Perform(Result);
+                    await PostAction.Perform(Result);
                 }
             } else {
                 Succeeded = false;

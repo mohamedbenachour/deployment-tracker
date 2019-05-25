@@ -32,5 +32,7 @@ namespace deployment_tracker.Models.API {
         public string PublicURL { get; set; }
 
         public int EnvironmentId { get; set; }
+
+        public Login SiteLogin { get; set; }
     }
 }

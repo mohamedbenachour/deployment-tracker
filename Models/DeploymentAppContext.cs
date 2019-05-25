@@ -116,6 +116,8 @@ namespace deployment_tracker.Models
 
         public int DeploymentCount { get; set; }
 
+        public Login SiteLogin { get; set; }
+
         [Timestamp]
         public byte[] RowVersion { get; set; }
 
@@ -141,6 +143,13 @@ namespace deployment_tracker.Models
         public string UserName { get; set; }
         
         public DateTime Timestamp { get; set; }
+    }
+
+    [Owned]
+    public class Login {
+        public string UserName { get; set; }
+
+        public string Password { get; set; }
     }
 
     public class DeploymentEnvironment {

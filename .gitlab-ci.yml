@@ -11,10 +11,12 @@ server-build:
     script:
     - dotnet build
     - dotnet ef database update
+    - dotnet ef migrations script -o database-upgrade.sql
     artifacts:
         name: server-database
         paths:
         - deployment.db
+        - database-upgrade.sql
 
 client-build:
     stage: build
@@ -37,6 +39,7 @@ linux-publish:
     script:
     - dotnet publish -c Release -r linux-x64 -o deployment-tracker/
     - cp deployment.db deployment-tracker/
+    - cp database-upgrade.sql deployment-tracker/
     artifacts:
         name: deployment-tracker-linux-x64
         paths:

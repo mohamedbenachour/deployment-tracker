@@ -1,0 +1,43 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "Kestrel": {
+    "EndPoints": {
+      "Http": {
+        "Url": "http://[::]:5000"
+      },
+      "Https": {
+        "Url": "https://[::]:5001"
+      }
+    }
+  },
+  "ExternalToken": "<token-value>",
+  "IdentitySource": {
+    "Type": "MockStore",
+    "Users": [
+      {
+        "Username": "<username>",
+        "Name": "<name>",
+        "Password": "<password>"
+      }
+    ]
+  },
+  "ConnectionStrings": {
+    "Application": "Data Source=<file-name>.db"
+  },
+  "Jenkins": {
+    "BaseUrl": "https://<jenkins-url>",
+    "Teardown": {
+      "ProjectName": "<project-name>",
+      "Parameters": {
+        "SiteName": "<site-name-parameter>",
+        "DestroySql": "<destroy-sql-parameter>"
+      }
+    }
+  }
+}
