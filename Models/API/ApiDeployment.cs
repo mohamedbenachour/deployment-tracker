@@ -18,7 +18,7 @@
 using deployment_tracker.Models;
 
 namespace deployment_tracker.Models.API {
-    public class ApiDeployment {
+    public class ApiDeployment : IBranchedDeployment, IDeployedSite {
         public int Id { get; set; }
         public string BranchName { get; set; }
         public string PublicURL { get; set; }
@@ -27,6 +27,8 @@ namespace deployment_tracker.Models.API {
         public int EnvironmentId { get; set; }
         public string Status { get; set; }
         public string TeardownUrl { get; set; }
+
+        public string JiraUrl { get; set; }
 
         public Login SiteLogin { get; set; }
 

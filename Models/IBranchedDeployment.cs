@@ -15,24 +15,10 @@
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
-using System.ComponentModel.DataAnnotations;
-
 using deployment_tracker.Models;
 
-namespace deployment_tracker.Models.API {
-    public class ApiNewDeployment : IBranchedDeployment, IDeployedSite {
-
-        [Required]
-        public string BranchName { get; set; }
-
-        [Required]
-        public string SiteName { get; set; }
-
-        [Required]
-        public string PublicURL { get; set; }
-
-        public int EnvironmentId { get; set; }
-
-        public Login SiteLogin { get; set; }
+namespace deployment_tracker.Models {
+    public interface IBranchedDeployment {
+        string BranchName { get; }
     }
 }

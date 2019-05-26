@@ -35,6 +35,7 @@ using deployment_tracker.Services.Identity;
 using deployment_tracker.Services.Identity.Mock;
 using deployment_tracker.Services.DeploymentManagement;
 using deployment_tracker.Services.Token;
+using deployment_tracker.Services.Jira;
 using deployment_tracker.Hubs;
 
 using Microsoft.EntityFrameworkCore;
@@ -77,6 +78,7 @@ namespace deployment_tracker
                 Logger.LogError("No identity source has been configured");
             }
 
+            services.AddSingleton<IJiraService, JiraService>();
             services.AddSingleton<IDeploymentManager, JenkinsDeploymentManager>();
             services.AddSingleton<ITokenVerifier, TokenVerifier>();
 

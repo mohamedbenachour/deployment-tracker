@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using deployment_tracker.Services.DeploymentManagement;
 using Microsoft.AspNetCore.Identity;
 using deployment_tracker.Services.Identity;
+using deployment_tracker.Services.Jira;
 using deployment_tracker.Services;
 
 namespace deployment_tracker.Controllers
@@ -28,20 +29,23 @@ namespace deployment_tracker.Controllers
     {
         private DeploymentAppContext Context { get; }
         private IDeploymentManager DeploymentManager { get; }
+        private IJiraService JiraService { get; }
 
         public EnvironmentController(DeploymentAppContext context,
         IDeploymentManager deploymentManager,
         IRequestState requestState,
         UserManager<ApplicationUser> userManager,
+        IJiraService jiraService,
         IUserStore<ApplicationUser> userStore) : base(requestState, userManager) {
             Context = context;
             DeploymentManager = deploymentManager;
+            JiraService = jiraService;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<ApiEnvironment>> Environments()
         {
-            var environments = new ListEnvironments(Context, new ApiDeploymentHydrator(DeploymentManager)).Fetch();
+            var environments = new ListEnvironments(Context, new ApiDeploymentHydrator(DeploymentManager, JiraService)).Fetch();
 
             return Ok(environments);
         }
