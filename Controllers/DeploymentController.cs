@@ -16,6 +16,8 @@ using deployment_tracker.Actions.Deployments;
 using deployment_tracker.Services.DeploymentManagement;
 using deployment_tracker.Services;
 using deployment_tracker.Services.Identity;
+using deployment_tracker.Services.Jira;
+
 using deployment_tracker.Hubs;
 
 using Microsoft.AspNetCore.Authorization;
@@ -41,9 +43,10 @@ namespace deployment_tracker.Controllers
             IRequestState requestState,
             UserManager<ApplicationUser> userManager,
             IDeploymentManager deploymentManager,
+            IJiraService jiraService,
             IHubContext<DeploymentHub, IDeploymentClient> hubContext) : base(requestState, userManager) {
             Context = context;
-            Hydrator = new ApiDeploymentHydrator(deploymentManager);
+            Hydrator = new ApiDeploymentHydrator(deploymentManager, jiraService);
             Reporter = new ReportDeploymentChange(hubContext);
         }
 

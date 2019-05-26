@@ -15,12 +15,32 @@ const renderStatus = (status) => {
     return <Icon type="close-circle" theme="filled" />;
 };
 
-const renderTitle = ({ branchName, status, publicURL }) => {
+const renderJiraLink = (jiraUrl) => {
+    if (jiraUrl) {
+        return (
+            <a href={jiraUrl} target="_blank" style={{ marginLeft: 10 }}>
+                <Button
+                    size="small"
+                    type="link"
+                >
+                    {'Jira'}
+                </Button>
+            </a>
+        );
+    }
+
+    return <React.Fragment />;
+};
+
+const renderTitle = ({ branchName, status, publicURL, jiraUrl }) => {
     if (statusIsRunning(status)) {
         return (
-            <a href={publicURL} target="_blank">{`${branchName}`}
-                <Icon type="select" style={{ marginLeft: 10 }} />
-            </a>
+            <React.Fragment>
+                <a href={publicURL} target="_blank">{`${branchName}`}
+                    <Icon type="select" style={{ marginLeft: 10 }} />
+                </a>
+                {renderJiraLink(jiraUrl)}
+            </React.Fragment>
         );
     }
 

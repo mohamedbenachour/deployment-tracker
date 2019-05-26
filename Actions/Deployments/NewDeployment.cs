@@ -51,7 +51,7 @@ namespace deployment_tracker.Actions.Deployments
 
                 newDeployment.PublicURL = Deployment.PublicURL;
                 newDeployment.Status = DeploymentStatus.RUNNING;
-                newDeployment.SiteLogin = Deployment.SiteLogin;
+                newDeployment.SiteLogin = Deployment.SiteLogin ?? new Login();
                 
                 await Context.SaveChangesAsync();
 
