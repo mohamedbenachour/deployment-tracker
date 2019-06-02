@@ -16,11 +16,18 @@ namespace deployment_tracker.Services.Jira {
 
         public JiraService(IConfiguration configuration, ILogger<JiraService> logger) {
             Configuration = new JiraConfiguration(configuration, logger);
-            StatusMapper = new JiraStatusMapper(Configuration.StatusMapping);
-            Cache = new JiraDetailCache();
+
+            if (Configuration.Enabled) {
+                StatusMapper = new JiraStatusMapper(Configuration.StatusMapping);
+                Cache = new JiraDetailCache();
+            }
         }
 
         public string GetJiraUrl(IBranchedDeployment deployment) {
+            if (!Configuration.Enabled) {
+                return null;
+            }
+
             var jiraIssue = GetJiraIssue(deployment);
 
             if (jiraIssue != null) {
@@ -30,10 +37,19 @@ namespace deployment_tracker.Services.Jira {
             return null;
         }
 
-        public string GetJiraIssue(IBranchedDeployment deployment)
-            => GetJiraKey(deployment.BranchName);
+        public string GetJiraIssue(IBranchedDeployment deployment) {
+            if (!Configuration.Enabled) {
+                return null;
+            }
+
+            return GetJiraKey(deployment.BranchName);
+        }
 
         public async Task<JiraStatus> GetJiraStatus(IBranchedDeployment deployment) {
+            if (!Configuration.Enabled) {
+                return JiraStatus.UNKNOWN;
+            }
+
             var jiraIssue = GetJiraIssue(deployment);
 
             return await new JiraStatusFetcher(GetFetcher(), StatusMapper).Fetch(jiraIssue);
@@ -49,6 +65,14 @@ namespace deployment_tracker.Services.Jira {
     class JiraConfiguration {
         public JiraConfiguration(IConfiguration configuration, ILogger logger) {
             var jiraConfiguration = configuration.GetSection("Jira");
+
+            Enabled = Boolean.Parse(jiraConfiguration[nameof(Enabled)]);
+
+            if (!Enabled) {
+                return;
+            }
+
+            logger.LogInformation("Jira integration is enabled");
 
             BaseUrl = jiraConfiguration[nameof(BaseUrl)];
 
@@ -84,6 +108,7 @@ namespace deployment_tracker.Services.Jira {
             StatusMapping[JiraStatus.IN_PROGRESS] = inProgressList;
         }
 
+        public bool Enabled { get; private set; }
         public string BaseUrl { get; private set; }
         public string SiteProjectKey { get; private set; }
         public LoginInformation JiraLogin { get; private set; }

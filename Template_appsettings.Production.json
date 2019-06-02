@@ -41,6 +41,7 @@
     }
   },
   "Jira": {
+    "Enabled": true,
     "BaseUrl": "https://<jira-url>",
     "SiteProjectKey": "<project-key>",
     "User": {
