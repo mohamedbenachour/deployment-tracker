@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 using deployment_tracker.Models.API;
 using deployment_tracker.Services.DeploymentManagement;
 using deployment_tracker.Services.Jira;
@@ -14,11 +16,19 @@ namespace deployment_tracker.Actions.Deployments {
             JiraService = jiraService;
         }
 
-        public void Hydrate(ApiDeployment deployment) {
+        public async Task Hydrate(ApiDeployment deployment) {
             if (deployment.Status == DeploymentStatus.RUNNING.ToString()) {
                 deployment.TeardownUrl = DeploymentManager.GetTeardownUrl(deployment);
             }
-            deployment.JiraUrl = JiraService.GetJiraUrl(deployment);
+
+            var jiraUrl = JiraService.GetJiraUrl(deployment);
+
+            if (jiraUrl != null) {
+                deployment.Jira = new JiraInformation {
+                    Url = jiraUrl,
+                    Status = (await JiraService.GetJiraStatus(deployment)).ToString()
+                };
+            }
         }
     }
 }

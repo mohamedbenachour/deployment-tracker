@@ -42,6 +42,10 @@
   },
   "Jira": {
     "BaseUrl": "https://<jira-url>",
-    "SiteProjectKey": "<project-key>"
+    "SiteProjectKey": "<project-key>",
+    "StatusIdMapping": {
+      "IN_PROGRESS": [1],
+      "RESOLVED": [5]
+    }
   }
 }

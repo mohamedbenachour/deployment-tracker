@@ -1,11 +1,13 @@
 import React from 'react';
-import { List, Typography, Button, Icon, Input, Checkbox } from 'antd';
+import { List, Typography, Button, Icon, Input, Checkbox, Tag } from 'antd';
 
 import { statusIsRunning } from './deployment-status';
 
 import { FormatAsLocalDateTimeString } from '../utils/date-time-formatting';
 
 import NewDeploymentModal from './connected-new-deployment-modal';
+
+import { InProgress, Resolved } from '../jira/status';
 
 const renderStatus = (status) => {
     if (statusIsRunning(status)) {
@@ -15,31 +17,43 @@ const renderStatus = (status) => {
     return <Icon type="close-circle" theme="filled" />;
 };
 
-const renderJiraLink = (jiraUrl) => {
-    if (jiraUrl) {
-        return (
-            <a href={jiraUrl} target="_blank" style={{ marginLeft: 10 }}>
-                <Button
-                    size="small"
-                    type="link"
-                >
-                    {'Jira'}
-                </Button>
-            </a>
-        );
+const getJiraStatusColour = (status) => {
+    if (status === Resolved) {
+        return 'green';
+    }
+    if (status === InProgress) {
+        return 'gold';
     }
 
-    return <React.Fragment />;
+    return 'grey';
 };
 
-const renderTitle = ({ branchName, status, publicURL, jiraUrl }) => {
+const renderJiraDetail = ({ url, status }) => (
+            <React.Fragment>
+                <a href={url} target="_blank" style={{ marginLeft: 10 }}>
+                    <Button
+                        size="small"
+                        type="link"
+                    >
+                        {'Jira'}
+                    </Button>
+                </a>
+                <Tag
+                    color={getJiraStatusColour(status)}
+                    >
+                    {status}
+                </Tag>
+            </React.Fragment>
+        );
+
+const renderTitle = ({ branchName, status, publicURL, jira }) => {
     if (statusIsRunning(status)) {
         return (
             <React.Fragment>
                 <a href={publicURL} target="_blank">{`${branchName}`}
                     <Icon type="select" style={{ marginLeft: 10 }} />
                 </a>
-                {renderJiraLink(jiraUrl)}
+                {jira && renderJiraDetail(jira)}
             </React.Fragment>
         );
     }

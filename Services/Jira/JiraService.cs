@@ -1,13 +1,19 @@
-using deployment_tracker.Models;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.Extensions.Configuration;
+
+using System;
+
+using deployment_tracker.Models;
 
 namespace deployment_tracker.Services.Jira {
     public class JiraService : IJiraService {
         private JiraConfiguration Configuration { get; }
-
+        private JiraStatusMapper StatusMapper { get; }
         public JiraService(IConfiguration configuration) {
             Configuration = new JiraConfiguration(configuration);
+            StatusMapper = new JiraStatusMapper(Configuration.StatusMapping);
         }
 
         public string GetJiraUrl(IBranchedDeployment deployment) {
@@ -23,8 +29,17 @@ namespace deployment_tracker.Services.Jira {
         public string GetJiraIssue(IBranchedDeployment deployment)
             => GetJiraKey(deployment.BranchName);
 
+        public async Task<JiraStatus> GetJiraStatus(IBranchedDeployment deployment) {
+            var jiraIssue = GetJiraIssue(deployment);
+
+            return await new JiraStatusFetcher(GetFetcher(), StatusMapper).Fetch(jiraIssue);
+        }
+
         private string GetJiraKey(string source)
             => new JiraIssueKeyExtractor(Configuration.SiteProjectKey).Extract(source);
+
+        private JiraIssueFetcher GetFetcher()
+            => new JiraIssueFetcher(Configuration.BaseUrl);
     }
 
     class JiraConfiguration {
@@ -33,9 +48,21 @@ namespace deployment_tracker.Services.Jira {
 
             BaseUrl = jiraConfiguration[nameof(BaseUrl)];
             SiteProjectKey = jiraConfiguration[nameof(SiteProjectKey)];
+
+            var jiraStatusMapping = jiraConfiguration.GetSection("StatusIdMapping");
+
+            var resolvedList = new HashSet<int>();
+            var inProgressList = new HashSet<int>();
+
+            jiraStatusMapping.GetSection("RESOLVED").Bind(resolvedList);
+            jiraStatusMapping.GetSection("IN_PROGRESS").Bind(inProgressList);
+
+            StatusMapping[JiraStatus.RESOLVED] = resolvedList;
+            StatusMapping[JiraStatus.IN_PROGRESS] = inProgressList;
         }
 
         public string BaseUrl { get; private set; }
         public string SiteProjectKey { get; private set; }
+        public IDictionary<JiraStatus, ISet<int>> StatusMapping { get; } = new Dictionary<JiraStatus, ISet<int>>();
     }
 }

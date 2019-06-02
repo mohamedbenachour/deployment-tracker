@@ -22,17 +22,19 @@ namespace deployment_tracker.Actions.Environment
             DeploymentHydrator = deploymentHydrator;
         }
 
-        public IEnumerable<ApiEnvironment> Fetch() {
-            return Context.Environments
+        public async Task<IEnumerable<ApiEnvironment>> Fetch() {
+            return (await Context.Environments
                 .Include(env => env.Deployments)
-                .Select(ConvertToApi).ToList();
+                .ToListAsync())
+                .Select(ConvertToApi)
+                .Select(t => t.Result);
         }
 
-        private ApiEnvironment ConvertToApi(DeploymentEnvironment environment) {
+        private async Task<ApiEnvironment> ConvertToApi(DeploymentEnvironment environment) {
             var converted = ApiEnvironment.FromInternal(environment);
 
             foreach (var deployment in converted.Deployments) {
-                DeploymentHydrator.Hydrate(deployment);
+                await DeploymentHydrator.Hydrate(deployment);
             }
 
             return converted;

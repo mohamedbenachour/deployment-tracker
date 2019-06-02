@@ -29,7 +29,7 @@ namespace deployment_tracker.Actions.Deployments {
             if (InternalAction.Succeeded) {
                 Succeeded = true;
                 Result = ApiDeployment.FromInternal(InternalAction.Result);
-                Hydrator.Hydrate(Result);
+                await Hydrator.Hydrate(Result);
 
                 if (PostAction != null) {
                     await PostAction.Perform(Result);

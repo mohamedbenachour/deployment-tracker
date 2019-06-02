@@ -28,7 +28,7 @@ namespace deployment_tracker.Models.API {
         public string Status { get; set; }
         public string TeardownUrl { get; set; }
 
-        public string JiraUrl { get; set; }
+        public JiraInformation Jira { get; set; }
 
         public Login SiteLogin { get; set; }
 
