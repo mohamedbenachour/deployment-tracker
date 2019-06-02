@@ -45,7 +45,7 @@ namespace deployment_tracker.Services.Identity.Mock {
         }
         
         #region createuser
-        public async Task<IdentityResult> CreateAsync(ApplicationUser user, 
+        public Task<IdentityResult> CreateAsync(ApplicationUser user, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -54,7 +54,7 @@ namespace deployment_tracker.Services.Identity.Mock {
         }
         #endregion
 
-        public async Task<IdentityResult> DeleteAsync(ApplicationUser user, 
+        public Task<IdentityResult> DeleteAsync(ApplicationUser user, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();

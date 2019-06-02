@@ -41,7 +41,16 @@
     }
   },
   "Jira": {
+    "Enabled": true,
     "BaseUrl": "https://<jira-url>",
-    "SiteProjectKey": "<project-key>"
+    "SiteProjectKey": "<project-key>",
+    "User": {
+      "UserName": "<user-name-or-blank>",
+      "Password": "<password-or-blank>"
+    },
+    "StatusIdMapping": {
+      "IN_PROGRESS": [1],
+      "COMPLETED": [5]
+    }
   }
 }

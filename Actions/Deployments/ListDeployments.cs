@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+
 using deployment_tracker.Models;
 using deployment_tracker.Models.API;
 
@@ -16,15 +18,15 @@ namespace deployment_tracker.Actions.Deployments
             DeploymentHydrator = deploymentHydrator;
         }
 
-        public IEnumerable<ApiDeployment> Fetch() {
-            return Context.Deployments
-                .Select(ConvertToApi).ToList();
+        public async Task<IEnumerable<ApiDeployment>> Fetch() {
+            return (await Context.Deployments.ToListAsync())
+                .Select(ConvertToApi).Select(t => t.Result);
         }
 
-        private ApiDeployment ConvertToApi(Deployment deployment) {
+        private async Task<ApiDeployment> ConvertToApi(Deployment deployment) {
             var converted = ApiDeployment.FromInternal(deployment);
 
-            DeploymentHydrator.Hydrate(converted);
+            await DeploymentHydrator.Hydrate(converted);
 
             return converted;
         }

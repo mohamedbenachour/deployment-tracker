@@ -51,9 +51,9 @@ namespace deployment_tracker.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Deployment>> Deployments()
+        public async Task<ActionResult<IEnumerable<Deployment>>> Deployments()
         {
-            var deployments = new ListDeployments(Context, Hydrator).Fetch();
+            var deployments = await new ListDeployments(Context, Hydrator).Fetch();
 
             return Ok(deployments);
         }

@@ -43,9 +43,9 @@ namespace deployment_tracker.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ApiEnvironment>> Environments()
+        public async Task<ActionResult<IEnumerable<ApiEnvironment>>> Environments()
         {
-            var environments = new ListEnvironments(Context, new ApiDeploymentHydrator(DeploymentManager, JiraService)).Fetch();
+            var environments = await new ListEnvironments(Context, new ApiDeploymentHydrator(DeploymentManager, JiraService)).Fetch();
 
             return Ok(environments);
         }
