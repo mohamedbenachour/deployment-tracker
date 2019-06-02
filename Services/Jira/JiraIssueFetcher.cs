@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Text;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -11,10 +12,12 @@ namespace deployment_tracker.Services.Jira {
     public class JiraIssueFetcher {
         private string BaseUrl { get; }
         private JiraDetailCache Cache { get; }
+        private LoginInformation Login { get; }
 
-        public JiraIssueFetcher(string baseUrl, JiraDetailCache cache) {
+        public JiraIssueFetcher(string baseUrl, LoginInformation login, JiraDetailCache cache) {
             BaseUrl = baseUrl;
             Cache = cache;
+            Login = login;
         }
 
         public async Task<JiraIssueDetail> Fetch(string jiraIssue) {
@@ -31,6 +34,8 @@ namespace deployment_tracker.Services.Jira {
 
         private async Task<JiraIssueDetail> GetJiraIssue(string jiraIssue) {
             using (HttpClient client = new HttpClient()) {
+                SetAuthentication(client);
+
                 string responseBody = await client.GetStringAsync(GetJiraUrl(jiraIssue));
 
                 DefaultContractResolver contractResolver = new DefaultContractResolver
@@ -43,10 +48,19 @@ namespace deployment_tracker.Services.Jira {
                     ContractResolver = contractResolver
                 });
 
-                //Console.WriteLine($"{jiraDetail.Fields.Status.Name}{jiraDetail.Fields.Status.Id}");
-
                 return jiraDetail;
             }
+        }
+
+
+        private void SetAuthentication(HttpClient client) {
+            if (Login == null) {
+                return;
+            }
+
+            var byteArray = Encoding.ASCII.GetBytes($"{Login.Username}:{Login.Password}");
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
         }
 
         private string GetJiraUrl(string jiraIssue)
