@@ -11,9 +11,12 @@ namespace deployment_tracker.Services.Jira {
     public class JiraService : IJiraService {
         private JiraConfiguration Configuration { get; }
         private JiraStatusMapper StatusMapper { get; }
+        private JiraDetailCache Cache { get; }
+
         public JiraService(IConfiguration configuration) {
             Configuration = new JiraConfiguration(configuration);
             StatusMapper = new JiraStatusMapper(Configuration.StatusMapping);
+            Cache = new JiraDetailCache();
         }
 
         public string GetJiraUrl(IBranchedDeployment deployment) {
@@ -39,7 +42,7 @@ namespace deployment_tracker.Services.Jira {
             => new JiraIssueKeyExtractor(Configuration.SiteProjectKey).Extract(source);
 
         private JiraIssueFetcher GetFetcher()
-            => new JiraIssueFetcher(Configuration.BaseUrl);
+            => new JiraIssueFetcher(Configuration.BaseUrl, Cache);
     }
 
     class JiraConfiguration {

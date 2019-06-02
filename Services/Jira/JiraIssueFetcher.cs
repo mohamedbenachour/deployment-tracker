@@ -10,13 +10,23 @@ namespace deployment_tracker.Services.Jira {
 
     public class JiraIssueFetcher {
         private string BaseUrl { get; }
+        private JiraDetailCache Cache { get; }
 
-        public JiraIssueFetcher(string baseUrl) {
+        public JiraIssueFetcher(string baseUrl, JiraDetailCache cache) {
             BaseUrl = baseUrl;
+            Cache = cache;
         }
 
         public async Task<JiraIssueDetail> Fetch(string jiraIssue) {
-            return await GetJiraIssue(jiraIssue);
+            var jiraDetail = Cache.Get(jiraIssue);
+
+            if (jiraDetail == null) {
+                jiraDetail = await GetJiraIssue(jiraIssue);
+
+                Cache.Store(jiraIssue, jiraDetail);
+            }
+
+            return jiraDetail;
         }
 
         private async Task<JiraIssueDetail> GetJiraIssue(string jiraIssue) {
