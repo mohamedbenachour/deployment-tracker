@@ -49,7 +49,7 @@
     },
     "StatusIdMapping": {
       "IN_PROGRESS": [1],
-      "RESOLVED": [5]
+      "COMPLETED": [5]
     }
   }
 }

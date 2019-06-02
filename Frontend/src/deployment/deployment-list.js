@@ -7,7 +7,7 @@ import { FormatAsLocalDateTimeString } from '../utils/date-time-formatting';
 
 import NewDeploymentModal from './connected-new-deployment-modal';
 
-import { InProgress, Resolved } from '../jira/status';
+import { InProgress, Completed } from '../jira/status';
 
 const renderStatus = (status) => {
     if (statusIsRunning(status)) {
@@ -18,7 +18,7 @@ const renderStatus = (status) => {
 };
 
 const getJiraStatusColour = (status) => {
-    if (status === Resolved) {
+    if (status === Completed) {
         return 'green';
     }
     if (status === InProgress) {

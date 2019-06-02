@@ -74,13 +74,13 @@ namespace deployment_tracker.Services.Jira {
 
             var jiraStatusMapping = jiraConfiguration.GetSection("StatusIdMapping");
 
-            var resolvedList = new HashSet<int>();
+            var completedList = new HashSet<int>();
             var inProgressList = new HashSet<int>();
 
-            jiraStatusMapping.GetSection("RESOLVED").Bind(resolvedList);
+            jiraStatusMapping.GetSection("COMPLETED").Bind(completedList);
             jiraStatusMapping.GetSection("IN_PROGRESS").Bind(inProgressList);
 
-            StatusMapping[JiraStatus.RESOLVED] = resolvedList;
+            StatusMapping[JiraStatus.COMPLETED] = completedList;
             StatusMapping[JiraStatus.IN_PROGRESS] = inProgressList;
         }
 

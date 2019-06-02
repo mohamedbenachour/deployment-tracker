@@ -29,10 +29,10 @@ namespace deployment_tracker.Services.Jira {
                 invertedMapping[id] = JiraStatus.IN_PROGRESS;
             }
 
-            var resolvedIds = statusMapping[JiraStatus.RESOLVED];
+            var completedIds = statusMapping[JiraStatus.COMPLETED];
 
-            foreach(var id in resolvedIds) {
-                invertedMapping[id] = JiraStatus.RESOLVED;
+            foreach(var id in completedIds) {
+                invertedMapping[id] = JiraStatus.COMPLETED;
             }
 
             return invertedMapping;
