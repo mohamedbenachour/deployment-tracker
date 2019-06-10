@@ -16,12 +16,23 @@
         {
             return Xsrf.GetAndStoreTokens(Context).RequestToken;
         }
+
+        public object GetPageData()
+        {
+            if (ViewData.ContainsKey("PageData")) {
+                return Json.Serialize(ViewData["PageData"]);
+            }
+
+            return "null";
+        }
     }
 
     <script>
         var _PAGE_PROPERTIES = {
             csrfToken: "@GetAntiXsrfRequestToken()"
         };
+
+        var _PAGE_DATA = @Html.Raw(@GetPageData());
     </script>
 
     <div class="app-mount-point"></div>

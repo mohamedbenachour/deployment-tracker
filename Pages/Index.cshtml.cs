@@ -6,14 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
 
+using deployment_tracker.Services.Configuration;
+
 namespace deployment_tracker.Pages
 {
     [Authorize]
     public class IndexModel : PageModel
     {
+
+        private ConfigurationService ConfigurationService { get; }
+
+        public IndexModel(ConfigurationService configurationService) {
+            ConfigurationService = configurationService;
+        }
+
         public void OnGet()
         {
-
+            ViewData["PageData"] = new {
+                AllowManualDeploymentsToBeAdded = ConfigurationService.GetAllowManualDeploymentsToBeAdded()
+            };
         }
     }
 }

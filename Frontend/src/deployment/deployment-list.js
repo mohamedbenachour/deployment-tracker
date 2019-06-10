@@ -9,6 +9,8 @@ import NewDeploymentModal from './connected-new-deployment-modal';
 
 import { InProgress, Completed } from '../jira/status';
 
+import { getPageData } from '../utils/page-data';
+
 const renderStatus = (status) => {
     if (statusIsRunning(status)) {
         return <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />;
@@ -92,13 +94,27 @@ const renderDeploymentItem = (deployment) => (
     </List.Item>
 );
 
+const renderAddDeploymentButton = (addDeployment) => {
+    if (getPageData().allowManualDeploymentsToBeAdded) {
+        return <Button
+            onClick={addDeployment}
+            type="primary"
+            shape="circle"
+            icon="plus"
+            style={{ marginRight: 10 }}
+            size="small" />;
+    }
+
+    return <React.Fragment />;
+};
+
 const renderHeader = (branchNameFilter, addDeployment, onSearch, showDestroyed, onShowDestroyedChange) => (
     <React.Fragment>
-        <Button onClick={addDeployment} type="primary" shape="circle" icon="plus" size="small" />
+        {renderAddDeploymentButton(addDeployment)}
         <Input.Search
             placeholder="Search by branch name"
             onChange={({ target: { value }}) => onSearch(value)}
-            style={{ width: 200, marginLeft: 10, marginRight: 10 }}
+            style={{ width: 200, marginRight: 10 }}
             value={branchNameFilter}
             />
         <Checkbox value={showDestroyed} onChange={({ target: { checked }}) => onShowDestroyedChange(checked)}>{'Show Destroyed'}</Checkbox>

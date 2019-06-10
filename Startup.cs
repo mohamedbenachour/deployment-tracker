@@ -13,7 +13,7 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
- */
+*/
 
 using System;
 using System.Collections.Generic;
@@ -31,6 +31,7 @@ using Microsoft.AspNetCore.Identity;
 
 using deployment_tracker.Models;
 using deployment_tracker.Services;
+using deployment_tracker.Services.Configuration;
 using deployment_tracker.Services.Identity;
 using deployment_tracker.Services.Identity.Mock;
 using deployment_tracker.Services.DeploymentManagement;
@@ -78,6 +79,7 @@ namespace deployment_tracker
                 Logger.LogError("No identity source has been configured");
             }
 
+            services.AddSingleton<ConfigurationService>();
             services.AddSingleton<IJiraService, JiraService>();
             services.AddSingleton<IDeploymentManager, JenkinsDeploymentManager>();
             services.AddSingleton<ITokenVerifier, TokenVerifier>();
