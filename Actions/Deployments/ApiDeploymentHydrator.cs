@@ -17,18 +17,22 @@ namespace deployment_tracker.Actions.Deployments {
         }
 
         public async Task Hydrate(ApiDeployment deployment) {
-            if (deployment.Status == DeploymentStatus.RUNNING.ToString()) {
+            if (SiteIsRunning(deployment)) {
                 deployment.TeardownUrl = DeploymentManager.GetTeardownUrl(deployment);
+
+                var jiraUrl = JiraService.GetJiraUrl(deployment);
+
+                if (jiraUrl != null) {
+                    deployment.Jira = new JiraInformation {
+                        Url = jiraUrl,
+                        Status = (await JiraService.GetJiraStatus(deployment)).ToString()
+                    };
+                }
             }
 
-            var jiraUrl = JiraService.GetJiraUrl(deployment);
-
-            if (jiraUrl != null) {
-                deployment.Jira = new JiraInformation {
-                    Url = jiraUrl,
-                    Status = (await JiraService.GetJiraStatus(deployment)).ToString()
-                };
-            }
         }
+
+        private bool SiteIsRunning(ApiDeployment deployment)
+            => deployment.Status == DeploymentStatus.RUNNING.ToString();
     }
 }
