@@ -40,6 +40,7 @@
       }
     }
   },
+  "AllowManualDeploymentsToBeAdded": false,
   "Jira": {
     "Enabled": true,
     "BaseUrl": "https://<jira-url>",

@@ -1,7 +1,11 @@
 import { createSelector } from 'reselect'
 
 import { getDeployments } from '../environment/selectors'
-import { deploymentIsDestroyed } from './deployment-status';
+import { statusIsRunning, statusIsDestroyed } from './deployment-status';
+
+
+const branchNameMatches = (branchName, filter) =>
+    branchName.toLowerCase().includes(filter.toLowerCase());
 
 export const getBranchNameFilter = ({ deployment: { filters: { branchName } }}) => branchName;
 
@@ -18,5 +22,5 @@ export const getVisibleDeployments = createSelector(
     [getDeployments, getBranchNameFilter, getShowDestroyed],
     (deployments, branchNameFilter, showDestroyed) =>
         sortDeployments(deployments
-        .filter(({ branchName }) => branchName.includes(branchNameFilter))
-        .filter(({ status }) => status === 'RUNNING' || (status === 'DESTROYED' && showDestroyed))));
+        .filter(({ branchName }) => branchNameMatches(branchName, branchNameFilter))
+        .filter(({ status }) => statusIsRunning(status) || (statusIsDestroyed(status) && showDestroyed))));
