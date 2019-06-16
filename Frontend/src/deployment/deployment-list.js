@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Typography, Button, Icon, Input, Checkbox, Tag } from 'antd';
+import { List, Typography, Button, Icon, Input, Checkbox, Tag, Popover } from 'antd';
 
 import { statusIsRunning } from './deployment-status';
 
@@ -63,15 +63,76 @@ const renderTitle = ({ branchName, status, publicURL, jira }) => {
     return branchName;
 };
 
-const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }}) => {
-    const actualName = (name && name.length > 0) ? name : `(${userName})`;
+const renderLoginContent = (fieldName, value, allowCopy = false) => {
+    const labelStyle = {
+        paddingRight: 5,
+    };
+    const valueStyle = {
+        backgroundColor: '#e8e8e8',
+        padding: 5,
+        border: '1px solid',
+        borderRadius: 2
+    };
+
+    valueStyle.borderColor = valueStyle.backgroundColor;
+
+    return (
+    <div style={{ margin: 10}}>
+        <label>
+            <Typography.Text strong style={labelStyle}>{fieldName}</Typography.Text>
+        </label>
+        <Typography.Text style={valueStyle}>{value}</Typography.Text>
+    </div>
+    );
+};
+
+const renderLoginDetail = ({ userName, password }) => {
+    if (!userName) {
+        return <React.Fragment />;
+    }
+
+    return (
+        <Popover
+            content={(
+            <React.Fragment>
+                {renderLoginContent('Username', userName)}
+                {renderLoginContent('Password', password)}
+            </React.Fragment>)}
+            trigger='click'
+        >
+            <Button
+                size="small"
+                type="link"
+            >
+                {'Site Login'}
+            </Button>
+        </Popover>
+    );
+};
+
+const getActualName = (name, userName) => {
+    if (name && name.length > 0) {
+        return name;
+    }
+
+    if (userName && userName.length > 0) {
+        return `(${userName})`;
+    }
+
+    return null;
+};
+
+const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }, siteLogin }) => {
+    const actualName = getActualName(name, userName);
     const deploymentText = statusIsRunning(status) ? 'Deployed' : 'Torndown';
+    const actualDeploymentText = actualName ? `${deploymentText} by` : deploymentText;
 
     return (
         <React.Fragment>
-            <Typography.Text>{`${deploymentText} by: `}</Typography.Text>
-            <Typography.Text strong={true}>{actualName}</Typography.Text>
+            <Typography.Text>{actualDeploymentText}</Typography.Text>
+            {actualName && <Typography.Text strong={true}>{actualName}</Typography.Text>}
             <Typography.Text>{` on ${FormatAsLocalDateTimeString(timestamp)}`}</Typography.Text>
+            {renderLoginDetail(siteLogin)}
         </React.Fragment>
     )
 };
