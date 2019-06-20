@@ -129,7 +129,7 @@ const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }, 
 
     return (
         <React.Fragment>
-            <Typography.Text>{actualDeploymentText}</Typography.Text>
+            <Typography.Text>{`${actualDeploymentText} `}</Typography.Text>
             {actualName && <Typography.Text strong={true}>{actualName}</Typography.Text>}
             <Typography.Text>{` on ${FormatAsLocalDateTimeString(timestamp)}`}</Typography.Text>
             {renderLoginDetail(siteLogin)}
