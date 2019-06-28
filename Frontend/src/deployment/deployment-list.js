@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Typography, Button, Icon, Input, Checkbox, Tag, Popover } from 'antd';
+import { List, Typography, Button, Icon, Input, Checkbox, Tag, Popover, Radio } from 'antd';
 
 import { statusIsRunning } from './deployment-status';
 
@@ -169,7 +169,15 @@ const renderAddDeploymentButton = (addDeployment) => {
     return <React.Fragment />;
 };
 
-const renderHeader = (branchNameFilter, addDeployment, onSearch, showDestroyed, onShowDestroyedChange) => (
+const renderStatusFilter = (statusFilter, onStatusFilterChange) => (
+    <Radio.Group onChange={onStatusFilterChange} value={statusFilter}>
+        <Radio.Button value="running">Running</Radio.Button>
+        <Radio.Button value="completed">Completed</Radio.Button>
+        <Radio.Button value="torndown">Torndown</Radio.Button>
+    </Radio.Group>
+);
+
+const renderHeader = (branchNameFilter, addDeployment, onSearch, statusFilter, onStatusFilterChange) => (
     <React.Fragment>
         {renderAddDeploymentButton(addDeployment)}
         <Input.Search
@@ -178,15 +186,15 @@ const renderHeader = (branchNameFilter, addDeployment, onSearch, showDestroyed, 
             style={{ width: 200, marginRight: 10 }}
             value={branchNameFilter}
             />
-        <Checkbox value={showDestroyed} onChange={({ target: { checked }}) => onShowDestroyedChange(checked)}>{'Show Destroyed'}</Checkbox>
+        {renderStatusFilter(statusFilter, ({ target: { value }}) => onStatusFilterChange(value))}
     </React.Fragment>
 );
 
-const DeploymentList = ({ deployments, isLoading, addDeployment, branchNameFilter, onSearch, showDestroyed, onShowDestroyedChange }) => (
+const DeploymentList = ({ deployments, isLoading, addDeployment, branchNameFilter, onSearch, statusFilter, onStatusFilterChange }) => (
     <React.Fragment>
         <NewDeploymentModal />
         <List
-            header={renderHeader(branchNameFilter, addDeployment, onSearch, showDestroyed, onShowDestroyedChange)}
+            header={renderHeader(branchNameFilter, addDeployment, onSearch, statusFilter, onStatusFilterChange)}
             bordered
             dataSource={deployments}
             loading={isLoading}

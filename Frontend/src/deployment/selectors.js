@@ -9,7 +9,7 @@ const branchNameMatches = (branchName, filter) =>
 
 export const getBranchNameFilter = ({ deployment: { filters: { branchName } }}) => branchName;
 
-export const getShowDestroyed = ({ deployment: {filters: { showDestroyed }}}) => showDestroyed;
+export const getStatusFilter = ({ deployment: { filters: { status }}}) => status;
 
 export const sortDeployments = (deployments) => deployments.sort((dOne, dTwo) => {
     const dOneDate = Date.parse(dOne.modifiedBy.timestamp);
@@ -18,9 +18,45 @@ export const sortDeployments = (deployments) => deployments.sort((dOne, dTwo) =>
     return dOneDate < dTwoDate;
 });
 
+export const getSortedDeployments = createSelector(
+    getDeployments,
+    (deployments) => {
+        const sortedDeployments = deployments;
+
+        sortDeployments(sortedDeployments);
+
+        return sortedDeployments;
+    }
+);
+
+const filterRunningDeployments = ({ status }) => statusIsRunning(status);
+
+const filterTorndownDeployments = ({ status }) => statusIsDestroyed(status);
+
+const filterCompletedDeployments = ({ jira }) => {
+    if (jira) {
+        return jira.status === 'COMPLETED';
+    }
+
+    return false;
+};
+
+const getDeploymentFilterByStatus = createSelector(
+    [getStatusFilter],
+    (status) => {
+        if (status === 'running') {
+            return filterRunningDeployments;
+        } else if (status === 'torndown') {
+            return filterTorndownDeployments;
+        }
+
+        return filterCompletedDeployments;
+    }
+);
+
 export const getVisibleDeployments = createSelector(
-    [getDeployments, getBranchNameFilter, getShowDestroyed],
-    (deployments, branchNameFilter, showDestroyed) =>
-        sortDeployments(deployments
+    [getSortedDeployments, getBranchNameFilter, getDeploymentFilterByStatus],
+    (deployments, branchNameFilter, statusFilter) =>
+        deployments
         .filter(({ branchName }) => branchNameMatches(branchName, branchNameFilter))
-        .filter(({ status }) => statusIsRunning(status) || (statusIsDestroyed(status) && showDestroyed))));
+        .filter(statusFilter));
