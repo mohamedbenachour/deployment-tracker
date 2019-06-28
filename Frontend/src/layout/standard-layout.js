@@ -4,7 +4,7 @@ import { Layout } from 'antd';
 
 const StandardLayout = ({ header, children }) => (
     <Layout>
-        <Layout.Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
+        <Layout.Header style={{ position: 'fixed', zIndex: 100, width: '100%' }}>
             {header || <React.Fragment />}
         </Layout.Header>
         <Layout.Content style={{ marginTop: 64 }}>
