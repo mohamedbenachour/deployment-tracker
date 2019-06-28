@@ -199,6 +199,7 @@ const DeploymentList = ({ deployments, isLoading, addDeployment, branchNameFilte
             dataSource={deployments}
             loading={isLoading}
             renderItem={renderDeploymentItem}
+            pagination={{ pageSize: 5 }}
             />
     </React.Fragment>
 );
