@@ -10,7 +10,7 @@ import {
     DEPLOYMENT_SAVE_STARTED,
     DEPLOYMENT_SAVE_FAILED,
     DEPLOYMENT_SEARCH,
-    DEPLOYMENT_SHOW_DESTROYED,
+    DEPLOYMENT_STATUS_FILTER_CHANGE,
 } from './action-types';
 
 export const deploymentAddClicked = () => ({
@@ -44,8 +44,8 @@ export const deploymentSearch = (searchName) => ({
     searchName,
 });
 
-export const deploymentShowDestroyed = (value) => ({
-    type: DEPLOYMENT_SHOW_DESTROYED,
+export const deploymentStatusFilterChanged = (value) => ({
+    type: DEPLOYMENT_STATUS_FILTER_CHANGE,
     value,
 });
 

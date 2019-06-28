@@ -12,7 +12,7 @@ import {
     DEPLOYMENT_SAVE_STARTED,
     DEPLOYMENT_SAVE_FAILED,
     DEPLOYMENT_SEARCH,
-    DEPLOYMENT_SHOW_DESTROYED
+    DEPLOYMENT_STATUS_FILTER_CHANGE
 } from './action-types';
 
 const getLoadingData = (loading = false) => ({
@@ -27,7 +27,7 @@ const defaultState = {
     deploymentBeingAdded: null,
     filters: {
         branchName: '',
-        showDestroyed: false,
+        status: 'running',
     }
 };
 
@@ -68,9 +68,9 @@ const deploymentReducer = (state = defaultState, action) => {
             });
             break;
 
-        case DEPLOYMENT_SHOW_DESTROYED:
+        case DEPLOYMENT_STATUS_FILTER_CHANGE:
             nextState = produce(state, draftState => {
-                draftState.filters.showDestroyed = action.value;
+                draftState.filters.status = action.value;
             });
             break;
 
