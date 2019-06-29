@@ -40,14 +40,17 @@ namespace deployment_tracker.Services.Jira {
 
         private JiraStatusExtractor StatusExtractor { get; }
 
+        private int MinutesBetweenRefresh { get; }
+
         private bool HasStarted { get; set; } = false;
         private Timer QueueTimer { get; set; }
 
-        public JiraIssueUpdater(JiraIssueClient client, JiraDetailCache cache, JiraStatusExtractor statusExtractor, ReportJiraStatusChange reporter) {
+        public JiraIssueUpdater(JiraIssueClient client, JiraDetailCache cache, int minutesBetweenRefresh, JiraStatusExtractor statusExtractor, ReportJiraStatusChange reporter) {
             Cache = cache;
             Client = client;
             JiraStatusChangeReporter = reporter;
             StatusExtractor = statusExtractor;
+            MinutesBetweenRefresh = minutesBetweenRefresh;
             JiraIssuesToUpdate = new BlockingCollection<string>();
             JiraIssuesToManage = new HashSet<string>();
         }
@@ -63,7 +66,7 @@ namespace deployment_tracker.Services.Jira {
 
             HasStarted = true;
 
-            QueueTimer = new Timer(InternalQueueCycle, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+            QueueTimer = new Timer(InternalQueueCycle, null, TimeSpan.Zero, TimeSpan.FromMinutes(MinutesBetweenRefresh));
             ThreadPool.QueueUserWorkItem(InternalUpdateCycle);
         }
 

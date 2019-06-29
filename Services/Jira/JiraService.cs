@@ -42,7 +42,7 @@ namespace deployment_tracker.Services.Jira {
             if (Configuration.Enabled) {
                 StatusMapper = new JiraStatusMapper(Configuration.StatusMapping);
                 Cache = new JiraDetailCache();
-                Updater = new JiraIssueUpdater(GetClient(), Cache, GetStatusExtractor(), new ReportJiraStatusChange(hubContext));
+                Updater = new JiraIssueUpdater(GetClient(), Cache, Configuration.MinutesBetweenRefresh, GetStatusExtractor(), new ReportJiraStatusChange(hubContext));
 
                 Updater.Start();
             }
@@ -137,6 +137,11 @@ namespace deployment_tracker.Services.Jira {
 
             StatusMapping[JiraStatus.COMPLETED] = completedList;
             StatusMapping[JiraStatus.IN_PROGRESS] = inProgressList;
+
+            var rawMinutesBetweenRefresh = jiraConfiguration[nameof(MinutesBetweenRefresh)];
+            MinutesBetweenRefresh = rawMinutesBetweenRefresh != null ? Int32.Parse(rawMinutesBetweenRefresh) : 10;
+
+            logger.LogInformation($"Refreshing Jira information every {MinutesBetweenRefresh} minutes");
         }
 
         public bool Enabled { get; private set; }
@@ -144,5 +149,6 @@ namespace deployment_tracker.Services.Jira {
         public string SiteProjectKey { get; private set; }
         public LoginInformation JiraLogin { get; private set; }
         public IDictionary<JiraStatus, ISet<int>> StatusMapping { get; } = new Dictionary<JiraStatus, ISet<int>>();
+        public int MinutesBetweenRefresh { get; private set; }
     }
 }
