@@ -20,12 +20,12 @@
     "babel-plugin-import": "^1.12.0",
     "css-loader": "^3.0.0",
     "style-loader": "^0.23.1",
-    "webpack": "^5.0.0-alpha.11",
-    "webpack-cli": "^3.3.4"
+    "webpack": "^5.0.0-alpha.16",
+    "webpack-cli": "^3.3.5"
   },
   "dependencies": {
     "@aspnet/signalr": "^1.1.4",
-    "antd": "^3.19.3",
+    "antd": "^3.19.8",
     "immer": "^3.1.3",
     "luxon": "^1.16.0",
     "react": "^16.8.6",
