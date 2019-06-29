@@ -100,10 +100,18 @@ namespace deployment_tracker.Services.Jira {
             }
 
             if (newStatus != currentStatus) {
-                JiraStatusChangeReporter.Report(jiraIssue, newStatus);
+                ThreadPool.QueueUserWorkItem(async (_) =>
+                    await JiraStatusChangeReporter.Report(jiraIssue, newStatus));
+            }
+
+            if (newStatus == JiraStatus.COMPLETED) {
+                RemoveJiraIssueFromUpdates(jiraIssue);
             }
 
             Cache.Store(jiraIssue, issueDetail);
         }
+
+        private void RemoveJiraIssueFromUpdates(string jiraIssue)
+            => JiraIssuesToManage.Remove(jiraIssue);
     }
 }
