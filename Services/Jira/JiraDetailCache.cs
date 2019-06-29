@@ -32,9 +32,7 @@ namespace deployment_tracker.Services.Jira {
         }
 
         public void Store(string jiraIssue, JiraIssueDetail detail) {
-            Cache.Set(jiraIssue, detail, new MemoryCacheEntryOptions {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
-            });
+            Cache.Set(jiraIssue, detail, new MemoryCacheEntryOptions {});
         }
 
         public JiraIssueDetail Get(string jiraIssue) {

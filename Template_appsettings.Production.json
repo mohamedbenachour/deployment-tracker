@@ -43,6 +43,7 @@
   "AllowManualDeploymentsToBeAdded": false,
   "Jira": {
     "Enabled": true,
+    "MinutesBetweenRefresh": 10,
     "BaseUrl": "https://<jira-url>",
     "SiteProjectKey": "<project-key>",
     "User": {

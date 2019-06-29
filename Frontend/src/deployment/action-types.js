@@ -1,4 +1,3 @@
-
 export const DEPLOYMENT_ADD_CLICKED = 'DAC';
 export const DEPLOYMENT_ADD_BRANCH_NAME_CHANGE = 'DABNC';
 export const DEPLOYMENT_ADD_SITE_NAME_CHANGE = 'DASNC';
@@ -12,3 +11,5 @@ export const DEPLOYMENT_SAVE_FAILED = 'DSF';
 
 export const DEPLOYMENT_SEARCH = 'DSRCH';
 export const DEPLOYMENT_STATUS_FILTER_CHANGE = 'DSFC';
+
+export const JIRA_STATUS_UPDATE = 'JSU';

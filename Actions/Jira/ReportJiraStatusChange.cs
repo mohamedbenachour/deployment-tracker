@@ -15,22 +15,28 @@
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
  
+using deployment_tracker.Actions;
+using deployment_tracker.Models;
+using deployment_tracker.Models.API;
+
 using System;
+using System.Threading.Tasks;
 
-namespace deployment_tracker.Services {
-    public class RequestState : IRequestState {
-        private User CurrentUser { get; set; } = null;
+using deployment_tracker.Hubs;
+using deployment_tracker.Services.Jira;
 
-        public void SetUser(User user) {
-            CurrentUser = user;
+using Microsoft.AspNetCore.SignalR;
+
+namespace deployment_tracker.Actions.Jira {
+    public class ReportJiraStatusChange {
+        private IHubContext<JiraHub, IJiraClient> Hub { get; }
+
+        public ReportJiraStatusChange(IHubContext<JiraHub, IJiraClient> hub) {
+            Hub = hub;
         }
 
-        public User GetUser() {
-            if (CurrentUser == null) {
-                throw new Exception("No user has been set");
-            }
-
-            return CurrentUser;
+        public async Task Report(string jiraIssue, JiraStatus jiraStatus) {
+            await Hub.Clients.All.JiraStatusChange(jiraIssue, jiraStatus.ToString());
         }
     }
 }

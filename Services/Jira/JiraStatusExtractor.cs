@@ -13,24 +13,31 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
- */
- 
+*/
+
 using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Threading;
 
-namespace deployment_tracker.Services {
-    public class RequestState : IRequestState {
-        private User CurrentUser { get; set; } = null;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
-        public void SetUser(User user) {
-            CurrentUser = user;
+namespace deployment_tracker.Services.Jira {
+
+    public class JiraStatusExtractor {
+        private JiraStatusMapper StatusMapper { get; }
+
+        public JiraStatusExtractor(JiraStatusMapper statusMapper) {
+            StatusMapper = statusMapper;
         }
 
-        public User GetUser() {
-            if (CurrentUser == null) {
-                throw new Exception("No user has been set");
+        public JiraStatus GetStatus(JiraIssueDetail issueDetail) {
+            if (issueDetail == null) {
+                return JiraStatus.UNKNOWN;
             }
 
-            return CurrentUser;
+            return StatusMapper.Map(issueDetail.Fields?.Status?.Id ?? -1);
         }
     }
 }

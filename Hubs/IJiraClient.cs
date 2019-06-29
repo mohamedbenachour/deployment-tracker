@@ -15,22 +15,12 @@
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
  
-using System;
+using System.Threading.Tasks;
 
-namespace deployment_tracker.Services {
-    public class RequestState : IRequestState {
-        private User CurrentUser { get; set; } = null;
+using deployment_tracker.Models.API;
 
-        public void SetUser(User user) {
-            CurrentUser = user;
-        }
-
-        public User GetUser() {
-            if (CurrentUser == null) {
-                throw new Exception("No user has been set");
-            }
-
-            return CurrentUser;
-        }
+namespace deployment_tracker.Hubs {
+    public interface IJiraClient {
+        Task JiraStatusChange(string jiraIssue, string jiraStatus);
     }
 }
