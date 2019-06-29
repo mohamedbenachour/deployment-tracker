@@ -43,19 +43,29 @@ namespace deployment_tracker.Services.Jira {
             using (HttpClient client = new HttpClient()) {
                 SetAuthentication(client);
 
-                string responseBody = await client.GetStringAsync(GetJiraUrl(jiraIssue));
+                try {
+                    var response = await client.GetAsync(GetJiraUrl(jiraIssue));
 
-                DefaultContractResolver contractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new CamelCaseNamingStrategy()
-                };
+                    if (!response.IsSuccessStatusCode) {
+                        return null;
+                    }
 
-                var jiraDetail = JsonConvert.DeserializeObject<JiraIssueDetail>(responseBody, new JsonSerializerSettings
-                {
-                    ContractResolver = contractResolver
-                });
+                    DefaultContractResolver contractResolver = new DefaultContractResolver
+                    {
+                        NamingStrategy = new CamelCaseNamingStrategy()
+                    };
 
-                return jiraDetail;
+                    var responseBody = await response.Content.ReadAsStringAsync();
+
+                    var jiraDetail = JsonConvert.DeserializeObject<JiraIssueDetail>(responseBody, new JsonSerializerSettings
+                    {
+                        ContractResolver = contractResolver
+                    });
+
+                    return jiraDetail;
+                } catch (Exception) {
+                    return null;
+                }
             }
         }
 
