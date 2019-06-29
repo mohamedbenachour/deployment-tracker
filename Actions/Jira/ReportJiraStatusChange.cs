@@ -13,34 +13,30 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
-*/
-
-using System.Threading.Tasks;
-using System.Threading;
-using System;
-
-using Microsoft.Extensions.Caching.Memory;
-
+ */
+ 
+using deployment_tracker.Actions;
 using deployment_tracker.Models;
+using deployment_tracker.Models.API;
 
-namespace deployment_tracker.Services.Jira {
-    public class JiraDetailCache {
-        private MemoryCache Cache { get; }
+using System;
+using System.Threading.Tasks;
 
-        public JiraDetailCache() {
-            Cache = new MemoryCache(new MemoryCacheOptions());
+using deployment_tracker.Hubs;
+using deployment_tracker.Services.Jira;
+
+using Microsoft.AspNetCore.SignalR;
+
+namespace deployment_tracker.Actions.Jira {
+    public class ReportJiraStatusChange {
+        private IHubContext<JiraHub, IJiraClient> Hub { get; }
+
+        public ReportJiraStatusChange(IHubContext<JiraHub, IJiraClient> hub) {
+            Hub = hub;
         }
 
-        public void Store(string jiraIssue, JiraIssueDetail detail) {
-            Cache.Set(jiraIssue, detail, new MemoryCacheEntryOptions {});
-        }
-
-        public JiraIssueDetail Get(string jiraIssue) {
-            if (!Cache.TryGetValue(jiraIssue, out JiraIssueDetail detail)) {
-                return null;
-            }
-
-            return detail;
+        public async Task Report(string jiraIssue, JiraStatus jiraStatus) {
+            await Hub.Clients.All.JiraStatusChange(jiraIssue, jiraStatus.ToString());
         }
     }
 }

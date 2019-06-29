@@ -13,7 +13,10 @@ import {
     ENVIRONMENT_NEW
 } from './action-types';
 
-import { DEPLOYMENT_NEW } from '../deployment/action-types';
+import {
+    DEPLOYMENT_NEW,
+    JIRA_STATUS_UPDATE
+} from '../deployment/action-types';
 
 const getLoadingData = (loading = false) => ({
     loading,
@@ -110,6 +113,19 @@ const environmentReducer = (state = defaultState, action) => {
                     environmentAddedTo.deployments.push(action.deployment);
                 }
             });
+
+            case JIRA_STATUS_UPDATE:
+                nextState = produce(state, draftState => {
+                    const allDeployments = draftState.environments.data.flatMap((environment) => environment.deployments);
+                    const deploymentsThatMatchIssue = allDeployments.filter(({ jira }) => {
+                        if (jira) {
+                            return jira.issue === action.jiraIssue;
+                        }
+                        return false;
+                    });
+
+                    deploymentsThatMatchIssue.forEach(({ jira }) => jira.status = action.jiraStatus);
+                });
 
         default:
             break;

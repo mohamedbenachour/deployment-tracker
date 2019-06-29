@@ -116,6 +116,7 @@ namespace deployment_tracker
             app.UseSignalR(routes =>
             {
                 routes.MapHub<DeploymentHub>("/deploymentHub");
+                routes.MapHub<JiraHub>("/jiraHub");
             });
             app.UseMvc();
         }

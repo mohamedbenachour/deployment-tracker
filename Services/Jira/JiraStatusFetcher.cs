@@ -27,11 +27,11 @@ namespace deployment_tracker.Services.Jira {
 
     public class JiraStatusFetcher {
         private JiraIssueFetcher IssueFetcher { get; }
-        private JiraStatusMapper StatusMapper { get; }
+        private JiraStatusExtractor StatusExtractor { get; }
 
-        public JiraStatusFetcher(JiraIssueFetcher issueFetcher, JiraStatusMapper statusMapper) {
+        public JiraStatusFetcher(JiraIssueFetcher issueFetcher, JiraStatusExtractor statusExtractor) {
             IssueFetcher = issueFetcher;
-            StatusMapper = statusMapper;
+            StatusExtractor = statusExtractor;
         }
 
         public async Task<JiraStatus> Fetch(string jiraIssue) {
@@ -41,11 +41,7 @@ namespace deployment_tracker.Services.Jira {
 
             var jiraIssueDetail = await IssueFetcher.Fetch(jiraIssue);
 
-            if (jiraIssueDetail == null) {
-                return JiraStatus.UNKNOWN;
-            }
-
-            return StatusMapper.Map(jiraIssueDetail.Fields?.Status?.Id ?? -1);
+            return StatusExtractor.GetStatus(jiraIssueDetail);
         }
     }
 }

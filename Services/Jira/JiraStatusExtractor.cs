@@ -19,39 +19,25 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Threading;
-using System.Text;
-
-using System.Collections.Concurrent;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace deployment_tracker.Services.Jira {
 
-    public class JiraIssueFetcher {
-        private JiraDetailCache Cache { get; }
-        private JiraIssueClient Client { get; }
+    public class JiraStatusExtractor {
+        private JiraStatusMapper StatusMapper { get; }
 
-        private JiraIssueUpdater Updater { get; }
-
-        public JiraIssueFetcher(JiraIssueClient client, JiraDetailCache cache, JiraIssueUpdater updater) {
-            Client = client;
-            Cache = cache;
-            Updater = updater;
+        public JiraStatusExtractor(JiraStatusMapper statusMapper) {
+            StatusMapper = statusMapper;
         }
 
-        public async Task<JiraIssueDetail> Fetch(string jiraIssue) {
-            var jiraDetail = Cache.Get(jiraIssue);
-
-            if (jiraDetail == null) {
-                jiraDetail = await Client.FetchIssueDetail(jiraIssue);
-
-                Cache.Store(jiraIssue, jiraDetail);
+        public JiraStatus GetStatus(JiraIssueDetail issueDetail) {
+            if (issueDetail == null) {
+                return JiraStatus.UNKNOWN;
             }
 
-            Updater.AddIssueToManage(jiraIssue);
-
-            return jiraDetail;
+            return StatusMapper.Map(issueDetail.Fields?.Status?.Id ?? -1);
         }
     }
 }

@@ -13,34 +13,16 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
-*/
-
+ */
+ 
+using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
-using System.Threading;
-using System;
+using deployment_tracker.Models.API;
 
-using Microsoft.Extensions.Caching.Memory;
-
-using deployment_tracker.Models;
-
-namespace deployment_tracker.Services.Jira {
-    public class JiraDetailCache {
-        private MemoryCache Cache { get; }
-
-        public JiraDetailCache() {
-            Cache = new MemoryCache(new MemoryCacheOptions());
-        }
-
-        public void Store(string jiraIssue, JiraIssueDetail detail) {
-            Cache.Set(jiraIssue, detail, new MemoryCacheEntryOptions {});
-        }
-
-        public JiraIssueDetail Get(string jiraIssue) {
-            if (!Cache.TryGetValue(jiraIssue, out JiraIssueDetail detail)) {
-                return null;
-            }
-
-            return detail;
+namespace deployment_tracker.Hubs {
+    public class JiraHub : Hub<IJiraClient> {
+        public async Task ReportJiraStatusChange(string jiraIssue, string jiraStatus) {
+            await Clients.Others.JiraStatusChange(jiraIssue, jiraStatus);
         }
     }
 }

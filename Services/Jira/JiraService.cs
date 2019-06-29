@@ -20,10 +20,13 @@ using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.SignalR;
 
 using System;
 
 using deployment_tracker.Models;
+using deployment_tracker.Hubs;
+using deployment_tracker.Actions.Jira;
 
 namespace deployment_tracker.Services.Jira {
     public class JiraService : IJiraService {
@@ -31,12 +34,17 @@ namespace deployment_tracker.Services.Jira {
         private JiraStatusMapper StatusMapper { get; }
         private JiraDetailCache Cache { get; }
 
-        public JiraService(IConfiguration configuration, ILogger<JiraService> logger) {
+        private JiraIssueUpdater Updater { get; }
+
+        public JiraService(IConfiguration configuration, ILogger<JiraService> logger, IHubContext<JiraHub, IJiraClient> hubContext) {
             Configuration = new JiraConfiguration(configuration, logger);
 
             if (Configuration.Enabled) {
                 StatusMapper = new JiraStatusMapper(Configuration.StatusMapping);
                 Cache = new JiraDetailCache();
+                Updater = new JiraIssueUpdater(GetClient(), Cache, GetStatusExtractor(), new ReportJiraStatusChange(hubContext));
+
+                Updater.Start();
             }
         }
 
@@ -69,14 +77,20 @@ namespace deployment_tracker.Services.Jira {
 
             var jiraIssue = GetJiraIssue(deployment);
 
-            return await new JiraStatusFetcher(GetFetcher(), StatusMapper).Fetch(jiraIssue);
+            return await new JiraStatusFetcher(GetFetcher(), GetStatusExtractor()).Fetch(jiraIssue);
         }
 
         private string GetJiraKey(string source)
             => new JiraIssueKeyExtractor(Configuration.SiteProjectKey).Extract(source);
 
         private JiraIssueFetcher GetFetcher()
-            => new JiraIssueFetcher(Configuration.BaseUrl, Configuration.JiraLogin, Cache);
+            => new JiraIssueFetcher(GetClient(), Cache, Updater);
+
+        private JiraIssueClient GetClient()
+            => new JiraIssueClient(Configuration.BaseUrl, Configuration.JiraLogin);
+
+        private JiraStatusExtractor GetStatusExtractor()
+            => new JiraStatusExtractor(StatusMapper);
     }
 
     class JiraConfiguration {

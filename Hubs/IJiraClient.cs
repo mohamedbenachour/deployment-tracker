@@ -13,34 +13,14 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
-*/
-
+ */
+ 
 using System.Threading.Tasks;
-using System.Threading;
-using System;
 
-using Microsoft.Extensions.Caching.Memory;
+using deployment_tracker.Models.API;
 
-using deployment_tracker.Models;
-
-namespace deployment_tracker.Services.Jira {
-    public class JiraDetailCache {
-        private MemoryCache Cache { get; }
-
-        public JiraDetailCache() {
-            Cache = new MemoryCache(new MemoryCacheOptions());
-        }
-
-        public void Store(string jiraIssue, JiraIssueDetail detail) {
-            Cache.Set(jiraIssue, detail, new MemoryCacheEntryOptions {});
-        }
-
-        public JiraIssueDetail Get(string jiraIssue) {
-            if (!Cache.TryGetValue(jiraIssue, out JiraIssueDetail detail)) {
-                return null;
-            }
-
-            return detail;
-        }
+namespace deployment_tracker.Hubs {
+    public interface IJiraClient {
+        Task JiraStatusChange(string jiraIssue, string jiraStatus);
     }
 }

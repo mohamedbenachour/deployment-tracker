@@ -20,6 +20,7 @@ import deploymentsReducer from './deployment/reducer';
 import { loadEnvironmentList } from './environment/async-actions';
 
 import DeploymentHubClient from './deployment/deployment-hub-client';
+import JiraHubClient from './jira/jira-hub-client';
 import Notifier from './app/notifier';
 
 const rootReducer = combineReducers({ app: appReducer, environment: environmentsReducer, deployment: deploymentsReducer });
@@ -28,6 +29,7 @@ const store = createStore(rootReducer);
 store.dispatch(loadEnvironmentList());
 
 new DeploymentHubClient(store, new Notifier()).start();
+new JiraHubClient(store).start();
 
 bootstrapToPage(
     <Provider store={store}>

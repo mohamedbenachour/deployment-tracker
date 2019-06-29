@@ -7,7 +7,8 @@ import { FormatAsLocalDateTimeString } from '../utils/date-time-formatting';
 
 import NewDeploymentModal from './connected-new-deployment-modal';
 
-import { InProgress, Completed } from '../jira/status';
+import JiraUrl from '../jira/jira-url';
+import JiraStatusBadge from '../jira/jira-status-badge';
 
 import { getPageData } from '../utils/page-data';
 
@@ -19,34 +20,12 @@ const renderStatus = (status) => {
     return <Icon type="close-circle" theme="filled" />;
 };
 
-const getJiraStatusColour = (status) => {
-    if (status === Completed) {
-        return 'green';
-    }
-    if (status === InProgress) {
-        return 'gold';
-    }
-
-    return 'grey';
-};
-
 const renderJiraDetail = ({ url, status }) => (
-            <React.Fragment>
-                <a href={url} target="_blank" style={{ marginLeft: 10 }}>
-                    <Button
-                        size="small"
-                        type="link"
-                    >
-                        {'Jira'}
-                    </Button>
-                </a>
-                <Tag
-                    color={getJiraStatusColour(status)}
-                    >
-                    {status}
-                </Tag>
-            </React.Fragment>
-        );
+    <React.Fragment>
+        <JiraUrl url={url} style={{ marginLeft: 10 }} />
+        <JiraStatusBadge status={status} />
+    </React.Fragment>
+);
 
 const renderTitle = ({ branchName, status, publicURL, jira }) => {
     if (statusIsRunning(status)) {

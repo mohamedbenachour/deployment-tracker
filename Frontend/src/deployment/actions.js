@@ -11,6 +11,8 @@ import {
     DEPLOYMENT_SAVE_FAILED,
     DEPLOYMENT_SEARCH,
     DEPLOYMENT_STATUS_FILTER_CHANGE,
+
+    JIRA_STATUS_UPDATE
 } from './action-types';
 
 export const deploymentAddClicked = () => ({
@@ -62,4 +64,10 @@ export const deploymentBeingAddedEnvironmentChanged = (environmentId) => ({
 export const newDeployment = (deployment) => ({
     type: DEPLOYMENT_NEW,
     deployment
+});
+
+export const jiraStatusUpdate = (jiraIssue, jiraStatus) => ({
+    type: JIRA_STATUS_UPDATE,
+    jiraIssue,
+    jiraStatus
 });
