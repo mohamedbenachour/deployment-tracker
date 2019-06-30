@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Typography, Button, Icon, Input, Checkbox, Tag, Popover, Radio } from 'antd';
+import { List, Typography, Button, Icon, Input, Popover, Radio, notification } from 'antd';
 
 import { statusIsRunning } from './deployment-status';
 
@@ -42,6 +42,12 @@ const renderTitle = ({ branchName, status, publicURL, jira }) => {
     return branchName;
 };
 
+const copyValue = (value) => {
+    navigator.clipboard.writeText(value).then(() => notification.info({
+        message: 'Copied to clipboard'
+    }));
+};
+
 const renderLoginContent = (fieldName, value, allowCopy = false) => {
     const labelStyle = {
         paddingRight: 5,
@@ -61,6 +67,13 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
             <Typography.Text strong style={labelStyle}>{fieldName}</Typography.Text>
         </label>
         <Typography.Text style={valueStyle}>{value}</Typography.Text>
+        {allowCopy &&
+            <Button
+                icon='copy'
+                onClick={() => copyValue(value)} style={{ marginLeft: 10 }}
+                title='Copy to clipboard'
+            />
+        }
     </div>
     );
 };
@@ -75,7 +88,7 @@ const renderLoginDetail = ({ userName, password }) => {
             content={(
             <React.Fragment>
                 {renderLoginContent('Username', userName)}
-                {renderLoginContent('Password', password)}
+                {renderLoginContent('Password', password, true)}
             </React.Fragment>)}
             trigger='click'
         >
