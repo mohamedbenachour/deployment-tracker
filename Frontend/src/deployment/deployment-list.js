@@ -51,6 +51,9 @@ const copyValue = (value) => {
 const renderLoginContent = (fieldName, value, allowCopy = false) => {
     const labelStyle = {
         paddingRight: 5,
+        userSelect: 'none',
+        '-moz-user-select': 'none',
+        '-webkit-user-select': 'none'
     };
     const valueStyle = {
         backgroundColor: '#e8e8e8',
