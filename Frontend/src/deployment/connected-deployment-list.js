@@ -11,6 +11,8 @@ import { getVisibleDeployments, getBranchNameFilter, getStatusFilter } from './s
 
 import { deploymentAddClicked, deploymentSearch, deploymentStatusFilterChanged } from './actions';
 
+import { teardownDeployment } from './async-actions';
+
 const mapStateToProps = (state) => ({
     deployments: getVisibleDeployments(state),
     isLoading: getLoading(state),
@@ -22,6 +24,7 @@ const mapDispatchToInputProps = dispatch => bindActionCreators({
     addDeployment: deploymentAddClicked,
     onSearch: deploymentSearch,
     onStatusFilterChange: deploymentStatusFilterChanged,
+    teardownDeployment
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToInputProps)(DeploymentList);
