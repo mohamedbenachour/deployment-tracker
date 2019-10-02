@@ -1,4 +1,4 @@
-image: mcr.microsoft.com/dotnet/core/sdk
+image: mcr.microsoft.com/dotnet/core/sdk:2.2
 
 stages:
     - build
@@ -7,7 +7,7 @@ stages:
 server-build:
     stage: build
     before_script:
-    - dotnet tool install -g dotnet-ef
+    - dotnet tool install -g --version 2.2.4 dotnet-ef
     script:
     - dotnet build
     - dotnet ef database update

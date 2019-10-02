@@ -27,3 +27,17 @@ export const addDeployment = () => {
         });
     };
 };
+
+export const teardownDeployment = ({ siteName }) => {
+    return () => {
+        postJSON('/api/deployment/destroyed', { siteName }, () => {
+        }, (error) => {
+            let message = error.title || error;
+
+            notification.error({
+                message: 'Failed to teardown deployment',
+                description: message,
+            });
+        });
+    };
+};
