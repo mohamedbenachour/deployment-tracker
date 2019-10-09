@@ -27,6 +27,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using deployment_tracker.Models;
+using Microsoft.EntityFrameworkCore;
+using deployment_tracker.Persistence;
 
 namespace deployment_tracker
 {
@@ -48,6 +52,8 @@ namespace deployment_tracker
 
             var host = builder.Build();
 
+            RunMigrations(host);
+
             if (isService)
             {
                 // To run the app without the CustomWebHostService change the
@@ -64,6 +70,10 @@ namespace deployment_tracker
 
         public static bool IsService(string[] args)
             => IsWindows() && !(Debugger.IsAttached || args.Contains("--console"));
+
+        private static void RunMigrations(IWebHost host) {
+            MigrationRunner.Run(host);
+        }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
