@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Typography, Button, Icon, Input, Popover, Radio, notification } from 'antd';
+import { List, Typography, Button, Icon, Input, Popover, Radio, notification, Tag } from 'antd';
 
 import { statusIsRunning } from './deployment-status';
 
@@ -27,7 +27,11 @@ const renderJiraDetail = ({ url, status }) => (
     </React.Fragment>
 );
 
-const renderTitle = ({ branchName, status, publicURL, jira }) => {
+const renderType = ({ name }) => (
+    <Tag style={{ marginLeft: 10 }} color="blue">{name}</Tag>
+);
+
+const renderTitle = ({ branchName, status, publicURL, jira, type }) => {
     if (statusIsRunning(status)) {
         return (
             <React.Fragment>
@@ -35,6 +39,7 @@ const renderTitle = ({ branchName, status, publicURL, jira }) => {
                     <Icon type="select" style={{ marginLeft: 10 }} />
                 </a>
                 {jira && renderJiraDetail(jira)}
+                {renderType(type)}
             </React.Fragment>
         );
     }
