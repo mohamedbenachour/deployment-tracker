@@ -12,7 +12,8 @@ import {
     DEPLOYMENT_SAVE_STARTED,
     DEPLOYMENT_SAVE_FAILED,
     DEPLOYMENT_SEARCH,
-    DEPLOYMENT_STATUS_FILTER_CHANGE
+    DEPLOYMENT_STATUS_FILTER_CHANGE,
+    DEPLOYMENT_TYPE_FILTER_CHANGE
 } from './action-types';
 
 const getLoadingData = (loading = false) => ({
@@ -28,6 +29,7 @@ const defaultState = {
     filters: {
         branchName: '',
         status: 'running',
+        type: null
     }
 };
 
@@ -71,6 +73,12 @@ const deploymentReducer = (state = defaultState, action) => {
         case DEPLOYMENT_STATUS_FILTER_CHANGE:
             nextState = produce(state, draftState => {
                 draftState.filters.status = action.value;
+            });
+            break;
+
+        case DEPLOYMENT_TYPE_FILTER_CHANGE:
+            nextState = produce(state, draftState => {
+                draftState.filters.type = action.typeId;
             });
             break;
 

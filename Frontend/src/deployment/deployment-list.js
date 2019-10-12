@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Typography, Button, Icon, Input, Popover, Radio, notification, Tag } from 'antd';
+import { List, Typography, Button, Icon, Input, Popover, Radio, notification, Tag, Select } from 'antd';
 
 import { statusIsRunning } from './deployment-status';
 
@@ -169,6 +169,22 @@ const renderAddDeploymentButton = (addDeployment) => {
     return <React.Fragment />;
 };
 
+const renderTypeOptions = (types) => types.map(({ id, name }) => (
+    <Select.Option key={id} value={id}>
+        {name}
+    </Select.Option>
+));
+
+const renderTypeFilter = (typeFilter, types, onChange) => (
+    <Select
+        value={typeFilter}
+        onChange={onChange}
+        style={{ width: 120, marginLeft: 10 }}
+        >
+        {renderTypeOptions(types)}
+    </Select>
+);
+
 const renderStatusFilter = (statusFilter, onStatusFilterChange) => (
     <Radio.Group onChange={onStatusFilterChange} value={statusFilter}>
         <Radio.Button value="running">Running</Radio.Button>
@@ -177,7 +193,16 @@ const renderStatusFilter = (statusFilter, onStatusFilterChange) => (
     </Radio.Group>
 );
 
-const renderHeader = (branchNameFilter, addDeployment, onSearch, statusFilter, onStatusFilterChange) => (
+const renderHeader = (
+    branchNameFilter,
+    addDeployment,
+    onSearch,
+    statusFilter,
+    onStatusFilterChange,
+    typeFilter,
+    types,
+    onTypeFilterChange
+    ) => (
     <React.Fragment>
         {renderAddDeploymentButton(addDeployment)}
         <Input.Search
@@ -187,14 +212,35 @@ const renderHeader = (branchNameFilter, addDeployment, onSearch, statusFilter, o
             value={branchNameFilter}
             />
         {renderStatusFilter(statusFilter, ({ target: { value }}) => onStatusFilterChange(value))}
+        {renderTypeFilter(typeFilter, types, onTypeFilterChange)}
     </React.Fragment>
 );
 
-const DeploymentList = ({ deployments, isLoading, addDeployment, branchNameFilter, onSearch, statusFilter, onStatusFilterChange }) => (
+const DeploymentList = ({ 
+    deployments,
+    isLoading,
+    addDeployment,
+    branchNameFilter,
+    onSearch,
+    statusFilter,
+    onStatusFilterChange,
+    typeFilter,
+    types,
+    onTypeFilterChange
+}) => (
     <React.Fragment>
         <NewDeploymentModal />
         <List
-            header={renderHeader(branchNameFilter, addDeployment, onSearch, statusFilter, onStatusFilterChange)}
+            header={renderHeader(
+                branchNameFilter,
+                addDeployment,
+                onSearch,
+                statusFilter,
+                onStatusFilterChange,
+                typeFilter,
+                types,
+                onTypeFilterChange
+                )}
             bordered
             dataSource={deployments}
             loading={isLoading}

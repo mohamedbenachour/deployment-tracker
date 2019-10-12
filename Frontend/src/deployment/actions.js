@@ -11,6 +11,7 @@ import {
     DEPLOYMENT_SAVE_FAILED,
     DEPLOYMENT_SEARCH,
     DEPLOYMENT_STATUS_FILTER_CHANGE,
+    DEPLOYMENT_TYPE_FILTER_CHANGE,
 
     JIRA_STATUS_UPDATE
 } from './action-types';
@@ -70,4 +71,9 @@ export const jiraStatusUpdate = (jiraIssue, jiraStatus) => ({
     type: JIRA_STATUS_UPDATE,
     jiraIssue,
     jiraStatus
+});
+
+export const deploymentTypeFilterChange = (typeId) => ({
+    type: DEPLOYMENT_TYPE_FILTER_CHANGE,
+    typeId
 });
