@@ -6,6 +6,8 @@ stages:
 
 server-build:
     stage: build
+    before_script:
+    - dotnet tool restore
     script:
     - dotnet build
     - dotnet dotnet-ef database update
