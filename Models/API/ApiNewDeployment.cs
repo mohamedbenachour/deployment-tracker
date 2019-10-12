@@ -17,9 +17,8 @@
 
 using System.ComponentModel.DataAnnotations;
 
-using deployment_tracker.Models;
-
-namespace deployment_tracker.Models.API {
+namespace deployment_tracker.Models.API
+{
     public class ApiNewDeployment : IBranchedDeployment, IDeployedSite {
 
         [Required]
@@ -34,5 +33,7 @@ namespace deployment_tracker.Models.API {
         public int EnvironmentId { get; set; }
 
         public Login SiteLogin { get; set; }
+
+        public ApiType Type { get; set; }
     }
 }

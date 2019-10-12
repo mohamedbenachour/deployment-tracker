@@ -14,18 +14,14 @@
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
- 
+
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using deployment_tracker.Models;
 using deployment_tracker.Models.API;
 
 using Microsoft.EntityFrameworkCore;
-using deployment_tracker.Actions;
 
 namespace deployment_tracker.Actions.Deployments
 {
@@ -46,7 +42,7 @@ namespace deployment_tracker.Actions.Deployments
         }
 
         public async Task Perform() {
-            if (IsValidNewDeployment()) {
+            if (await IsValidNewDeployment()) {
                 var matchingDeployment = Context.Deployments
                     .Include(d => d.DeployedEnvironment)
                     .SingleOrDefault(deployment => deployment.BranchName == Deployment.BranchName);
@@ -69,6 +65,7 @@ namespace deployment_tracker.Actions.Deployments
                 newDeployment.PublicURL = Deployment.PublicURL;
                 newDeployment.Status = DeploymentStatus.RUNNING;
                 newDeployment.SiteLogin = Deployment.SiteLogin ?? new Login();
+                newDeployment.Type = await GetTypeForNewDeployment(Deployment);
                 
                 await Context.SaveChangesAsync();
 
@@ -80,7 +77,15 @@ namespace deployment_tracker.Actions.Deployments
             }
         }
 
-        private bool IsValidNewDeployment() {
+        private async Task<Models.Type> GetTypeForNewDeployment(ApiNewDeployment deployment) {
+            if (deployment.Type == null) {
+                return await Context.Types.FirstAsync();
+            }
+
+            return new Models.Type { Id = deployment.Type.Id };
+        }
+
+        private async Task<bool> IsValidNewDeployment() {
             if (String.IsNullOrWhiteSpace(Deployment.BranchName)) {
                 Error = "The deployment branch name must be specified.";
                 return false;
@@ -101,9 +106,16 @@ namespace deployment_tracker.Actions.Deployments
                 return false;
             }
 
-            if (!Context.Environments.Any(env => env.Id == Deployment.EnvironmentId)) {
+            if (!(await Context.Environments.AnyAsync(env => env.Id == Deployment.EnvironmentId))) {
                 Error = "The specified environment does not exist.";
                 return false;
+            }
+
+            if (Deployment.Type != null) {
+                if (!(await Context.Types.AnyAsync(type => type.Id == Deployment.Type.Id))) {
+                    Error = "The specified type does not exist";
+                    return false;
+                }
             }
 
             return true;
