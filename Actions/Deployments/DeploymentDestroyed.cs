@@ -48,15 +48,16 @@ namespace deployment_tracker.Actions.Deployments
 
         public async Task Perform() {
             if (IsValidDeployment()) {
-                var deployment = Context.Deployments
+                var deployments = await Context.Deployments
                 .Include(d => d.DeployedEnvironment)
-                .Single(d => d.SiteName == SiteName);
+                .Where(d => d.SiteName == SiteName)
+                .ToListAsync();
 
-                deployment.Status = DeploymentStatus.DESTROYED;
+                deployments.ForEach(deployment => deployment.Status = DeploymentStatus.DESTROYED);
                 
                 await Context.SaveChangesAsync();
 
-                Result = deployment;
+                Result = deployments.First();
 
                 Succeeded = true;
             } else {

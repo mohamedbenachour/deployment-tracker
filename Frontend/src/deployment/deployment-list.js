@@ -133,16 +133,19 @@ const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }, 
     )
 };
 
-const getActions = ({ teardownUrl, status }) => {
+const getActions = ({ teardownUrl, status, siteName }, teardownDeployment) => {
     if (statusIsRunning(status)) {
-        return [<a href={teardownUrl} target="_blank"><Icon style={{ color: 'red' }} type="stop" /></a>];
+        return [
+            <Icon title="Mark as torndown" type="delete" onClick={() => teardownDeployment({ siteName })} />,
+            <a title="Teardown" href={teardownUrl} target="_blank"><Icon style={{ color: 'red' }} type="stop" /></a>
+        ];
     }
 
     return [];
 };
 
-const renderDeploymentItem = (deployment) => (
-    <List.Item actions={getActions(deployment)}>
+const renderDeploymentItem = (deployment, teardownDeployment) => (
+    <List.Item actions={getActions(deployment, teardownDeployment)}>
         <List.Item.Meta 
             title={renderTitle(deployment)}
             description={renderDescription(deployment)}
@@ -212,7 +215,7 @@ const renderHeader = (
     </React.Fragment>
 );
 
-const DeploymentList = ({ 
+const DeploymentList = ({
     deployments,
     isLoading,
     addDeployment,
@@ -222,7 +225,8 @@ const DeploymentList = ({
     onStatusFilterChange,
     typeFilter,
     types,
-    onTypeFilterChange
+    onTypeFilterChange,
+    teardownDeployment
 }) => (
     <React.Fragment>
         <NewDeploymentModal />
@@ -240,7 +244,7 @@ const DeploymentList = ({
             bordered
             dataSource={deployments}
             loading={isLoading}
-            renderItem={renderDeploymentItem}
+            renderItem={(deployment) => renderDeploymentItem(deployment, teardownDeployment)}
             pagination={{ pageSize: 10 }}
             />
     </React.Fragment>
