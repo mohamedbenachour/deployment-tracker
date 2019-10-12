@@ -42,6 +42,7 @@ namespace deployment_tracker.Actions.Environment
         public async Task<IEnumerable<ApiEnvironment>> Fetch() {
             return (await Context.Environments
                 .Include(env => env.Deployments)
+                .ThenInclude(d => d.Type)
                 .ToListAsync())
                 .Select(ConvertToApi)
                 .Select(t => t.Result);

@@ -15,15 +15,10 @@
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Threading;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
-namespace deployment_tracker.Services.Jira {
+namespace deployment_tracker.Services.Jira
+{
 
     public class JiraStatusFetcher {
         private JiraIssueFetcher IssueFetcher { get; }

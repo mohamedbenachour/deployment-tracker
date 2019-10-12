@@ -14,26 +14,15 @@
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
+ 
+namespace deployment_tracker.Models.API {
+    public class ApiType {
+        public int Id { get; set; }
+        public string Name { get; set; }
 
-using System.ComponentModel.DataAnnotations;
-
-namespace deployment_tracker.Models.API
-{
-    public class ApiNewDeployment : IBranchedDeployment, IDeployedSite {
-
-        [Required]
-        public string BranchName { get; set; }
-
-        [Required]
-        public string SiteName { get; set; }
-
-        [Required]
-        public string PublicURL { get; set; }
-
-        public int EnvironmentId { get; set; }
-
-        public Login SiteLogin { get; set; }
-
-        public ApiType Type { get; set; }
+        public static ApiType FromInternal(Type type) => new ApiType {
+            Id = type.Id,
+            Name = type.Name
+        };
     }
 }

@@ -11,5 +11,6 @@ export const DEPLOYMENT_SAVE_FAILED = 'DSF';
 
 export const DEPLOYMENT_SEARCH = 'DSRCH';
 export const DEPLOYMENT_STATUS_FILTER_CHANGE = 'DSFC';
+export const DEPLOYMENT_TYPE_FILTER_CHANGE = 'DTFS';
 
 export const JIRA_STATUS_UPDATE = 'JSU';

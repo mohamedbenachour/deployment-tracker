@@ -28,6 +28,8 @@ namespace deployment_tracker.Models.API {
         public string Status { get; set; }
         public string TeardownUrl { get; set; }
 
+        public ApiType Type { get; set; }
+
         public JiraInformation Jira { get; set; }
 
         public Login SiteLogin { get; set; }
@@ -45,7 +47,8 @@ namespace deployment_tracker.Models.API {
                 Status = toConvert.Status.ToString(),
                 CreatedBy = toConvert.CreatedBy,
                 ModifiedBy = toConvert.ModifiedBy,
-                SiteLogin = toConvert.SiteLogin
+                SiteLogin = toConvert.SiteLogin,
+                Type = ApiType.FromInternal(toConvert.Type)
             };
         }
     }

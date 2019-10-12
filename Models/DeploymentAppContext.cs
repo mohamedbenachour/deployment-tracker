@@ -46,6 +46,9 @@ namespace deployment_tracker.Models
             modelBuilder.Entity<Deployment>()
                 .Property(d => d.Status)
                 .HasConversion(converter);
+
+            modelBuilder.Entity<Type>()
+                .HasData(new { Id = 1, Name = "Default"});
         }
 
         private void SetAuditDetails() {
@@ -87,6 +90,7 @@ namespace deployment_tracker.Models
 
         public DbSet<DeploymentEnvironment> Environments { get; set; }
         public DbSet<Deployment> Deployments { get; set; }
+        public DbSet<Type> Types { get; set; }
     }
 
     public enum DeploymentStatus {
@@ -94,11 +98,28 @@ namespace deployment_tracker.Models
         DESTROYED
     }
 
+    public class Type
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(200, MinimumLength = 3)]
+        public string Name { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
+        public virtual IList<Deployment> Deployments { get; set;} = new List<Deployment>();
+    }
+
     public class Deployment : IAuditable, IBranchedDeployment, IDeployedSite {
         [Key]
         public int Id { get; set; }
 
         public virtual DeploymentEnvironment DeployedEnvironment { get; set; }
+
+        public virtual Type Type { get; set; }
 
         [Required]
         [StringLength(200, MinimumLength = 3)]
@@ -164,7 +185,7 @@ namespace deployment_tracker.Models
         [StringLength(50, MinimumLength = 3)]
         public string Name {get; set; }
 
-        public virtual IList<Deployment> Deployments {get; set;} = new List<Deployment>();
+        public virtual IList<Deployment> Deployments { get; set;} = new List<Deployment>();
 
         [Timestamp]
         public byte[] RowVersion { get; set; }

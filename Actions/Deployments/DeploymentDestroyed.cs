@@ -14,19 +14,13 @@
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
- 
+
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using deployment_tracker.Models;
-using deployment_tracker.Models.API;
 
 using Microsoft.EntityFrameworkCore;
-
-using deployment_tracker.Actions;
 
 namespace deployment_tracker.Actions.Deployments
 {
@@ -47,7 +41,7 @@ namespace deployment_tracker.Actions.Deployments
         }
 
         public async Task Perform() {
-            if (IsValidDeployment()) {
+            if (await IsValidDeployment()) {
                 var deployments = await Context.Deployments
                 .Include(d => d.DeployedEnvironment)
                 .Where(d => d.SiteName == SiteName)
@@ -65,8 +59,8 @@ namespace deployment_tracker.Actions.Deployments
             }
         }
 
-        private bool IsValidDeployment() {
-            var matchingDeployment = Context.Deployments.Any(deployment => deployment.SiteName == SiteName);
+        private async Task<bool> IsValidDeployment() {
+            var matchingDeployment = await Context.Deployments.AnyAsync(deployment => deployment.SiteName == SiteName);
 
             if (!matchingDeployment) {
                 Error = "A deployment with the specified site name does not exist.";

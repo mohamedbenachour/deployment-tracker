@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Typography, Button, Icon, Input, Popover, Radio, notification } from 'antd';
+import { List, Typography, Button, Icon, Input, Popover, Radio, notification, Tag, Select } from 'antd';
 
 import { statusIsRunning } from './deployment-status';
 
@@ -27,7 +27,11 @@ const renderJiraDetail = ({ url, status }) => (
     </React.Fragment>
 );
 
-const renderTitle = ({ branchName, status, publicURL, jira }) => {
+const renderType = ({ name }) => (
+    <Tag style={{ marginLeft: 10 }} color="blue">{name}</Tag>
+);
+
+const renderTitle = ({ branchName, status, publicURL, jira, type }) => {
     if (statusIsRunning(status)) {
         return (
             <React.Fragment>
@@ -35,6 +39,7 @@ const renderTitle = ({ branchName, status, publicURL, jira }) => {
                     <Icon type="select" style={{ marginLeft: 10 }} />
                 </a>
                 {jira && renderJiraDetail(jira)}
+                {renderType(type)}
             </React.Fragment>
         );
     }
@@ -82,10 +87,6 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
 };
 
 const renderLoginDetail = ({ userName, password }) => {
-    if (!userName) {
-        return <React.Fragment />;
-    }
-
     return (
         <Popover
             content={(
@@ -127,7 +128,7 @@ const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }, 
             <Typography.Text>{`${actualDeploymentText} `}</Typography.Text>
             {actualName && <Typography.Text strong={true}>{actualName}</Typography.Text>}
             <Typography.Text>{` on ${FormatAsLocalDateTimeString(timestamp)}`}</Typography.Text>
-            {renderLoginDetail(siteLogin)}
+            {siteLogin && renderLoginDetail(siteLogin)}
         </React.Fragment>
     )
 };
@@ -167,6 +168,22 @@ const renderAddDeploymentButton = (addDeployment) => {
     return <React.Fragment />;
 };
 
+const renderTypeOptions = (types) => types.map(({ id, name }) => (
+    <Select.Option key={id} value={id}>
+        {name}
+    </Select.Option>
+));
+
+const renderTypeFilter = (typeFilter, types, onChange) => (
+    <Select
+        value={typeFilter}
+        onChange={onChange}
+        style={{ width: 120, marginLeft: 10 }}
+        >
+        {renderTypeOptions(types)}
+    </Select>
+);
+
 const renderStatusFilter = (statusFilter, onStatusFilterChange) => (
     <Radio.Group onChange={onStatusFilterChange} value={statusFilter}>
         <Radio.Button value="running">Running</Radio.Button>
@@ -175,7 +192,16 @@ const renderStatusFilter = (statusFilter, onStatusFilterChange) => (
     </Radio.Group>
 );
 
-const renderHeader = (branchNameFilter, addDeployment, onSearch, statusFilter, onStatusFilterChange) => (
+const renderHeader = (
+    branchNameFilter,
+    addDeployment,
+    onSearch,
+    statusFilter,
+    onStatusFilterChange,
+    typeFilter,
+    types,
+    onTypeFilterChange
+    ) => (
     <React.Fragment>
         {renderAddDeploymentButton(addDeployment)}
         <Input.Search
@@ -185,6 +211,7 @@ const renderHeader = (branchNameFilter, addDeployment, onSearch, statusFilter, o
             value={branchNameFilter}
             />
         {renderStatusFilter(statusFilter, ({ target: { value }}) => onStatusFilterChange(value))}
+        {renderTypeFilter(typeFilter, types, onTypeFilterChange)}
     </React.Fragment>
 );
 
@@ -196,12 +223,24 @@ const DeploymentList = ({
     onSearch,
     statusFilter,
     onStatusFilterChange,
+    typeFilter,
+    types,
+    onTypeFilterChange,
     teardownDeployment
 }) => (
     <React.Fragment>
         <NewDeploymentModal />
         <List
-            header={renderHeader(branchNameFilter, addDeployment, onSearch, statusFilter, onStatusFilterChange)}
+            header={renderHeader(
+                branchNameFilter,
+                addDeployment,
+                onSearch,
+                statusFilter,
+                onStatusFilterChange,
+                typeFilter,
+                types,
+                onTypeFilterChange
+                )}
             bordered
             dataSource={deployments}
             loading={isLoading}

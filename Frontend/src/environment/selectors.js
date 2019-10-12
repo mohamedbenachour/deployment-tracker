@@ -8,3 +8,16 @@ export const getDeployments = createSelector(
     [getEnvironments],
     (environments) => environments.flatMap((environment) => environment.deployments || [])
 );
+
+export const getTypes = createSelector(
+    [getDeployments],
+    (deployments) => {
+        const resultKeys = {};
+
+        deployments.forEach(({ type }) => {
+            resultKeys[type.name] = type;
+        });
+
+        return Object.values(resultKeys);
+    }
+);
