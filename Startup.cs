@@ -35,19 +35,19 @@ using deployment_tracker.Services.Jira;
 using deployment_tracker.Hubs;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using System;
 
 namespace deployment_tracker
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Logger = logger;
         }
 
         public IConfiguration Configuration { get; }
-        private ILogger Logger { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -66,12 +66,10 @@ namespace deployment_tracker
 
             // Identity Services
             if (Configuration.GetSection("IdentitySource")["Type"] == "MockStore") {
-                Logger.LogInformation("Using the MockStore identity source");
-
                 services.AddSingleton<IUserStore<ApplicationUser>, MockUserStore>();
                 services.AddTransient<IRoleStore<ApplicationRole>, MockRoleStore>();
             } else {
-                Logger.LogError("No identity source has been configured");
+                throw new Exception("No auth services configured.");
             }
 
             services.AddSingleton<ConfigurationService>();
@@ -84,13 +82,13 @@ namespace deployment_tracker
             services.AddDbContext<DeploymentAppContext>
                 (options => options.UseSqlite(Configuration.GetSection("ConnectionStrings")["Application"]));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddRazorPages();
 
             services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -106,14 +104,17 @@ namespace deployment_tracker
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseAuthentication();
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<DeploymentHub>("/deploymentHub");
-                routes.MapHub<JiraHub>("/jiraHub");
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+                endpoints.MapRazorPages();
+                endpoints.MapHub<DeploymentHub>("/deploymentHub");
+                endpoints.MapHub<JiraHub>("/jiraHub");
             });
-            app.UseMvc();
         }
     }
 }

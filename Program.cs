@@ -14,75 +14,35 @@
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
- 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+
 using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.WindowsServices;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using deployment_tracker.Models;
-using Microsoft.EntityFrameworkCore;
 using deployment_tracker.Persistence;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace deployment_tracker
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var isService = IsService(args);
-
-            if (isService)
-            {
-                var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
-                var pathToContentRoot = Path.GetDirectoryName(pathToExe);
-                Directory.SetCurrentDirectory(pathToContentRoot);
-            }
-
-            var builder = CreateWebHostBuilder(
-                args.Where(arg => arg != "--console").ToArray());
+            var builder = CreateWebHostBuilder(args);
 
             var host = builder.Build();
 
             RunMigrations(host);
 
-            if (isService)
-            {
-                // To run the app without the CustomWebHostService change the
-                // next line to host.RunAsService();
-                host.RunAsService();
-            }
-            else
-            {
-                host.Run();
-            }
+            await host.RunAsync();
         }
 
-        public static bool IsWindows() => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-
-        public static bool IsService(string[] args)
-            => IsWindows() && !(Debugger.IsAttached || args.Contains("--console"));
-
-        private static void RunMigrations(IWebHost host) {
+        private static void RunMigrations(IHost host) {
             MigrationRunner.Run(host);
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureLogging((hostingContext, logging) =>
-                {
-                    if (IsWindows()) {
-                        logging.AddEventLog();
-                    }
-                })
-                .UseStartup<Startup>();
+        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseWindowsService()
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
     }
 }
