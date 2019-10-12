@@ -87,10 +87,6 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
 };
 
 const renderLoginDetail = ({ userName, password }) => {
-    if (!userName) {
-        return <React.Fragment />;
-    }
-
     return (
         <Popover
             content={(
@@ -132,7 +128,7 @@ const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }, 
             <Typography.Text>{`${actualDeploymentText} `}</Typography.Text>
             {actualName && <Typography.Text strong={true}>{actualName}</Typography.Text>}
             <Typography.Text>{` on ${FormatAsLocalDateTimeString(timestamp)}`}</Typography.Text>
-            {renderLoginDetail(siteLogin)}
+            {siteLogin && renderLoginDetail(siteLogin)}
         </React.Fragment>
     )
 };
