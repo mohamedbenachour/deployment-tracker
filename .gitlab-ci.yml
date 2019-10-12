@@ -6,12 +6,10 @@ stages:
 
 server-build:
     stage: build
-    before_script:
-    - dotnet tool install --version 3.0.0 dotnet-ef
     script:
     - dotnet build
-    - dotnet ef database update
-    - dotnet ef migrations script -o database-upgrade.sql
+    - dotnet dotnet-ef database update
+    - dotnet dotnet-ef migrations script -o database-upgrade.sql
     artifacts:
         name: server-database
         paths:
