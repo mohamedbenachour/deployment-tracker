@@ -18,13 +18,13 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Threading;
 using System.Text;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using System.Text.Json;
+using deployment_tracker.Json;
 
-namespace deployment_tracker.Services.Jira {
+namespace deployment_tracker.Services.Jira
+{
 
     public class JiraIssueClient {
         private string BaseUrl { get; }
@@ -50,17 +50,9 @@ namespace deployment_tracker.Services.Jira {
                         return null;
                     }
 
-                    DefaultContractResolver contractResolver = new DefaultContractResolver
-                    {
-                        NamingStrategy = new CamelCaseNamingStrategy()
-                    };
+                    var responseBody = await response.Content.ReadAsStreamAsync();
 
-                    var responseBody = await response.Content.ReadAsStringAsync();
-
-                    var jiraDetail = JsonConvert.DeserializeObject<JiraIssueDetail>(responseBody, new JsonSerializerSettings
-                    {
-                        ContractResolver = contractResolver
-                    });
+                    var jiraDetail = await JsonSerializer.DeserializeAsync<JiraIssueDetail>(responseBody, GetJsonSerializerOptions());
 
                     return jiraDetail;
                 } catch (Exception) {
@@ -68,7 +60,6 @@ namespace deployment_tracker.Services.Jira {
                 }
             }
         }
-
 
         private void SetAuthentication(HttpClient client) {
             if (Login == null) {
@@ -82,5 +73,15 @@ namespace deployment_tracker.Services.Jira {
 
         private string GetJiraUrl(string jiraIssue)
             => $"{BaseUrl}/rest/api/2/issue/{jiraIssue}";
+
+        private JsonSerializerOptions GetJsonSerializerOptions() {
+            var options = new JsonSerializerOptions {
+                PropertyNameCaseInsensitive = true,
+            };
+
+            options.Converters.Add(new IntToStringConverter());
+
+            return options;
+        }
     }
 }
