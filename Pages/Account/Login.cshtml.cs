@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
@@ -11,6 +9,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 using deployment_tracker.Services.Identity;
+using System.Security.Claims;
+using System.Threading;
 
 namespace deployment_tracker.Views.Account
 {
@@ -20,10 +20,13 @@ namespace deployment_tracker.Views.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        private IUserStore<ApplicationUser> UserStore { get; }
+
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, IUserStore<ApplicationUser> userStore)
         {
             _signInManager = signInManager;
             _logger = logger;
+            UserStore = userStore;
         }
 
         [BindProperty]
@@ -59,9 +62,7 @@ namespace deployment_tracker.Views.Account
             returnUrl = returnUrl ?? Url.Content("~/");
 
             // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            await HttpContext.SignOutAsync(ApplicationScheme.Name);
 
             ReturnUrl = returnUrl;
         }
@@ -72,22 +73,36 @@ namespace deployment_tracker.Views.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
-                }
-                else
-                {
+                    var user = await UserStore.FindByNameAsync(Input.UserName, CancellationToken.None);
+
+                    if (user != null ) {
+                        var result = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, Input.RememberMe);
+
+                        if (result.Succeeded) {
+                            var claims = new List<Claim>
+                            {
+                                new Claim("user", Input.UserName),
+                                new Claim("role", "Member")
+                            };
+
+                            await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
+
+                            if (Url.IsLocalUrl(returnUrl))
+                            {
+                                return Redirect(returnUrl);
+                            }
+                            else
+                            {
+                                return Redirect("/");
+                            }
+                        }
+                    }
+
                     _logger.LogInformation("Did not work");
 
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
-            }
 
             // If we got this far, something failed, redisplay form
             return Page();

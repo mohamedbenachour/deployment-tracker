@@ -17,11 +17,8 @@
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 
 using deployment_tracker.Models;
@@ -42,6 +39,9 @@ namespace deployment_tracker
 {
     public class Startup
     {
+        public readonly string CookieScheme = ApplicationScheme.Name;
+        private const string LoginRedirect = "/Account/Login";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -52,22 +52,17 @@ namespace deployment_tracker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-
-           // Add identity types
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddDefaultTokenProviders();
+            services.AddAuthentication(CookieScheme) // Sets the default scheme to cookies
+                .AddCookie(CookieScheme, options =>
+                {
+                    options.LoginPath = LoginRedirect;
+                });
 
             // Identity Services
             if (Configuration.GetSection("IdentitySource")["Type"] == "MockStore") {
-                services.AddSingleton<IUserStore<ApplicationUser>, MockUserStore>();
-                services.AddTransient<IRoleStore<ApplicationRole>, MockRoleStore>();
+                services.AddIdentityCore<ApplicationUser>()
+                    .AddUserStore<MockUserStore>()
+                    .AddSignInManager<SignInManager<ApplicationUser>>();
             } else {
                 throw new Exception("No auth services configured.");
             }
@@ -101,9 +96,7 @@ namespace deployment_tracker
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
 
             app.UseRouting();
             app.UseAuthentication();

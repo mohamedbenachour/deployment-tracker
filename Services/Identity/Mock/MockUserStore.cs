@@ -80,13 +80,15 @@ namespace deployment_tracker.Services.Identity.Mock {
             cancellationToken.ThrowIfCancellationRequested();
             if (userName == null) throw new ArgumentNullException(nameof(userName));
 
-            Logger.LogDebug($"Finding user {userName}");
+            var userNameToFind = userName.ToUpperInvariant();
 
-            if (!UsersStore.ContainsKey(userName)) {
+            Logger.LogDebug($"Finding user {userNameToFind}");
+
+            if (!UsersStore.ContainsKey(userNameToFind)) {
                 return Task.FromResult((ApplicationUser) null);
             }
 
-            return Task.FromResult(UsersStore[userName]);
+            return Task.FromResult(UsersStore[userNameToFind]);
         }
 
         public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
