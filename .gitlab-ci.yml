@@ -10,8 +10,8 @@ server-build:
     - dotnet tool restore
     script:
     - dotnet build
-    - dotnet dotnet-ef database update
-    - dotnet dotnet-ef migrations script -o database-upgrade.sql
+    - dotnet dotnet-ef database update --project DeploymentTrackerCore
+    - dotnet dotnet-ef migrations script -o database-upgrade.sql --project DeploymentTrackerCore
     artifacts:
         name: server-database
         paths:
@@ -37,7 +37,7 @@ linux-publish:
     - client-build
     - server-build
     script:
-    - dotnet publish -c Release -r linux-x64 -o deployment-tracker/
+    - dotnet publish -c Release -r linux-x64 -o deployment-tracker/ --project DeploymentTrackerCore
     - cp deployment.db deployment-tracker/
     - cp database-upgrade.sql deployment-tracker/
     artifacts:
@@ -52,7 +52,7 @@ windows-publish:
     - client-build
     - server-build
     script:
-    - dotnet publish -c Release -r win-x64 -o deployment-tracker/
+    - dotnet publish -c Release -r win-x64 -o deployment-tracker/ --project DeploymentTrackerCore
     - cp deployment.db deployment-tracker/
     artifacts:
         name: deployment-tracker-windows-x64
