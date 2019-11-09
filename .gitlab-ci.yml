@@ -41,6 +41,7 @@ linux-publish:
     - dotnet publish DeploymentTrackerCore -c Release -r linux-x64 -o deployment-tracker/
     - cp deployment.db deployment-tracker/
     - cp database-upgrade.sql deployment-tracker/
+    - mv deployment-tracker/DeploymentTrackerCore deployment-tracker/deployment-tracker
     artifacts:
         name: deployment-tracker-linux-x64
         paths:
@@ -55,6 +56,7 @@ windows-publish:
     script:
     - dotnet publish DeploymentTrackerCore -c Release -r win-x64 -o deployment-tracker/
     - cp deployment.db deployment-tracker/
+    - mv deployment-tracker/DeploymentTrackerCore deployment-tracker/deployment-tracker
     artifacts:
         name: deployment-tracker-windows-x64
         paths:
