@@ -30,7 +30,7 @@ client-build:
     artifacts:
         name: frontend-resources
         paths:
-        - wwwroot
+        - DeploymentTrackerCore/wwwroot
 
 linux-publish:
     stage: publish-artifacts
