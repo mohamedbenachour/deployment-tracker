@@ -38,7 +38,7 @@ linux-publish:
     - client-build
     - server-build
     script:
-    - dotnet publish -c Release -r linux-x64 -o deployment-tracker/ --project DeploymentTrackerCore
+    - dotnet publish DeploymentTrackerCore -c Release -r linux-x64 -o deployment-tracker/
     - cp deployment.db deployment-tracker/
     - cp database-upgrade.sql deployment-tracker/
     artifacts:
@@ -53,7 +53,7 @@ windows-publish:
     - client-build
     - server-build
     script:
-    - dotnet publish -c Release -r win-x64 -o deployment-tracker/ --project DeploymentTrackerCore
+    - dotnet publish DeploymentTrackerCore -c Release -r win-x64 -o deployment-tracker/
     - cp deployment.db deployment-tracker/
     artifacts:
         name: deployment-tracker-windows-x64
