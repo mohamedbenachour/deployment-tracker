@@ -11,6 +11,7 @@ server-build:
     script:
     - dotnet build
     - dotnet dotnet-ef database update --project DeploymentTrackerCore
+    - mv DeploymentTrackerCore/deployment.db .
     - dotnet dotnet-ef migrations script -o database-upgrade.sql --project DeploymentTrackerCore
     artifacts:
         name: server-database
