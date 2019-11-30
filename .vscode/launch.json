@@ -10,9 +10,13 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.0/deployment-tracker.dll",
+            "program": "${workspaceFolder}/DeploymentTrackerCore/bin/Debug/netcoreapp3.0/DeploymentTrackerCore.dll",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/DeploymentTrackerCore",
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+            },
             "stopAtEntry": false,
             "launchBrowser": {
                 "enabled": true
@@ -21,7 +25,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
+                "/Views": "${workspaceFolder}/DeploymentTrackerCore/Views"
             }
         },
         {
