@@ -23,6 +23,8 @@ using System.Threading.Tasks;
 using DeploymentTrackerCore.Services;
 using DeploymentTrackerCore.Services.Identity;
 using DeploymentTrackerCore.Actions;
+using System.Linq;
+using System.Security.Claims;
 
 namespace DeploymentTrackerCore.Controllers {
     public abstract class BaseApiController : Controller {
@@ -44,13 +46,16 @@ namespace DeploymentTrackerCore.Controllers {
             return BadRequest(performer.Error);
         }
 
-        protected async Task SetUser() {
+        protected void SetUser() {
             var user = HttpContext.User;
+
             if (user != null) {
-                var resolvedUser = await Users.GetUserAsync(user);
+                var userName = user.Claims.Single(claim => claim.Type == ClaimTypes.Name).Value;
+                var name = user.Claims.Single(claim => claim.Type == ApplicationClaims.FullName).Value;
+
                 CurrentRequestState.SetUser(new User {
-                    Name = resolvedUser.Name,
-                    Username = resolvedUser.UserName
+                    Name = name,
+                    Username = userName
                 });
             }
         }

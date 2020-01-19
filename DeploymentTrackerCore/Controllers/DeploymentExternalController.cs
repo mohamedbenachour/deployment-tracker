@@ -16,9 +16,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DeploymentTrackerCore.Models;
@@ -26,7 +23,6 @@ using DeploymentTrackerCore.Models.API;
 
 using DeploymentTrackerCore.Actions.Deployments;
 using DeploymentTrackerCore.Services;
-using DeploymentTrackerCore.Services.Identity;
 using DeploymentTrackerCore.Services.DeploymentManagement;
 using DeploymentTrackerCore.Services.Token;
 using DeploymentTrackerCore.Services.Jira;
@@ -35,8 +31,6 @@ using DeploymentTrackerCore.Hubs;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace DeploymentTrackerCore.Controllers
 {

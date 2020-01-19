@@ -34,13 +34,12 @@ using DeploymentTrackerCore.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace DeploymentTrackerCore
 {
     public class Startup
     {
-        public readonly string CookieScheme = ApplicationScheme.Name;
-        private const string LoginRedirect = "/Account/Login";
 
         public Startup(IConfiguration configuration)
         {
@@ -52,11 +51,8 @@ namespace DeploymentTrackerCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(CookieScheme) // Sets the default scheme to cookies
-                .AddCookie(CookieScheme, options =>
-                {
-                    options.LoginPath = LoginRedirect;
-                });
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
 
             // Identity Services
             if (Configuration.GetSection("IdentitySource")["Type"] == "MockStore") {
@@ -98,7 +94,12 @@ namespace DeploymentTrackerCore
 
             app.UseStaticFiles();
 
+            app.UseCookiePolicy(new CookiePolicyOptions {
+                MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Strict
+            });
+
             app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
 

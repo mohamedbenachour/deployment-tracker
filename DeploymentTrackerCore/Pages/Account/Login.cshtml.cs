@@ -11,6 +11,8 @@ using Microsoft.Extensions.Logging;
 using DeploymentTrackerCore.Services.Identity;
 using System.Security.Claims;
 using System.Threading;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System;
 
 namespace DeploymentTrackerCore.Views.Account
 {
@@ -62,7 +64,7 @@ namespace DeploymentTrackerCore.Views.Account
             returnUrl = returnUrl ?? Url.Content("~/");
 
             // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(ApplicationScheme.Name);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             ReturnUrl = returnUrl;
         }
@@ -81,11 +83,20 @@ namespace DeploymentTrackerCore.Views.Account
                         if (result.Succeeded) {
                             var claims = new List<Claim>
                             {
-                                new Claim("user", Input.UserName),
-                                new Claim("role", "Member")
+                                new Claim(ClaimTypes.Name, Input.UserName),
+                                new Claim(ApplicationClaims.FullName, user.Name),
+                                new Claim(ClaimTypes.Role, "Member")
                             };
 
-                            await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, "Cookies", "user", "role")));
+                            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                            new ClaimsPrincipal(identity),
+                            new AuthenticationProperties {
+                                AllowRefresh = true,
+                                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1),
+                                IsPersistent = Input.RememberMe
+                            });
 
                             if (Url.IsLocalUrl(returnUrl))
                             {

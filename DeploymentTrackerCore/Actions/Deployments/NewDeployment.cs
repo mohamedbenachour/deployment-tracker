@@ -91,6 +91,11 @@ namespace DeploymentTrackerCore.Actions.Deployments
                 return false;
             }
 
+            if (String.IsNullOrWhiteSpace(Deployment.SiteName)) {
+                Error = "The deployment site name must be specified.";
+                return false;
+            }
+
             if (String.IsNullOrWhiteSpace(Deployment.PublicURL)) {
                 Error = "The deployment public URL must be specified.";
                 return false;
