@@ -18,7 +18,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,20 +51,21 @@ namespace DeploymentTrackerCore.Models
         }
 
         private void SetAuditDetails() {
+            var auditTime = DateTime.UtcNow;
+            var currentUser = CurrentRequestState.GetUser();
             var applicableEntries = from e in ChangeTracker.Entries()
                            where typeof(IAuditable).IsAssignableFrom(e.Entity.GetType())
                             && (e.State == EntityState.Added
                                || e.State == EntityState.Modified) 
                            select e;
 
+            foreach (var entry in applicableEntries)
+            {
                 var auditDetail = new AuditDetail {
                     Timestamp = DateTime.UtcNow,
                     Name = CurrentRequestState.GetUser().Name,
                     UserName = CurrentRequestState.GetUser().Username
                 };
-
-            foreach (var entry in applicableEntries)
-            {
                 var actualEntity = (IAuditable) entry.Entity;
                 if (entry.State == EntityState.Added) {
                     actualEntity.SetCreatedBy(auditDetail);
