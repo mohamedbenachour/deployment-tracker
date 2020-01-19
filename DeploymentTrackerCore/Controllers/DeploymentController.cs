@@ -14,19 +14,14 @@
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
- 
-using System;
+
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 
 using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Models.API;
-
-using DeploymentTrackerCore.Actions;
 
 using DeploymentTrackerCore.Actions.Deployments;
 
@@ -40,8 +35,6 @@ using DeploymentTrackerCore.Hubs;
 using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.SignalR;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace DeploymentTrackerCore.Controllers
 {
@@ -78,7 +71,7 @@ namespace DeploymentTrackerCore.Controllers
         [HttpPost]
         [Route("destroyed")]
         public async Task<ActionResult<ApiDeployment>> DeploymentDestroyed(ApiDeploymentDestroyed request) {
-            await SetUser();
+            SetUser();
             
             var destroyer = new DeploymentDestroyed(Context, request.SiteName);
             var apiHandler = new ApiActionHandler(destroyer, Hydrator, Reporter);
@@ -89,7 +82,7 @@ namespace DeploymentTrackerCore.Controllers
         [HttpPost]
         public async Task<ActionResult<ApiDeployment>> CreateDeployment(ApiNewDeployment deployment)
         {
-            await SetUser();
+            SetUser();
 
             var creator = new NewDeployment(Context, deployment);
             var apiHandler = new ApiActionHandler(creator, Hydrator, Reporter);

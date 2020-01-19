@@ -14,22 +14,16 @@
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
- 
-using System;
+
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Models.API;
 using Microsoft.AspNetCore.Authorization;
 
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-
 using DeploymentTrackerCore.Actions.Environment;
 using DeploymentTrackerCore.Actions.Deployments;
-using Microsoft.EntityFrameworkCore;
 using DeploymentTrackerCore.Services.DeploymentManagement;
 using Microsoft.AspNetCore.Identity;
 using DeploymentTrackerCore.Services.Identity;
@@ -70,7 +64,7 @@ namespace DeploymentTrackerCore.Controllers
         [HttpDelete]
         [Route("{id}")]
         public async Task<ActionResult> DeleteEnvironment(int id) {
-            await SetUser();
+            SetUser();
 
             var deletor = new DeleteEnvironment(Context, id);
 
@@ -86,7 +80,7 @@ namespace DeploymentTrackerCore.Controllers
         [HttpPost]
         public async Task<ActionResult<ApiEnvironment>> CreateEnvironment(ApiNewEnvironment environment)
         {
-            await SetUser();
+            SetUser();
 
             var creator = new NewEnvironment(Context, environment);
 
