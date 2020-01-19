@@ -44,6 +44,7 @@ namespace DeploymentTrackerCore.Actions.Deployments
             if (await IsValidDeployment()) {
                 var deployments = await Context.Deployments
                 .Include(d => d.DeployedEnvironment)
+                .Include(d => d.Type)
                 .Where(d => d.SiteName == SiteName)
                 .ToListAsync();
 
