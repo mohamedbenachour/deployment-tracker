@@ -41,7 +41,7 @@ const environmentReducer = (state = defaultState, action) => {
             });
 
             break;
-        
+
         case ENVIRONMENT_LIST_LOADED:
             nextState = produce(state, draftState => {
                 draftState.environments = getLoadingData(false);
@@ -49,7 +49,7 @@ const environmentReducer = (state = defaultState, action) => {
             });
 
             break;
-        
+
         case ENVIRONMENT_SAVE_STARTED:
             nextState = produce(state, draftState => {
                 draftState.saveInProgress = true;
@@ -60,7 +60,7 @@ const environmentReducer = (state = defaultState, action) => {
             nextState = produce(state, draftState => {
                 draftState.saveInProgress = false;
             });
-        break;
+            break;
 
         case ENVIRONMENT_ADD_CANCEL:
             nextState = produce(state, draftState => {
@@ -71,24 +71,26 @@ const environmentReducer = (state = defaultState, action) => {
         case ENVIRONMENT_ADD_CLICKED:
             nextState = produce(state, draftState => {
                 draftState.addingAnEnvironment = true;
-                draftState.environmentBeingAdded = { name: '' };
+                draftState.environmentBeingAdded = {
+                    name: ''
+                };
             });
 
             break;
-        
+
         case ENVIRONMENT_ADD_NAME_CHANGE:
             nextState = produce(state, draftState => {
                 draftState.environmentBeingAdded.name = action.name;
             });
 
-        break;
+            break;
 
         case ENVIRONMENT_ADD_HOST_NAME_CHANGE:
-        nextState = produce(state, draftState => {
-            draftState.environmentBeingAdded.hostName = action.hostName;
-        });
+            nextState = produce(state, draftState => {
+                draftState.environmentBeingAdded.hostName = action.hostName;
+            });
 
-        break;
+            break;
 
         case ENVIRONMENT_NEW:
             nextState = produce(state, draftState => {
@@ -99,7 +101,7 @@ const environmentReducer = (state = defaultState, action) => {
                 draftState.environments.data.push(action.environment);
             });
 
-        break;
+            break;
 
         case DEPLOYMENT_NEW:
             nextState = produce(state, draftState => {
@@ -115,19 +117,23 @@ const environmentReducer = (state = defaultState, action) => {
             });
             break;
 
-            case JIRA_STATUS_UPDATE:
-                nextState = produce(state, draftState => {
-                    const allDeployments = draftState.environments.data.flatMap((environment) => environment.deployments);
-                    const deploymentsThatMatchIssue = allDeployments.filter(({ jira }) => {
-                        if (jira) {
-                            return jira.issue === action.jiraIssue;
-                        }
-                        return false;
-                    });
-
-                    deploymentsThatMatchIssue.forEach(({ jira }) => jira.status = action.jiraStatus);
+        case JIRA_STATUS_UPDATE:
+            nextState = produce(state, draftState => {
+                const allDeployments = draftState.environments.data.flatMap((environment) => environment.deployments);
+                const deploymentsThatMatchIssue = allDeployments.filter(({
+                    jira
+                }) => {
+                    if (jira) {
+                        return jira.issue === action.jiraIssue;
+                    }
+                    return false;
                 });
-                break;
+
+                deploymentsThatMatchIssue.forEach(({
+                    jira
+                }) => jira.status = action.jiraStatus);
+            });
+            break;
 
         default:
             break;
