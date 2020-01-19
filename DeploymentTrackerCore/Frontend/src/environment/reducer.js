@@ -113,6 +113,7 @@ const environmentReducer = (state = defaultState, action) => {
                     environmentAddedTo.deployments.push(action.deployment);
                 }
             });
+            break;
 
             case JIRA_STATUS_UPDATE:
                 nextState = produce(state, draftState => {
@@ -126,6 +127,7 @@ const environmentReducer = (state = defaultState, action) => {
 
                     deploymentsThatMatchIssue.forEach(({ jira }) => jira.status = action.jiraStatus);
                 });
+                break;
 
         default:
             break;
