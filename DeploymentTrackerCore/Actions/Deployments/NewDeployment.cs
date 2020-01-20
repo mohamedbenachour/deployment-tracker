@@ -82,7 +82,7 @@ namespace DeploymentTrackerCore.Actions.Deployments
                 return await Context.Types.FirstAsync();
             }
 
-            return new Models.Type { Id = deployment.Type.Id };
+            return await Context.Types.SingleAsync(type => type.Id == deployment.Type.Id);
         }
 
         private async Task<bool> IsValidNewDeployment() {
