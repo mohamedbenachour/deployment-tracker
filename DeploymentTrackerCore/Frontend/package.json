@@ -8,7 +8,9 @@
     "build-production": "webpack --config webpack-prod.config.js",
     "build-watch": "webpack -w",
     "test": "jest",
-    "test-watch": "jest --watch"
+    "test-watch": "jest --watch",
+    "lint": "eslint src/ __tests__/",
+    "lint-fix": "eslint --fix src/ __tests__/"
   },
   "author": "Pramod Dematagoda",
   "license": "GPL-3.0-or-later",
@@ -21,6 +23,12 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-import": "^1.13.0",
     "css-loader": "^3.4.2",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
     "jest": "^25.1.0",
     "jest-junit": "^10.0.0",
     "style-loader": "^1.1.3",
