@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import {
-    bindActionCreators
+    bindActionCreators,
 } from 'redux';
 
 import NewDeploymentModal from './new-deployment-modal';
@@ -12,25 +12,25 @@ import {
     deploymentBeingAddedSiteNameChanged,
     deploymentBeingAddedPublicURLChanged,
     deploymentBeingAddedEnvironmentChanged,
-    deploymentAddCancelled
+    deploymentAddCancelled,
 } from './actions';
 import { addDeployment } from './async-actions';
 
 const mapStateToProps = (state) => {
     const {
         deployment: { deploymentBeingAdded, addingADeployment, saveInProgress },
-        environment: { environments: { data }}
+        environment: { environments: { data } },
     } = state;
 
     return {
-        deploymentBeingAdded: deploymentBeingAdded || { deployedEnvironment : {} },
+        deploymentBeingAdded: deploymentBeingAdded || { deployedEnvironment: {} },
         visible: addingADeployment,
         environments: data || [],
         saveInProgress,
     };
 };
 
-const mapDispatchToInputProps = dispatch => bindActionCreators({
+const mapDispatchToInputProps = (dispatch) => bindActionCreators({
     onBranchNameChange: deploymentBeingAddedBranchNameChanged,
     onSiteNameChange: deploymentBeingAddedSiteNameChanged,
     onPublicUrlChange: deploymentBeingAddedPublicURLChanged,

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import {
-    bindActionCreators
+    bindActionCreators,
 } from 'redux';
 
 import HeaderMenu from './header-menu';
@@ -12,7 +12,7 @@ const mapStateToProps = ({ app: { section } }) => ({
     currentSection: section,
 });
 
-const mapDispatchToInputProps = dispatch => bindActionCreators({
+const mapDispatchToInputProps = (dispatch) => bindActionCreators({
     sectionChanged,
 }, dispatch);
 

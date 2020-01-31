@@ -13,13 +13,13 @@ import {
     DEPLOYMENT_SAVE_FAILED,
     DEPLOYMENT_SEARCH,
     DEPLOYMENT_STATUS_FILTER_CHANGE,
-    DEPLOYMENT_TYPE_FILTER_CHANGE
+    DEPLOYMENT_TYPE_FILTER_CHANGE,
 } from './action-types';
 
 const getLoadingData = (loading = false) => ({
     loading,
     data: null,
-    loadError: null
+    loadError: null,
 });
 
 const defaultState = {
@@ -29,96 +29,96 @@ const defaultState = {
     filters: {
         branchName: '',
         status: 'running',
-        type: null
-    }
+        type: null,
+    },
 };
 
 const deploymentReducer = (state = defaultState, action) => {
     let nextState = state;
 
     switch (action.type) {
-        case DEPLOYMENT_SAVE_STARTED:
-            nextState = produce(state, draftState => { draftState.saveInProgress = true; });
-            break;
-
-        case DEPLOYMENT_SAVE_FAILED:
-            nextState = produce(state, draftState => { draftState.saveInProgress = false; });
+    case DEPLOYMENT_SAVE_STARTED:
+        nextState = produce(state, (draftState) => { draftState.saveInProgress = true; });
         break;
 
-        case DEPLOYMENT_ADD_CANCEL:
-            nextState = produce(state, draftState => {
-                draftState.addingADeployment = false;
-                draftState.deploymentBeingAdded = null;
-            });
-            break;
-        case DEPLOYMENT_ADD_CLICKED:
-            nextState = produce(state, draftState => {
-                draftState.addingADeployment = true;
-                draftState.deploymentBeingAdded = {
-                    branchName: '',
-                    publicURL: 'https://',
-                    environmentId: null,
-                    siteName: '',
-                };
-            });
+    case DEPLOYMENT_SAVE_FAILED:
+        nextState = produce(state, (draftState) => { draftState.saveInProgress = false; });
+        break;
 
-            break;
-        
-        case DEPLOYMENT_SEARCH:
-            nextState = produce(state, draftState => {
-                draftState.filters.branchName = action.searchName;
-            });
-            break;
+    case DEPLOYMENT_ADD_CANCEL:
+        nextState = produce(state, (draftState) => {
+            draftState.addingADeployment = false;
+            draftState.deploymentBeingAdded = null;
+        });
+        break;
+    case DEPLOYMENT_ADD_CLICKED:
+        nextState = produce(state, (draftState) => {
+            draftState.addingADeployment = true;
+            draftState.deploymentBeingAdded = {
+                branchName: '',
+                publicURL: 'https://',
+                environmentId: null,
+                siteName: '',
+            };
+        });
 
-        case DEPLOYMENT_STATUS_FILTER_CHANGE:
-            nextState = produce(state, draftState => {
-                draftState.filters.status = action.value;
-            });
-            break;
+        break;
 
-        case DEPLOYMENT_TYPE_FILTER_CHANGE:
-            nextState = produce(state, draftState => {
-                draftState.filters.type = action.typeId;
-            });
-            break;
+    case DEPLOYMENT_SEARCH:
+        nextState = produce(state, (draftState) => {
+            draftState.filters.branchName = action.searchName;
+        });
+        break;
 
-        case DEPLOYMENT_ADD_BRANCH_NAME_CHANGE:
-            nextState = produce(state, draftState => {
-                draftState.deploymentBeingAdded.branchName = action.branchName;
-            });
+    case DEPLOYMENT_STATUS_FILTER_CHANGE:
+        nextState = produce(state, (draftState) => {
+            draftState.filters.status = action.value;
+        });
+        break;
 
-            break;
+    case DEPLOYMENT_TYPE_FILTER_CHANGE:
+        nextState = produce(state, (draftState) => {
+            draftState.filters.type = action.typeId;
+        });
+        break;
 
-        case DEPLOYMENT_ADD_SITE_NAME_CHANGE:
-            nextState = produce(state, draftState => {
-                draftState.deploymentBeingAdded.siteName = action.siteName;
-            });
+    case DEPLOYMENT_ADD_BRANCH_NAME_CHANGE:
+        nextState = produce(state, (draftState) => {
+            draftState.deploymentBeingAdded.branchName = action.branchName;
+        });
 
-            break;
+        break;
 
-        case DEPLOYMENT_ADD_PUBLIC_URL_CHANGE:
-            nextState = produce(state, draftState => {
-                draftState.deploymentBeingAdded.publicURL = action.publicURL;
-            });
+    case DEPLOYMENT_ADD_SITE_NAME_CHANGE:
+        nextState = produce(state, (draftState) => {
+            draftState.deploymentBeingAdded.siteName = action.siteName;
+        });
 
-            break;
+        break;
 
-        case DEPLOYMENT_ADD_ENVIRONMENT_CHANGE:
-            nextState = produce(state, draftState => {
-                draftState.deploymentBeingAdded.environmentId = action.environmentId;
-            });
+    case DEPLOYMENT_ADD_PUBLIC_URL_CHANGE:
+        nextState = produce(state, (draftState) => {
+            draftState.deploymentBeingAdded.publicURL = action.publicURL;
+        });
 
-            break;
-        
-        case DEPLOYMENT_NEW:
-            nextState = produce(state, draftState => {
-                draftState.saveInProgress = false;
-                draftState.addingADeployment = false;
-                draftState.deploymentBeingAdded = null;
-            });
+        break;
 
-        default:
-            break;
+    case DEPLOYMENT_ADD_ENVIRONMENT_CHANGE:
+        nextState = produce(state, (draftState) => {
+            draftState.deploymentBeingAdded.environmentId = action.environmentId;
+        });
+
+        break;
+
+    case DEPLOYMENT_NEW:
+        nextState = produce(state, (draftState) => {
+            draftState.saveInProgress = false;
+            draftState.addingADeployment = false;
+            draftState.deploymentBeingAdded = null;
+        });
+
+    default:
+        break;
     }
 
     return nextState;

@@ -8,8 +8,8 @@ import Centered from '../layout/centered';
 
 const styles = {
     logoutScreen: {
-        padding: 15
-    }
+        padding: 15,
+    },
 };
 
 const LogoutScreen = ({ classes }) => (

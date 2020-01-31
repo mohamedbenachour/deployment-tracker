@@ -1,5 +1,7 @@
 import React from 'react';
-import { List, Typography, Button, Icon, Input, Popover, Radio, notification, Tag, Select } from 'antd';
+import {
+    List, Typography, Button, Icon, Input, Popover, Radio, notification, Tag, Select,
+} from 'antd';
 
 import { statusIsRunning } from './deployment-status';
 
@@ -21,26 +23,29 @@ const renderStatus = (status) => {
 };
 
 const renderJiraDetail = ({ url, status }) => (
-    <React.Fragment>
+    <>
         <JiraUrl url={url} style={{ marginLeft: 10 }} />
         <JiraStatusBadge status={status} />
-    </React.Fragment>
+    </>
 );
 
 const renderType = ({ name }) => (
     <Tag style={{ marginLeft: 10 }} color="blue">{name}</Tag>
 );
 
-const renderTitle = ({ branchName, status, publicURL, jira, type }) => {
+const renderTitle = ({
+    branchName, status, publicURL, jira, type,
+}) => {
     if (statusIsRunning(status)) {
         return (
-            <React.Fragment>
-                <a href={publicURL} target="_blank">{`${branchName}`}
+            <>
+                <a href={publicURL} target="_blank">
+                    {`${branchName}`}
                     <Icon type="select" style={{ marginLeft: 10 }} />
                 </a>
                 {jira && renderJiraDetail(jira)}
                 {renderType(type)}
-            </React.Fragment>
+            </>
         );
     }
 
@@ -49,7 +54,7 @@ const renderTitle = ({ branchName, status, publicURL, jira, type }) => {
 
 const copyValue = (value) => {
     navigator.clipboard.writeText(value).then(() => notification.info({
-        message: 'Copied to clipboard'
+        message: 'Copied to clipboard',
     }));
 };
 
@@ -58,53 +63,53 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
         paddingRight: 5,
         userSelect: 'none',
         '-moz-user-select': 'none',
-        '-webkit-user-select': 'none'
+        '-webkit-user-select': 'none',
     };
     const valueStyle = {
         backgroundColor: '#e8e8e8',
         padding: 5,
         border: '1px solid',
-        borderRadius: 2
+        borderRadius: 2,
     };
 
     valueStyle.borderColor = valueStyle.backgroundColor;
 
     return (
-    <div style={{ margin: 10}}>
-        <label>
-            <Typography.Text strong style={labelStyle}>{fieldName}</Typography.Text>
-        </label>
-        <Typography.Text style={valueStyle}>{value}</Typography.Text>
-        {allowCopy &&
-            <Button
-                icon='copy'
-                onClick={() => copyValue(value)} style={{ marginLeft: 10 }}
-                title='Copy to clipboard'
-            />
-        }
-    </div>
+        <div style={{ margin: 10 }}>
+            <label>
+                <Typography.Text strong style={labelStyle}>{fieldName}</Typography.Text>
+            </label>
+            <Typography.Text style={valueStyle}>{value}</Typography.Text>
+            {allowCopy
+            && (
+                <Button
+                    icon="copy"
+                  onClick={() => copyValue(value)} style={{ marginLeft: 10 }}
+                  title="Copy to clipboard"
+                />
+            )}
+        </div>
     );
 };
 
-const renderLoginDetail = ({ userName, password }) => {
-    return (
-        <Popover
-            content={(
+const renderLoginDetail = ({ userName, password }) => (
+    <Popover
+      content={(
             <React.Fragment>
-                {renderLoginContent('Username', userName)}
-                {renderLoginContent('Password', password, true)}
-            </React.Fragment>)}
-            trigger='click'
+              {renderLoginContent('Username', userName)}
+              {renderLoginContent('Password', password, true)}
+          </React.Fragment>
+        )}
+        trigger="click"
+    >
+        <Button
+            size="small"
+            type="link"
         >
-            <Button
-                size="small"
-                type="link"
-            >
-                {'Site Login'}
-            </Button>
-        </Popover>
-    );
-};
+            Site Login
+        </Button>
+    </Popover>
+);
 
 const getActualName = (name, userName) => {
     if (name && name.length > 0) {
@@ -124,20 +129,20 @@ const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }, 
     const actualDeploymentText = actualName ? `${deploymentText} by` : deploymentText;
 
     return (
-        <React.Fragment>
+        <>
             <Typography.Text>{`${actualDeploymentText} `}</Typography.Text>
-            {actualName && <Typography.Text strong={true}>{actualName}</Typography.Text>}
+            {actualName && <Typography.Text strong>{actualName}</Typography.Text>}
             <Typography.Text>{` on ${FormatAsLocalDateTimeString(timestamp)}`}</Typography.Text>
             {siteLogin && renderLoginDetail(siteLogin)}
-        </React.Fragment>
-    )
+        </>
+    );
 };
 
 const getActions = ({ teardownUrl, status, siteName }, teardownDeployment) => {
     if (statusIsRunning(status)) {
         return [
             <Icon title="Mark as torndown" type="delete" onClick={() => teardownDeployment({ siteName })} />,
-            <a title="Teardown" href={teardownUrl} target="_blank"><Icon style={{ color: 'red' }} type="stop" /></a>
+            <a title="Teardown" href={teardownUrl} target="_blank"><Icon style={{ color: 'red' }} type="stop" /></a>,
         ];
     }
 
@@ -146,7 +151,7 @@ const getActions = ({ teardownUrl, status, siteName }, teardownDeployment) => {
 
 const renderDeploymentItem = (deployment, teardownDeployment) => (
     <List.Item actions={getActions(deployment, teardownDeployment)}>
-        <List.Item.Meta 
+        <List.Item.Meta
             title={renderTitle(deployment)}
             description={renderDescription(deployment)}
         />
@@ -156,16 +161,19 @@ const renderDeploymentItem = (deployment, teardownDeployment) => (
 
 const renderAddDeploymentButton = (addDeployment) => {
     if (getPageData().allowManualDeploymentsToBeAdded) {
-        return <Button
-            onClick={addDeployment}
-            type="primary"
-            shape="circle"
-            icon="plus"
-            style={{ marginRight: 10 }}
-            size="small" />;
+        return (
+            <Button
+                onClick={addDeployment}
+                type="primary"
+              shape="circle"
+                icon="plus"
+                style={{ marginRight: 10 }}
+                size="small"
+            />
+        );
     }
 
-    return <React.Fragment />;
+    return <></>;
 };
 
 const renderTypeOptions = (types) => types.map(({ id, name }) => (
@@ -179,7 +187,7 @@ const renderTypeFilter = (typeFilter, types, onChange) => (
         value={typeFilter}
         onChange={onChange}
         style={{ width: 120, marginLeft: 10 }}
-        >
+    >
         {renderTypeOptions(types)}
     </Select>
 );
@@ -200,19 +208,19 @@ const renderHeader = (
     onStatusFilterChange,
     typeFilter,
     types,
-    onTypeFilterChange
-    ) => (
-    <React.Fragment>
+    onTypeFilterChange,
+) => (
+    <>
         {renderAddDeploymentButton(addDeployment)}
         <Input.Search
-            placeholder="Search by branch name"
-            onChange={({ target: { value }}) => onSearch(value)}
-            style={{ width: 200, marginRight: 10 }}
-            value={branchNameFilter}
-            />
-        {renderStatusFilter(statusFilter, ({ target: { value }}) => onStatusFilterChange(value))}
+          placeholder="Search by branch name"
+          onChange={({ target: { value } }) => onSearch(value)}
+          style={{ width: 200, marginRight: 10 }}
+          value={branchNameFilter}
+        />
+        {renderStatusFilter(statusFilter, ({ target: { value } }) => onStatusFilterChange(value))}
         {renderTypeFilter(typeFilter, types, onTypeFilterChange)}
-    </React.Fragment>
+    </>
 );
 
 const DeploymentList = ({
@@ -226,12 +234,12 @@ const DeploymentList = ({
     typeFilter,
     types,
     onTypeFilterChange,
-    teardownDeployment
+    teardownDeployment,
 }) => (
-    <React.Fragment>
+    <>
         <NewDeploymentModal />
         <List
-            header={renderHeader(
+          header={renderHeader(
                 branchNameFilter,
                 addDeployment,
                 onSearch,
@@ -239,15 +247,15 @@ const DeploymentList = ({
                 onStatusFilterChange,
                 typeFilter,
                 types,
-                onTypeFilterChange
-                )}
-            bordered
-            dataSource={deployments}
-            loading={isLoading}
-            renderItem={(deployment) => renderDeploymentItem(deployment, teardownDeployment)}
-            pagination={{ pageSize: 10 }}
-            />
-    </React.Fragment>
+                onTypeFilterChange,
+            )}
+          bordered
+          dataSource={deployments}
+          loading={isLoading}
+          renderItem={(deployment) => renderDeploymentItem(deployment, teardownDeployment)}
+          pagination={{ pageSize: 10 }}
+        />
+    </>
 );
 
 export default DeploymentList;

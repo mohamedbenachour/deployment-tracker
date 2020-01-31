@@ -9,7 +9,7 @@ import {
     ENVIRONMENT_ADD_HOST_NAME_CHANGE,
     ENVIRONMENT_NEW,
     ENVIRONMENT_SAVE_STARTED,
-    ENVIRONMENT_SAVE_FAILED
+    ENVIRONMENT_SAVE_FAILED,
 } from './action-types';
 
 export const environmentListIsLoading = () => ({
@@ -18,7 +18,7 @@ export const environmentListIsLoading = () => ({
 
 export const environmentListLoaded = (environments) => ({
     type: ENVIRONMENT_LIST_LOADED,
-    environments
+    environments,
 });
 
 export const environmentAddClicked = () => ({
@@ -49,5 +49,5 @@ export const environmentBeingAddedHostNameChanged = (hostName) => ({
 
 export const newEnvironment = (environment) => ({
     type: ENVIRONMENT_NEW,
-    environment
+    environment,
 });

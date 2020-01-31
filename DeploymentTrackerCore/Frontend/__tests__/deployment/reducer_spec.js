@@ -1,8 +1,7 @@
-import deploymentReducer from "../../src/deployment/reducer";
-import { deploymentSearch, deploymentStatusFilterChanged } from "../../src/deployment/actions";
+import deploymentReducer from '../../src/deployment/reducer';
+import { deploymentSearch, deploymentStatusFilterChanged } from '../../src/deployment/actions';
 
 describe('deployment reducer', () => {
-
     describe('default state', () => {
         const defaultState = deploymentReducer(undefined, { type: '__' });
 
@@ -14,8 +13,8 @@ describe('deployment reducer', () => {
                 filters: {
                     branchName: '',
                     status: 'running',
-                    type: null
-                }
+                    type: null,
+                },
             });
         });
 

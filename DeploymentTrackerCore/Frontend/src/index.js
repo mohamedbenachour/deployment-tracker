@@ -2,6 +2,7 @@ import React from 'react';
 
 import { combineReducers } from 'redux';
 
+import { Provider } from 'react-redux';
 import bootstrapToPage from './utils/page-bootstrapper';
 
 import StandardLayout from './layout/standard-layout';
@@ -10,7 +11,6 @@ import HeaderMenu from './app/connected-header-menu';
 import Content from './app/connected-content';
 import { createStore } from './utils/redux-store';
 
-import { Provider } from 'react-redux';
 
 import appReducer from './app/reducer';
 
@@ -36,5 +36,5 @@ bootstrapToPage(
         <StandardLayout header={<HeaderMenu />}>
             <Content />
         </StandardLayout>
-    </Provider>
+    </Provider>,
 );

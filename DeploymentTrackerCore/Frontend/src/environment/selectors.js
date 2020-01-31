@@ -1,12 +1,12 @@
-import { createSelector } from 'reselect'
+import { createSelector } from 'reselect';
 
-export const getLoading = ({ environment: { environments: { loading }}}) => loading;
+export const getLoading = ({ environment: { environments: { loading } } }) => loading;
 
-export const getEnvironments = ({ environment: { environments: { data }}}) => data || [];
+export const getEnvironments = ({ environment: { environments: { data } } }) => data || [];
 
 export const getDeployments = createSelector(
     [getEnvironments],
-    (environments) => environments.flatMap((environment) => environment.deployments || [])
+    (environments) => environments.flatMap((environment) => environment.deployments || []),
 );
 
 export const getTypes = createSelector(
@@ -19,5 +19,5 @@ export const getTypes = createSelector(
         });
 
         return Object.values(resultKeys);
-    }
+    },
 );

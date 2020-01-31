@@ -2,7 +2,6 @@ import reducer from '../../src/app/reducer';
 import { sectionChanged } from '../../src/app/actions';
 
 describe('app reducer', () => {
-
     describe('default state', () => {
         const defaultState = reducer(undefined, { action: '___' });
 
