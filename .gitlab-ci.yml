@@ -2,6 +2,7 @@ image: mcr.microsoft.com/dotnet/core/sdk:3.1
 
 stages:
     - build
+    - test
     - publish-artifacts
 
 server-build:
@@ -31,6 +32,18 @@ client-build:
         name: frontend-resources
         paths:
         - DeploymentTrackerCore/wwwroot
+
+client-test:
+    stage: test
+    image: node
+    before_script:
+    - cd DeploymentTrackerCore/Frontend
+    - npm ci
+    script:
+    - npm test
+    artifacts:
+        reports:
+            junit: DeploymentTrackerCore/Frontend/__tests__/test-report.xml
 
 linux-publish:
     stage: publish-artifacts
