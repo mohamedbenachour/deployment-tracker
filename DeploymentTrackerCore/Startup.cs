@@ -73,7 +73,10 @@ namespace DeploymentTrackerCore
             services.AddDbContext<DeploymentAppContext>
                 (options => options.UseSqlite(Configuration.GetSection("ConnectionStrings")["Application"]));
 
-            services.AddRazorPages();
+            services.AddRazorPages()
+                .AddJsonOptions(options => {
+                    options.JsonSerializerOptions.AllowTrailingCommas = true;
+                });
 
             services.AddSignalR();
         }

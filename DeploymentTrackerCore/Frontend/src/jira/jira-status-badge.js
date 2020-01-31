@@ -24,7 +24,7 @@ import { InProgress, Completed } from './status';
 const STATUS_TO_TEXT = {
     COMPLETED: 'Completed',
     IN_PROGRESS: 'In Progress',
-    UNKNOWN: 'Unknown'
+    UNKNOWN: 'Unknown',
 };
 
 const getJiraStatusColour = (status) => {
@@ -41,16 +41,17 @@ const getJiraStatusColour = (status) => {
 const getStatusText = (status) => STATUS_TO_TEXT[status];
 
 const JiraStatusBadge = ({ status }) => (
-    <React.Fragment>
-        {status &&
-        <Tag
-            color={getJiraStatusColour(status)}
-            style={{ marginRight: 0 }}
+    <>
+        {status
+        && (
+            <Tag
+                color={getJiraStatusColour(status)}
+                style={{ marginRight: 0 }}
             >
-            {getStatusText(status)}
-        </Tag>
-        }
-    </React.Fragment>
+                {getStatusText(status)}
+            </Tag>
+        )}
+    </>
 );
 
 export default JiraStatusBadge;

@@ -1,5 +1,6 @@
 const path = require('path');
-const fs = require('fs');
+
+const babelConfig = require('./babel.config');
 
 module.exports = {
     mode: 'development',
@@ -22,12 +23,8 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['@babel/preset-env', '@babel/preset-react'],
-                        plugins: [
-                            '@babel/plugin-proposal-object-rest-spread',
-                            ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }] // `style: true` for less
-                        ],
-                        cacheDirectory: true,
+                        ...babelConfig,
+                        cacheDirectory: true
                     },
                 },
             },

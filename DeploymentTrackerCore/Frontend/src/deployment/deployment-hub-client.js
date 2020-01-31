@@ -1,16 +1,16 @@
 import React from 'react';
 
-import * as signalR from "@aspnet/signalr";
+import * as signalR from '@aspnet/signalr';
 
 import { notification } from 'antd';
 import { statusIsRunning } from './deployment-status';
 
 import {
-    newDeployment
+    newDeployment,
 } from './actions';
 
 const createConnection = (store, notifier) => {
-    const connection = new signalR.HubConnectionBuilder().withUrl("/deploymentHub").build();
+    const connection = new signalR.HubConnectionBuilder().withUrl('/deploymentHub').build();
 
     connection.on('DeploymentChange', (deployment) => {
         store.dispatch(newDeployment(deployment));
@@ -20,7 +20,9 @@ const createConnection = (store, notifier) => {
     return connection;
 };
 
-const notifyUser = ({ branchName, publicURL, status, modifiedBy: { name }}, notifier) => {
+const notifyUser = ({
+    branchName, publicURL, status, modifiedBy: { name },
+}, notifier) => {
     const message = statusIsRunning(status) ? 'New Deployment' : 'Torndown Deployment';
 
     notification.info({

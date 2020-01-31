@@ -5,9 +5,9 @@ const boostrapToPage = (component) => {
         ReactDom.render((
             component
         ),
-        document.querySelector(".app-mount-point"));
+        document.querySelector('.app-mount-point'));
     };
-    
+
     document.addEventListener('DOMContentLoaded', applicationStart, { once: true });
 };
 

@@ -1,16 +1,15 @@
-import { createSelector } from 'reselect'
+import { createSelector } from 'reselect';
 
-import { getDeployments, getTypes } from '../environment/selectors'
+import { getDeployments, getTypes } from '../environment/selectors';
 import { statusIsRunning, statusIsDestroyed } from './deployment-status';
 
-const branchNameMatches = (branchName, filter) =>
-    branchName.toLowerCase().includes(filter.toLowerCase());
+const branchNameMatches = (branchName, filter) => branchName.toLowerCase().includes(filter.toLowerCase());
 
-export const getBranchNameFilter = ({ deployment: { filters: { branchName } }}) => branchName;
+export const getBranchNameFilter = ({ deployment: { filters: { branchName } } }) => branchName;
 
-export const getStatusFilter = ({ deployment: { filters: { status }}}) => status;
+export const getStatusFilter = ({ deployment: { filters: { status } } }) => status;
 
-export const getTypeFilter = ({ deployment: { filters: { type }}}) => type;
+export const getTypeFilter = ({ deployment: { filters: { type } } }) => type;
 
 export const sortDeployments = (deployments) => deployments.sort((dOne, dTwo) => {
     const dOneDate = Date.parse(dOne.modifiedBy.timestamp);
@@ -27,7 +26,7 @@ export const getSortedDeployments = createSelector(
         sortDeployments(sortedDeployments);
 
         return sortedDeployments;
-    }
+    },
 );
 
 const filterRunningDeployments = ({ status }) => statusIsRunning(status);
@@ -47,25 +46,25 @@ const getDeploymentFilterByStatus = createSelector(
     (status) => {
         if (status === 'running') {
             return filterRunningDeployments;
-        } else if (status === 'torndown') {
+        } if (status === 'torndown') {
             return filterTorndownDeployments;
         }
 
         return filterCompletedDeployments;
-    }
+    },
 );
 
-const typeMatches = ({ id }, typeFilter) => typeFilter === null ? true : id === typeFilter;
+const typeMatches = ({ id }, typeFilter) => (typeFilter === null ? true : id === typeFilter);
 
 export const getVisibleDeployments = createSelector(
     [getSortedDeployments, getBranchNameFilter, getDeploymentFilterByStatus, getTypeFilter],
-    (deployments, branchNameFilter, statusFilter, typeFilter) =>
-        deployments
+    (deployments, branchNameFilter, statusFilter, typeFilter) => deployments
         .filter(({ type }) => typeMatches(type, typeFilter))
         .filter(({ branchName }) => branchNameMatches(branchName, branchNameFilter))
-        .filter(statusFilter));
+        .filter(statusFilter),
+);
 
 export const getTypesToFilterOn = createSelector(
     [getTypes],
-    (types) => [{ id: null, name: 'All' }].concat(types)
+    (types) => [{ id: null, name: 'All' }].concat(types),
 );

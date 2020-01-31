@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import {
-    bindActionCreators
+    bindActionCreators,
 } from 'redux';
 
 import NewEnvironmentModal from './new-environment-modal';
@@ -12,10 +12,10 @@ import { addEnvironment } from './async-actions';
 const mapStateToProps = ({ environment: { environmentBeingAdded, addingAnEnvironment, saveInProgress } }) => ({
     environmentBeingAdded: environmentBeingAdded || {},
     visible: addingAnEnvironment,
-    saveInProgress
+    saveInProgress,
 });
 
-const mapDispatchToInputProps = dispatch => bindActionCreators({
+const mapDispatchToInputProps = (dispatch) => bindActionCreators({
     onNameChange: environmentBeingAddedNameChanged,
     onHostNameChange: environmentBeingAddedHostNameChanged,
     onOk: addEnvironment,

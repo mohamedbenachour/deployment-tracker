@@ -1,42 +1,38 @@
+import { notification } from 'antd';
 import {
     environmentListIsLoading,
     environmentListLoaded,
 
     environmentBeingSaved,
     environmentSaveFailed,
-    newEnvironment
+    newEnvironment,
 } from './actions';
 
-import { notification } from 'antd';
 
-import { getJSON, postJSON } from './../utils/io';
+import { getJSON, postJSON } from '../utils/io';
 
-export const loadEnvironmentList = () => {
-    return (dispatch) => {
-        dispatch(environmentListIsLoading());
+export const loadEnvironmentList = () => (dispatch) => {
+    dispatch(environmentListIsLoading());
 
-        getJSON('/api/environment', (environments) => {
-            dispatch(environmentListLoaded(environments));
-        });
-    };
+    getJSON('/api/environment', (environments) => {
+        dispatch(environmentListLoaded(environments));
+    });
 };
 
-export const addEnvironment = () => {
-    return (dispatch, getState) => {
-        dispatch(environmentBeingSaved());
+export const addEnvironment = () => (dispatch, getState) => {
+    dispatch(environmentBeingSaved());
 
-        const environment = getState().environment.environmentBeingAdded;
-        postJSON('/api/environment', environment, (addedEnvironment) => {
-            dispatch(newEnvironment(addedEnvironment));
-        }, (error) => {
-            let message = error.title || error;
+    const environment = getState().environment.environmentBeingAdded;
+    postJSON('/api/environment', environment, (addedEnvironment) => {
+        dispatch(newEnvironment(addedEnvironment));
+    }, (error) => {
+        const message = error.title || error;
 
-            dispatch(environmentSaveFailed());
+        dispatch(environmentSaveFailed());
 
-            notification.error({
-                message: 'Failed to add deployment',
-                description: message,
-            });
+        notification.error({
+            message: 'Failed to add deployment',
+            description: message,
         });
-    };
+    });
 };

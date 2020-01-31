@@ -7,12 +7,12 @@ const styles = {
         '@media (min-width: 401px)': {
             position: 'absolute',
             top: '15%',
-            left: '35%'
+            left: '35%',
         },
         '@media (max-width: 400px)': {
-            width: '100%'
-        }
-    }
+            width: '100%',
+        },
+    },
 };
 
 const Centered = ({ classes, children }) => (

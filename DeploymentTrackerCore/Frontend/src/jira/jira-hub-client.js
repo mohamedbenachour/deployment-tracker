@@ -1,11 +1,11 @@
-import * as signalR from "@aspnet/signalr";
+import * as signalR from '@aspnet/signalr';
 
 import {
-    jiraStatusUpdate
+    jiraStatusUpdate,
 } from '../deployment/actions';
 
 const createConnection = (store) => {
-    const connection = new signalR.HubConnectionBuilder().withUrl("/jiraHub").build();
+    const connection = new signalR.HubConnectionBuilder().withUrl('/jiraHub').build();
 
     connection.on('JiraStatusChange', (jiraIssue, newJiraStatus) => {
         store.dispatch(jiraStatusUpdate(jiraIssue, newJiraStatus));

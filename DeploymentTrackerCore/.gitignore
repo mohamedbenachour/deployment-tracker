@@ -3,5 +3,6 @@ obj/
 wwwroot/
 
 Frontend/node_modules
+Frontend/__tests__/test-report.xml
 
 deployment.db

@@ -9,7 +9,8 @@ const NewEnvironmentModal = ({
     onCancel,
     onNameChange,
     onHostNameChange,
-    environmentBeingAdded: { name, hostName } }) => (
+    environmentBeingAdded: { name, hostName },
+}) => (
     <Modal
         visible={visible}
         onOk={onOk}
@@ -18,9 +19,9 @@ const NewEnvironmentModal = ({
         confirmLoading={saveInProgress}
     >
         <Typography.Text>Name</Typography.Text>
-        <Input value={name} onChange={({ target: { value }}) => onNameChange(value)} />
+        <Input value={name} onChange={({ target: { value } }) => onNameChange(value)} />
         <Typography.Text>Host Name</Typography.Text>
-        <Input value={hostName} onChange={({ target: { value }}) => onHostNameChange(value)} />
+        <Input value={hostName} onChange={({ target: { value } }) => onHostNameChange(value)} />
     </Modal>
 );
 
