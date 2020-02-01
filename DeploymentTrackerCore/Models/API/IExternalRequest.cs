@@ -15,14 +15,9 @@
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
  
-using System.ComponentModel.DataAnnotations;
-
 namespace DeploymentTrackerCore.Models.API {
-    public class ApiExternalNewDeployment : ApiNewDeployment, IExternalRequest {
-        [Required]
-        public ApiUser User { get; set; }
-
-        [Required]
-        public ApiExternalTokenContainer Token { get; set; }
+    public interface IExternalRequest {
+        ApiUser User { get; set; }
+        ApiExternalTokenContainer Token { get; set; }
     }
 }

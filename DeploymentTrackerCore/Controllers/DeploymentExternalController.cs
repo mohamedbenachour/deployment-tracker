@@ -31,6 +31,8 @@ using DeploymentTrackerCore.Hubs;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Http;
+using DeploymentTrackerCore.Actions;
 
 namespace DeploymentTrackerCore.Controllers
 {
@@ -62,26 +64,30 @@ namespace DeploymentTrackerCore.Controllers
         [HttpPost]
         [Route("destroyed")]
         public async Task<ActionResult<ApiDeployment>> DeploymentDestroyed(ApiExternalDeploymentDestroyed request) {
-            VerifyValidToken(request.Token.Value);
-            SetUser(request.User);
-            
             var destroyer = new DeploymentDestroyed(Context, request.SiteName);
             var apiHandler = new ApiActionHandler(destroyer, Hydrator, Reporter);
 
-            return await Handle(apiHandler);
+            return await Handle(apiHandler, request);
         }
 
         [HttpPost]
         public async Task<ActionResult<ApiDeployment>> CreateDeployment(ApiExternalNewDeployment deployment)
         {
-            VerifyValidToken(deployment.Token.Value);
-            SetUser(deployment.User);
-
             var creator = new NewDeployment(Context, deployment);
             var apiHandler = new ApiActionHandler(creator, Hydrator, Reporter);
 
-            return await Handle(apiHandler);
+            return await Handle(apiHandler, deployment);
         }
+
+        protected async Task<ActionResult<T>> Handle<T>(IActionPerformer<T> actionHandler, IExternalRequest request) {
+            if (!IsValidToken(request.Token.Value)) {
+                return BadRequest();
+            }
+
+            SetUser(request.User);
+
+            return await base.Handle(actionHandler);
+         }
 
         private void SetUser(ApiUser user) {
             if (user != null) {
@@ -92,10 +98,8 @@ namespace DeploymentTrackerCore.Controllers
             }
         }
 
-        private void VerifyValidToken(string token) {
-            if (!ExternalTokenVerifier.IsValid(token)) {
-                throw new Exception("Invalid token");
-            }
+        private bool IsValidToken(string token) {
+            return ExternalTokenVerifier.IsValid(token);
         }
     }
 }

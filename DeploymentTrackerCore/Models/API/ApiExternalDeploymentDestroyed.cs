@@ -18,7 +18,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace DeploymentTrackerCore.Models.API {
-    public class ApiExternalDeploymentDestroyed : ApiDeploymentDestroyed {
+    public class ApiExternalDeploymentDestroyed : ApiDeploymentDestroyed, IExternalRequest {
         [Required]
         public ApiUser User { get; set; }
         [Required]
