@@ -78,7 +78,7 @@ namespace DeploymentTrackerCore.Views.Account
                     var user = await UserStore.FindByNameAsync(Input.UserName, CancellationToken.None);
 
                     if (user != null ) {
-                        var result = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, Input.RememberMe);
+                        var result = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, false);
 
                         if (result.Succeeded) {
                             var identity = user.GetClaimIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
