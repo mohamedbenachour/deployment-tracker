@@ -5,9 +5,10 @@ import withStyles from 'react-jss';
 const styles = {
     container: {
         '@media (min-width: 401px)': {
-            position: 'absolute',
-            top: '15%',
-            left: '35%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100vh'
         },
         '@media (max-width: 400px)': {
             width: '100%',
