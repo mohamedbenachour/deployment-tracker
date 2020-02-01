@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Layout } from 'antd';
+import StandardFooter from './standard-footer';
 
 const StandardLayout = ({ header, children }) => (
     <Layout>
@@ -10,7 +11,7 @@ const StandardLayout = ({ header, children }) => (
         <Layout.Content style={{ marginTop: 64 }}>
             {children}
         </Layout.Content>
-        <Layout.Footer><div>Deployment Tracker</div></Layout.Footer>
+        <StandardFooter />
     </Layout>
 );
 

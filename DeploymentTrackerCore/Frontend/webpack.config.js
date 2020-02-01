@@ -1,5 +1,8 @@
 const path = require('path');
+const fs = require('fs');
+const webpack = require('webpack');
 
+const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
 const babelConfig = require('./babel.config');
 
 module.exports = {
@@ -16,8 +19,7 @@ module.exports = {
     },
     target: 'web',
     module: {
-        rules: [
-            {
+        rules: [{
                 test: /\.m?js$/,
                 exclude: /(node_modules|bower_components)/,
                 use: {
@@ -37,4 +39,9 @@ module.exports = {
             },
         ],
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env.VERSION': JSON.stringify(packageJson.version),
+        })
+    ]
 };
