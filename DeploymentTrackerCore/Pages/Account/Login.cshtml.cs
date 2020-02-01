@@ -81,14 +81,7 @@ namespace DeploymentTrackerCore.Views.Account
                         var result = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, Input.RememberMe);
 
                         if (result.Succeeded) {
-                            var claims = new List<Claim>
-                            {
-                                new Claim(ClaimTypes.Name, Input.UserName),
-                                new Claim(ApplicationClaims.FullName, user.Name),
-                                new Claim(ClaimTypes.Role, "Member")
-                            };
-
-                            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                            var identity = user.GetClaimIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
 
                             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                             new ClaimsPrincipal(identity),

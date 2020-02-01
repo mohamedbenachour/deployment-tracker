@@ -27,7 +27,7 @@ namespace DeploymentTrackerCore
     {
         public static async Task Main(string[] args)
         {
-            var builder = CreateWebHostBuilder(args);
+            var builder = CreateHostBuilder(args);
 
             var host = builder.Build();
 
@@ -40,7 +40,7 @@ namespace DeploymentTrackerCore
             MigrationRunner.Run(host);
         }
 
-        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseWindowsService()
                 .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());

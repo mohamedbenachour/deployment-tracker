@@ -45,6 +45,16 @@ client-test:
         reports:
             junit: DeploymentTrackerCore/Frontend/__tests__/test-report.xml
 
+server-test:
+    stage: test
+    before_script:
+    - cd IntegrationTests
+    script:
+    - dotnet test --logger "junit;LogFilePath=junit-test-report.xml"
+    artifacts:
+        reports:
+            junit: IntegrationTests/junit-test-report.xml
+
 linux-publish:
     stage: publish-artifacts
     dependencies:
