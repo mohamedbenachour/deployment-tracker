@@ -16,10 +16,10 @@
 */
 
 using System.Threading.Tasks;
-using System.Threading;
 using DeploymentTrackerCore.Models;
 
-namespace DeploymentTrackerCore.Services.Jira {
+namespace DeploymentTrackerCore.Services.Jira
+{
     public enum JiraStatus {
         IN_PROGRESS,
         COMPLETED,

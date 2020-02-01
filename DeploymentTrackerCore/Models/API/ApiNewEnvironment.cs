@@ -15,13 +15,10 @@
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
-using System.Linq;
 using System.ComponentModel.DataAnnotations;
 
-using DeploymentTrackerCore.Models;
-
-namespace DeploymentTrackerCore.Models.API {
+namespace DeploymentTrackerCore.Models.API
+{
     public class ApiNewEnvironment {
         [Required]
         public string Name { get; set; }

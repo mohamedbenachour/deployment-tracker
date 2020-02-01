@@ -1,3 +1,20 @@
+/*
+* This file is part of Deployment Tracker.
+* 
+* Deployment Tracker is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Deployment Tracker is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -78,17 +95,10 @@ namespace DeploymentTrackerCore.Views.Account
                     var user = await UserStore.FindByNameAsync(Input.UserName, CancellationToken.None);
 
                     if (user != null ) {
-                        var result = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, Input.RememberMe);
+                        var result = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, false);
 
                         if (result.Succeeded) {
-                            var claims = new List<Claim>
-                            {
-                                new Claim(ClaimTypes.Name, Input.UserName),
-                                new Claim(ApplicationClaims.FullName, user.Name),
-                                new Claim(ClaimTypes.Role, "Member")
-                            };
-
-                            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                            var identity = user.GetClaimIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
 
                             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                             new ClaimsPrincipal(identity),

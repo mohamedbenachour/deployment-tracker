@@ -13,16 +13,27 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
- */
- 
-using System.ComponentModel.DataAnnotations;
+*/
 
-namespace DeploymentTrackerCore.Models.API {
-    public class ApiExternalNewDeployment : ApiNewDeployment, IExternalRequest {
-        [Required]
-        public ApiUser User { get; set; }
+using System.Threading.Tasks;
+using NUnit.Framework;
 
-        [Required]
-        public ApiExternalTokenContainer Token { get; set; }
+namespace IntegrationTests
+{
+    [TestFixture]
+    public class SanityTests
+    {
+
+        [TestCase("/")]
+        [TestCase("/Account/Login")]
+        [TestCase("/Account/Logout")]
+        public async Task Pages(string url)
+        {
+            var client = TestEnvironment.ClientFactory.CreateClient();
+
+            var response = await client.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

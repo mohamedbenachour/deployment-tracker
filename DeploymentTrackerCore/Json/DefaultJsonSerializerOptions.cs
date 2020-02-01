@@ -13,14 +13,14 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
- */
+*/
 
-using System.Collections.Generic;
+using System.Text.Json;
 
-namespace DeploymentTrackerCore.Models.API {
-    public class ApiEnvironmentDeploymentLess {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string HostName { get; set; }
+namespace DeploymentTrackerCore.Json {
+    public static class DefaultJsonSerializerOptions {
+        public static JsonSerializerOptions Options => new JsonSerializerOptions {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            }; 
     }
 }

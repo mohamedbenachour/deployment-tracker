@@ -13,16 +13,21 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
- */
- 
-using System.ComponentModel.DataAnnotations;
+*/
 
-namespace DeploymentTrackerCore.Models.API {
-    public class ApiExternalNewDeployment : ApiNewDeployment, IExternalRequest {
-        [Required]
-        public ApiUser User { get; set; }
+using IntegrationTests.EnvironmentSetup;
 
-        [Required]
-        public ApiExternalTokenContainer Token { get; set; }
+namespace IntegrationTests {
+    public class TestEnvironment {
+        public const string ExternalToken = "foobar";
+
+        public struct URLs {
+            public const string Environment = "/api/environment";
+            public const string Deployment = "/api/deployment";
+
+            public const string DeploymentExternal = "/api/deployment/external";
+        }
+
+        public static TestApplicationFactory<DeploymentTrackerCore.Startup> ClientFactory = new TestApplicationFactory<DeploymentTrackerCore.Startup>();
     }
 }

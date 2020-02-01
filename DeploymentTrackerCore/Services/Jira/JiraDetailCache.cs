@@ -15,15 +15,10 @@
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
 */
 
-using System.Threading.Tasks;
-using System.Threading;
-using System;
-
 using Microsoft.Extensions.Caching.Memory;
 
-using DeploymentTrackerCore.Models;
-
-namespace DeploymentTrackerCore.Services.Jira {
+namespace DeploymentTrackerCore.Services.Jira
+{
     public class JiraDetailCache {
         private MemoryCache Cache { get; }
 

@@ -13,16 +13,22 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
- */
- 
-using System.ComponentModel.DataAnnotations;
+*/
 
-namespace DeploymentTrackerCore.Models.API {
-    public class ApiExternalNewDeployment : ApiNewDeployment, IExternalRequest {
-        [Required]
-        public ApiUser User { get; set; }
+using System.Net.Http;
+using System.Net.Mime;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using DeploymentTrackerCore.Json;
 
-        [Required]
-        public ApiExternalTokenContainer Token { get; set; }
+namespace IntegrationTests.Helpers {
+    public static class HttpClientExtensions {
+        public static async Task<HttpResponseMessage> PostJsonAsync<T>(this HttpClient client, string url, T toPost) {
+            var serialisedObject = JsonSerializer.Serialize(toPost, DefaultJsonSerializerOptions.Options);
+            var content = new StringContent(serialisedObject, Encoding.UTF8, MediaTypeNames.Application.Json);
+
+            return await client.PostAsync(url, content);
+        }
     }
 }

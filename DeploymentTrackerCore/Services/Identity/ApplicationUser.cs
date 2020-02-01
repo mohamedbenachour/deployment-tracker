@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Security.Principal;
 
 namespace DeploymentTrackerCore.Services.Identity {
@@ -12,5 +14,17 @@ namespace DeploymentTrackerCore.Services.Identity {
 
         public string AuthenticationType { get; set; }
         public bool IsAuthenticated { get; set; }
+
+        public ClaimsIdentity GetClaimIdentity(string authenticationScheme)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, UserName),
+                new Claim(ApplicationClaims.FullName, Name),
+                new Claim(ClaimTypes.Role, "Member")
+            };
+
+            return new ClaimsIdentity(claims, authenticationScheme);
+        }
     }
 }
