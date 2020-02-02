@@ -16,16 +16,24 @@
 */
 
 using IntegrationTests.EnvironmentSetup;
+using IntegrationTests.Helpers;
 
 namespace IntegrationTests {
     public class TestEnvironment {
         public const string ExternalToken = "foobar";
 
         public struct URLs {
-            public const string Environment = "/api/environment";
-            public const string Deployment = "/api/deployment";
+            public static readonly FluentUrlBuilder ApiBase = FluentUrlBuilder.WithRoot("api");
 
-            public const string DeploymentExternal = "/api/deployment/external";
+            public static readonly FluentUrlBuilder EnvironmentRoot = ApiBase.WithPart("environment");
+            public static readonly string Environment = EnvironmentRoot.ToString();
+
+            public static readonly FluentUrlBuilder DeploymentRoot = ApiBase.WithPart("deployment");
+            public static readonly string Deployment = DeploymentRoot.ToString();
+
+            public static readonly FluentUrlBuilder DeploymentExternalRoot = DeploymentRoot.WithPart("external");
+
+            public static readonly string DeploymentExternal = DeploymentExternalRoot.ToString();
         }
 
         public static TestApplicationFactory<DeploymentTrackerCore.Startup> ClientFactory = new TestApplicationFactory<DeploymentTrackerCore.Startup>();

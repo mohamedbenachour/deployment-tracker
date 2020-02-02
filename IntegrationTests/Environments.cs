@@ -27,7 +27,7 @@ namespace IntegrationTests
     [TestFixture]
     public class Environments
     {
-        private const string EnvironmentURL = TestEnvironment.URLs.Environment;
+        private static readonly string EnvironmentURL = TestEnvironment.URLs.Environment;
 
         [Test]
         public async Task EnvironmentsCanBeRetrievedForAnEmptySite()
@@ -84,7 +84,7 @@ namespace IntegrationTests
 
             var createdEnvironment = await createResponse.AssertSuccessfulResponseAndGetContent<ApiEnvironment>();
 
-            var deleteResponse = await client.DeleteAsync($"{EnvironmentURL}/{createdEnvironment.Id}");
+            var deleteResponse = await client.DeleteAsync(TestEnvironment.URLs.EnvironmentRoot.WithPart(createdEnvironment.Id).ToString());
 
             deleteResponse.AssertSuccessfulResponse();
         }
@@ -112,7 +112,7 @@ namespace IntegrationTests
 
             deploymentResponse.AssertSuccessfulResponse();
 
-            var deleteResponse = await client.DeleteAsync($"{EnvironmentURL}/{createdEnvironment.Id}");
+            var deleteResponse = await client.DeleteAsync(TestEnvironment.URLs.EnvironmentRoot.WithPart(createdEnvironment.Id).ToString());
 
             deleteResponse.AssertBadRequest();
         }

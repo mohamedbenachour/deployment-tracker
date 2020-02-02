@@ -184,7 +184,10 @@ namespace IntegrationTests
                 }
             };
 
-            var destroyedResponse = await client.PostJsonAsync($"{TestEnvironment.URLs.DeploymentExternal}/destroyed", deploymentToDestroy);
+            var destroyedResponse = await client.PostJsonAsync(
+                TestEnvironment.URLs.DeploymentExternalRoot.WithPart("destroyed").ToString(),
+                deploymentToDestroy
+                );
 
             var destroyedDeployment = await destroyedResponse.AssertSuccessfulResponseAndGetContent<ApiDeployment>();
 
@@ -195,8 +198,8 @@ namespace IntegrationTests
         public async Task OneTimeSetup() {
             var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
             var environmentToCreate = new ApiNewEnvironment {
-                HostName = "one-to-delete",
-                Name = "The one I want to delete"
+                HostName = "external-testing",
+                Name = "externals-go-here"
             };
 
             var createResponse = await client.PostJsonAsync(TestEnvironment.URLs.Environment, environmentToCreate);
