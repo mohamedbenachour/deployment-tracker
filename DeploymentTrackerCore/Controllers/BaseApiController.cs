@@ -46,6 +46,16 @@ namespace DeploymentTrackerCore.Controllers {
             return BadRequest(performer.Error);
         }
 
+        protected async Task<ActionResult<O>> Handle<I, O>(IAction<I, O> action, I input) {
+            var result = await action.Perform(input);
+
+            if (result.Succeeded) {
+                return Ok(result.Result);
+            }
+
+            return BadRequest(result.Error);
+        }
+
         protected void SetUser() {
             var user = HttpContext.User;
 

@@ -34,6 +34,8 @@ namespace IntegrationTests {
             public static readonly FluentUrlBuilder DeploymentExternalRoot = DeploymentRoot.WithPart("external");
 
             public static readonly string DeploymentExternal = DeploymentExternalRoot.ToString();
+
+            public static readonly string Type = ApiBase.WithPart("type").ToString();
         }
 
         public static TestApplicationFactory<DeploymentTrackerCore.Startup> ClientFactory = new TestApplicationFactory<DeploymentTrackerCore.Startup>();

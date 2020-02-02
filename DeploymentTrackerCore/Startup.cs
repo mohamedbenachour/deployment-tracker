@@ -35,6 +35,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using DeploymentTrackerCore.Actions.Type;
 
 namespace DeploymentTrackerCore
 {
@@ -67,6 +68,7 @@ namespace DeploymentTrackerCore
             services.AddSingleton<IJiraService, JiraService>();
             services.AddSingleton<IDeploymentManager, JenkinsDeploymentManager>();
             services.AddSingleton<ITokenVerifier, TokenVerifier>();
+            services.AddTransient<NewTypeFromApi, NewTypeFromApi>();
 
             services.AddScoped<IRequestState, RequestState>();
 
