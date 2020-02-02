@@ -1,5 +1,3 @@
-import produce from 'immer';
-
 import {
     DEPLOYMENT_ADD_CLICKED,
     DEPLOYMENT_ADD_CANCEL,
