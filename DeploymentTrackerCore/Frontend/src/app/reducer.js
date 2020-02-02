@@ -1,27 +1,16 @@
-import produce from 'immer';
-
 import { APP_SECTION_CHANGED } from './action-types';
+import getReducerForActionsMap from '../utils/reducer-for-actions-map';
 
 const defaultState = {
     section: 'deployments',
 };
 
-const reducer = (state = defaultState, action) => {
-    let nextState = state;
-
-    switch (action.type) {
-    case APP_SECTION_CHANGED:
-        if (action.section !== state.section) {
-            nextState = produce(state, (draftState) => { draftState.section = action.section; });
-        }
-
-        break;
-
-    default:
-        break;
+const actionsMap = {
+    [APP_SECTION_CHANGED]: (draft, { section }) => {
+        draft.section = section;
     }
-
-    return nextState;
 };
+
+const reducer = getReducerForActionsMap(actionsMap, defaultState);
 
 export default reducer;
