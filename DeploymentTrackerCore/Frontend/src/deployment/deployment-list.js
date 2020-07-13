@@ -1,7 +1,10 @@
 import React from 'react';
 import {
-    List, Typography, Button, Icon, Input, Popover, Radio, notification, Tag, Select,
+    List, Typography, Button, Input, Popover, Radio, notification, Tag, Select,
 } from 'antd';
+import {
+    PlusOutlined, CloseCircleFilled, CheckCircleTwoTone, CopyOutlined, SelectOutlined, DeleteOutlined, StopTwoTone,
+} from '@ant-design/icons';
 
 import { statusIsRunning } from './deployment-status';
 
@@ -16,10 +19,10 @@ import { getPageData } from '../utils/page-data';
 
 const renderStatus = (status) => {
     if (statusIsRunning(status)) {
-        return <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />;
+        return <CheckCircleTwoTone twoToneColor="#52c41a" />;
     }
 
-    return <Icon type="close-circle" theme="filled" />;
+    return <CloseCircleFilled />;
 };
 
 const renderJiraDetail = ({ url, status }) => (
@@ -41,7 +44,7 @@ const renderTitle = ({
             <>
                 <a href={publicURL} target="_blank">
                     {`${branchName}`}
-                    <Icon type="select" style={{ marginLeft: 10 }} />
+                    <SelectOutlined style={{ marginLeft: 10 }} />
                 </a>
                 {jira && renderJiraDetail(jira)}
                 {renderType(type)}
@@ -83,9 +86,10 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
             {allowCopy
             && (
                 <Button
-                    icon="copy"
-                  onClick={() => copyValue(value)} style={{ marginLeft: 10 }}
-                  title="Copy to clipboard"
+                  icon={<CopyOutlined />}
+                    onClick={() => copyValue(value)}
+                  style={{ marginLeft: 10 }}
+                    title="Copy to clipboard"
                 />
             )}
         </div>
@@ -94,17 +98,17 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
 
 const renderLoginDetail = ({ userName, password }) => (
     <Popover
-      content={(
-            <React.Fragment>
-              {renderLoginContent('Username', userName)}
-              {renderLoginContent('Password', password, true)}
-          </React.Fragment>
+        content={(
+          <>
+                {renderLoginContent('Username', userName)}
+                {renderLoginContent('Password', password, true)}
+            </>
         )}
-        trigger="click"
+      trigger="click"
     >
         <Button
-            size="small"
-            type="link"
+          size="small"
+          type="link"
         >
             Site Login
         </Button>
@@ -141,8 +145,8 @@ const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }, 
 const getActions = ({ teardownUrl, status, siteName }, teardownDeployment) => {
     if (statusIsRunning(status)) {
         return [
-            <Icon title="Mark as torndown" type="delete" onClick={() => teardownDeployment({ siteName })} />,
-            <a title="Teardown" href={teardownUrl} target="_blank"><Icon style={{ color: 'red' }} type="stop" /></a>,
+            <DeleteOutlined title="Mark as torndown" onClick={() => teardownDeployment({ siteName })} />,
+            <a title="Teardown" href={teardownUrl} target="_blank"><StopTwoTone twoToneColor="#ff0000" /></a>,
         ];
     }
 
@@ -152,8 +156,8 @@ const getActions = ({ teardownUrl, status, siteName }, teardownDeployment) => {
 const renderDeploymentItem = (deployment, teardownDeployment) => (
     <List.Item actions={getActions(deployment, teardownDeployment)}>
         <List.Item.Meta
-            title={renderTitle(deployment)}
-            description={renderDescription(deployment)}
+          title={renderTitle(deployment)}
+          description={renderDescription(deployment)}
         />
         {renderStatus(deployment.status)}
     </List.Item>
@@ -163,12 +167,12 @@ const renderAddDeploymentButton = (addDeployment) => {
     if (getPageData().allowManualDeploymentsToBeAdded) {
         return (
             <Button
-                onClick={addDeployment}
-                type="primary"
-              shape="circle"
-                icon="plus"
-                style={{ marginRight: 10 }}
-                size="small"
+              onClick={addDeployment}
+              type="primary"
+                shape="circle"
+              icon={<PlusOutlined />}
+              style={{ marginRight: 10 }}
+              size="small"
             />
         );
     }
@@ -184,9 +188,9 @@ const renderTypeOptions = (types) => types.map(({ id, name }) => (
 
 const renderTypeFilter = (typeFilter, types, onChange) => (
     <Select
-        value={typeFilter}
-        onChange={onChange}
-        style={{ width: 120, marginLeft: 10 }}
+      value={typeFilter}
+      onChange={onChange}
+      style={{ width: 120, marginLeft: 10 }}
     >
         {renderTypeOptions(types)}
     </Select>
@@ -213,10 +217,10 @@ const renderHeader = (
     <>
         {renderAddDeploymentButton(addDeployment)}
         <Input.Search
-          placeholder="Search by branch name"
-          onChange={({ target: { value } }) => onSearch(value)}
-          style={{ width: 200, marginRight: 10 }}
-          value={branchNameFilter}
+            placeholder="Search by branch name"
+            onChange={({ target: { value } }) => onSearch(value)}
+            style={{ width: 200, marginRight: 10 }}
+            value={branchNameFilter}
         />
         {renderStatusFilter(statusFilter, ({ target: { value } }) => onStatusFilterChange(value))}
         {renderTypeFilter(typeFilter, types, onTypeFilterChange)}
@@ -239,7 +243,7 @@ const DeploymentList = ({
     <>
         <NewDeploymentModal />
         <List
-          header={renderHeader(
+            header={renderHeader(
                 branchNameFilter,
                 addDeployment,
                 onSearch,
@@ -249,11 +253,11 @@ const DeploymentList = ({
                 types,
                 onTypeFilterChange,
             )}
-          bordered
-          dataSource={deployments}
-          loading={isLoading}
-          renderItem={(deployment) => renderDeploymentItem(deployment, teardownDeployment)}
-          pagination={{ pageSize: 10 }}
+            bordered
+            dataSource={deployments}
+            loading={isLoading}
+            renderItem={(deployment) => renderDeploymentItem(deployment, teardownDeployment)}
+            pagination={{ pageSize: 10 }}
         />
     </>
 );

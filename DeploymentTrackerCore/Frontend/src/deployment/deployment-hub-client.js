@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as signalR from '@aspnet/signalr';
+import * as signalR from '@microsoft/signalr';
 
 import { notification } from 'antd';
 import { statusIsRunning } from './deployment-status';

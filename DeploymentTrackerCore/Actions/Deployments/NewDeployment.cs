@@ -45,7 +45,7 @@ namespace DeploymentTrackerCore.Actions.Deployments
             if (await IsValidNewDeployment()) {
                 var matchingDeployment = Context.Deployments
                     .Include(d => d.DeployedEnvironment)
-                    .SingleOrDefault(deployment => deployment.BranchName == Deployment.BranchName);
+                    .SingleOrDefault(deployment => deployment.SiteName == Deployment.SiteName);
                 Deployment newDeployment;
                 
                 if (matchingDeployment != null) {

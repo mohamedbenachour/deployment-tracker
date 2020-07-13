@@ -11,7 +11,6 @@ import HeaderMenu from './app/connected-header-menu';
 import Content from './app/connected-content';
 import { createStore } from './utils/redux-store';
 
-
 import appReducer from './app/reducer';
 
 import environmentsReducer from './environment/reducer';

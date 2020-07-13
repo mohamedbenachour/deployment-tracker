@@ -1,4 +1,3 @@
-
 export const ENVIRONMENT_LIST_LOADING = 'ELL';
 export const ENVIRONMENT_LIST_LOADED = 'ELLD';
 

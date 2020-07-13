@@ -36,7 +36,10 @@ namespace DeploymentTrackerCore.Actions.Deployments
         }
 
         public async Task<IEnumerable<ApiDeployment>> Fetch() {
-            return (await Context.Deployments.ToListAsync())
+            return (await Context.Deployments
+                .Include(d => d.DeployedEnvironment)
+                .Include(d => d.Type)
+                .ToListAsync())
                 .Select(ConvertToApi).Select(t => t.Result);
         }
 
