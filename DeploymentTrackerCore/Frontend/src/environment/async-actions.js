@@ -8,7 +8,6 @@ import {
     newEnvironment,
 } from './actions';
 
-
 import { getJSON, postJSON } from '../utils/io';
 
 export const loadEnvironmentList = () => (dispatch) => {

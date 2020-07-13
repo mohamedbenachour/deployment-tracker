@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 import produce from 'immer';
 
 import {
@@ -116,6 +118,7 @@ const deploymentReducer = (state = defaultState, action) => {
             draftState.addingADeployment = false;
             draftState.deploymentBeingAdded = null;
         });
+        break;
 
     default:
         break;

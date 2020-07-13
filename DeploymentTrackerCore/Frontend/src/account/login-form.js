@@ -7,6 +7,8 @@ import {
     Typography,
 } from 'antd';
 
+import { LoginOutlined } from '@ant-design/icons';
+
 import withStyles from 'react-jss';
 
 import CsrfHiddenInput from '../utils/csrf-hidden-input';
@@ -46,7 +48,7 @@ const LoginForm = ({ classes }) => (
                 <Checkbox id="Input_RememberMe" name="Input.RememberMe" value="true">Remember Me?</Checkbox>
             </div>
             <div className={classes.formGroup}>
-                <Button type="primary" icon="login" htmlType="submit">Log in</Button>
+                <Button type="primary" icon={<LoginOutlined />} htmlType="submit">Log in</Button>
             </div>
             <CsrfHiddenInput />
         </form>

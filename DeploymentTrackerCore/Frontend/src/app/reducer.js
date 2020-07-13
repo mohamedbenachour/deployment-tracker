@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 import produce from 'immer';
 
 import { APP_SECTION_CHANGED } from './action-types';

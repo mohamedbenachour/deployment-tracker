@@ -8,10 +8,10 @@ const JiraUrl = ({ url, style }) => (
             && (
                 <a href={url} target="_blank" style={style}>
                     <Button
-                        size="small"
-                        type="link"
+                      size="small"
+                      type="link"
                     >
-                    Jira
+                        Jira
                     </Button>
                 </a>
             )}

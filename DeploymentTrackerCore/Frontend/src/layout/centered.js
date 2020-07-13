@@ -8,7 +8,7 @@ const styles = {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '100vh'
+            height: '100vh',
         },
         '@media (max-width: 400px)': {
             width: '100%',
