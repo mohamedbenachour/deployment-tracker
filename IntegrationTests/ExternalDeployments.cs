@@ -15,6 +15,7 @@
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
@@ -23,6 +24,7 @@ using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Models.API;
 using FluentAssertions;
 using IntegrationTests.Helpers;
+using IntegrationTests.Helpers.DeploymentsApi;
 using NUnit.Framework;
 
 namespace IntegrationTests
@@ -190,6 +192,50 @@ namespace IntegrationTests
 
             destroyedDeployment.Status.Should().Be(DeploymentStatus.DESTROYED.ToString());
         }
+
+        [Test]
+        public async Task MultipleDeploymentsCanBeCreatedForABranchUsingDifferentSiteNames()
+        {
+            var client = TestEnvironment.ClientFactory.CreateClient();
+            var authenticatedClient = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
+
+            var branchName = "branching-in-style";
+            var siteNameBase = "sitez-v";
+
+            var deploymentOne = CreateNewDeployment($"{siteNameBase}-1", branchName);
+            var deploymentTwo = CreateNewDeployment($"{siteNameBase}-2", branchName);
+
+            await client.PostJsonAsync(TestEnvironment.URLs.DeploymentExternal, deploymentOne);
+            await client.PostJsonAsync(TestEnvironment.URLs.DeploymentExternal, deploymentTwo);
+
+            var deployments = await GetCurrentDeployments.ForClient(authenticatedClient);
+
+            deployments.Where(deployment => deployment.BranchName == branchName)
+                .Count().Should().Be(2);
+        }
+
+        private ApiExternalNewDeployment CreateNewDeployment(string siteName, string branchName) =>
+            new ApiExternalNewDeployment
+            {
+                BranchName = branchName,
+                SiteName = siteName,
+                EnvironmentId = EnvironmentId,
+                PublicURL = $"https://{siteName}.externals.com.au/torndown",
+                User = new ApiUser
+                {
+                    Name = "External Userz",
+                    Username = "external-user-here"
+                },
+                SiteLogin = new Login
+                {
+                    UserName = "user-name-here",
+                    Password = "passwordzz"
+                },
+                Token = new ApiExternalTokenContainer
+                {
+                    Value = TestEnvironment.ExternalToken
+                }
+            };
 
         [OneTimeSetUp]
         public async Task OneTimeSetup() {
