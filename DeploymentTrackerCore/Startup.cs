@@ -19,22 +19,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
 
 using DeploymentTrackerCore.Models;
-using DeploymentTrackerCore.Services;
-using DeploymentTrackerCore.Services.Configuration;
-using DeploymentTrackerCore.Services.Identity;
-using DeploymentTrackerCore.Services.Identity.Mock;
-using DeploymentTrackerCore.Services.DeploymentManagement;
-using DeploymentTrackerCore.Services.Token;
-using DeploymentTrackerCore.Services.Jira;
 using DeploymentTrackerCore.Hubs;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using DeploymentTrackerCore.Services.ServiceRegistration;
 
 namespace DeploymentTrackerCore
 {
@@ -54,27 +46,15 @@ namespace DeploymentTrackerCore
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
 
-            // Identity Services
-            if (Configuration.GetSection("IdentitySource")["Type"] == "MockStore") {
-                services.AddIdentityCore<ApplicationUser>()
-                    .AddUserStore<MockUserStore>()
-                    .AddSignInManager<SignInManager<ApplicationUser>>();
-            } else {
-                throw new Exception("No auth services configured.");
-            }
-
-            services.AddSingleton<ConfigurationService>();
-            services.AddSingleton<IJiraService, JiraService>();
-            services.AddSingleton<IDeploymentManager, JenkinsDeploymentManager>();
-            services.AddSingleton<ITokenVerifier, TokenVerifier>();
-
-            services.AddScoped<IRequestState, RequestState>();
+            IdentityServices.Configure(Configuration, services);
+            GeneralServices.Configure(services);
 
             services.AddDbContext<DeploymentAppContext>
                 (options => options.UseSqlite(Configuration.GetSection("ConnectionStrings")["Application"]));
 
             services.AddRazorPages()
-                .AddJsonOptions(options => {
+                .AddJsonOptions(options =>
+                {
                     options.JsonSerializerOptions.AllowTrailingCommas = true;
                 });
 
@@ -97,7 +77,8 @@ namespace DeploymentTrackerCore
 
             app.UseStaticFiles();
 
-            app.UseCookiePolicy(new CookiePolicyOptions {
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
                 MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Strict
             });
 
@@ -106,7 +87,8 @@ namespace DeploymentTrackerCore
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => {
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
                 endpoints.MapHub<DeploymentHub>("/deploymentHub");
