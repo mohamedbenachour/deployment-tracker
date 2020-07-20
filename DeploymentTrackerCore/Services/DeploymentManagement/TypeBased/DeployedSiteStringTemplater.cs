@@ -13,15 +13,15 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
- */
+*/
 
-namespace DeploymentTrackerCore.Models
+using DeploymentTrackerCore.Models;
+
+namespace DeploymentTrackerCore.Services.DeploymentManagement.TypeBased
 {
-    public interface IDeployedSite
+    internal class DeployedSiteStringTemplater
     {
-        string SiteName { get; }
-        string PublicURL { get; }
-
-        IIdentifiable Type { get; }
+        public string Template(IDeployedSite site, string template)
+            => template.Replace("{{SiteName}}", site.SiteName);
     }
 }

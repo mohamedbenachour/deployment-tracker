@@ -17,9 +17,9 @@
 
 using DeploymentTrackerCore.Services.Configuration;
 using DeploymentTrackerCore.Services.DeploymentManagement;
+using DeploymentTrackerCore.Services.DeploymentManagement.TypeBased;
 using DeploymentTrackerCore.Services.Jira;
 using DeploymentTrackerCore.Services.Token;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DeploymentTrackerCore.Services.ServiceRegistration
@@ -30,7 +30,7 @@ namespace DeploymentTrackerCore.Services.ServiceRegistration
         {
             services.AddSingleton<ConfigurationService>();
             services.AddSingleton<IJiraService, JiraService>();
-            services.AddSingleton<IDeploymentManager, JenkinsDeploymentManager>();
+            services.AddScoped<IDeploymentManager, TypeBasedDeploymentManager>();
             services.AddSingleton<ITokenVerifier, TokenVerifier>();
 
             services.AddScoped<IRequestState, RequestState>();

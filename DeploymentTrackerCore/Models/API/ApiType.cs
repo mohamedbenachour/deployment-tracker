@@ -14,13 +14,16 @@
 * You should have received a copy of the GNU General Public License
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
- 
-namespace DeploymentTrackerCore.Models.API {
-    public class ApiType {
+
+namespace DeploymentTrackerCore.Models.API
+{
+    public class ApiType : IIdentifiable
+    {
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public static ApiType FromInternal(Type type) => new ApiType {
+        public static ApiType FromInternal(Type type) => new ApiType
+        {
             Id = type.Id,
             Name = type.Name
         };

@@ -17,11 +17,8 @@
 
 namespace DeploymentTrackerCore.Models
 {
-    public interface IDeployedSite
+    public interface IIdentifiable
     {
-        string SiteName { get; }
-        string PublicURL { get; }
-
-        IIdentifiable Type { get; }
+        public int Id { get; }
     }
 }
