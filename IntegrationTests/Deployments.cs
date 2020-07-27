@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Models.API;
 using IntegrationTests.Helpers;
+using IntegrationTests.Helpers.TestSetup;
 using NUnit.Framework;
 
 namespace IntegrationTests
@@ -36,7 +37,7 @@ namespace IntegrationTests
         {
             var deploymentToCreate = new ApiNewDeployment
             {
-                BranchName =TestNames.BranchName,
+                BranchName = TestNames.BranchName,
                 SiteName = TestNames.SiteName,
                 EnvironmentId = EnvironmentId,
                 PublicURL = "https://internals.com.au",
@@ -79,7 +80,7 @@ namespace IntegrationTests
             };
 
             var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
-            
+
             (await client.PostJsonAsync(TestEnvironment.URLs.Deployment, deploymentToCreate))
                 .AssertSuccessfulResponse();
 
@@ -89,20 +90,6 @@ namespace IntegrationTests
         }
 
         [OneTimeSetUp]
-        public async Task OneTimeSetup()
-        {
-            var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
-            var environmentToCreate = new ApiNewEnvironment
-            {
-                HostName = TestNames.HostName,
-                Name = TestNames.Environment
-            };
-
-            var createResponse = await client.PostJsonAsync(TestEnvironment.URLs.Environment, environmentToCreate);
-
-            var createdEnvironment = await createResponse.AssertSuccessfulResponseAndGetContent<ApiEnvironment>();
-
-            EnvironmentId = createdEnvironment.Id;
-        }
+        public async Task OneTimeSetup() => EnvironmentId = (await UniqueEnvironment.Create()).Id;
     }
 }

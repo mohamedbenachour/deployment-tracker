@@ -9,8 +9,11 @@ using Microsoft.Extensions.Logging;
 namespace IntegrationTests.EnvironmentSetup
 {
     public class TestApplicationFactory<TStartup>
-        : WebApplicationFactory<TStartup> where TStartup: class
+        : WebApplicationFactory<TStartup> where TStartup : class
     {
+        public static void SetupDatabaseOptions(DbContextOptionsBuilder builder) => builder
+            .UseInMemoryDatabase("InMemoryDbForTesting");
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureServices(services =>
@@ -26,10 +29,7 @@ namespace IntegrationTests.EnvironmentSetup
                 }
 
                 // Add ApplicationDbContext using an in-memory database for testing.
-                services.AddDbContext<DeploymentAppContext>(options =>
-                {
-                    options.UseInMemoryDatabase("InMemoryDbForTesting");
-                });
+                services.AddDbContext<DeploymentAppContext>(SetupDatabaseOptions);
 
                 // Build the service provider.
                 var sp = services.BuildServiceProvider();
