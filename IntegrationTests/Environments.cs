@@ -42,9 +42,11 @@ namespace IntegrationTests
         }
 
         [Test]
-        public async Task AnEnvironmentCanBeCreated() {
+        public async Task AnEnvironmentCanBeCreated()
+        {
             var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
-            var environmentToCreate = new ApiNewEnvironment {
+            var environmentToCreate = new ApiNewEnvironment
+            {
                 HostName = "the-cloud",
                 Name = "The Cloud, Not The real one Obvs"
             };
@@ -58,9 +60,11 @@ namespace IntegrationTests
         }
 
         [Test]
-        public async Task AnEnvironmentWithADuplicateHostNameAndNameCannotBeCreated() {
+        public async Task AnEnvironmentWithADuplicateHostNameAndNameCannotBeCreated()
+        {
             var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
-            var environmentToCreate = new ApiNewEnvironment {
+            var environmentToCreate = new ApiNewEnvironment
+            {
                 HostName = "duplicate-me",
                 Name = "The copy"
             };
@@ -73,9 +77,11 @@ namespace IntegrationTests
         }
 
         [Test]
-        public async Task AnEnvironmentWithNoDeploymentsCanBeDeleted() {
+        public async Task AnEnvironmentWithNoDeploymentsCanBeDeleted()
+        {
             var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
-            var environmentToCreate = new ApiNewEnvironment {
+            var environmentToCreate = new ApiNewEnvironment
+            {
                 HostName = "one-to-delete",
                 Name = "The one I want to delete"
             };
@@ -90,9 +96,11 @@ namespace IntegrationTests
         }
 
         [Test]
-        public async Task AnEnvironmentWithDeploymentsCannotBeDeleted() {
+        public async Task AnEnvironmentWithDeploymentsCannotBeDeleted()
+        {
             var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
-            var environmentToCreate = new ApiNewEnvironment {
+            var environmentToCreate = new ApiNewEnvironment
+            {
                 HostName = "another-un",
                 Name = "Another Environment I like"
             };
@@ -101,7 +109,8 @@ namespace IntegrationTests
 
             var createdEnvironment = await response.AssertSuccessfulResponseAndGetContent<ApiEnvironment>();
 
-            var deploymentToCreate = new ApiNewDeployment {
+            var deploymentToCreate = new ApiNewDeployment
+            {
                 BranchName = "i-cannot-be-deleted",
                 EnvironmentId = createdEnvironment.Id,
                 PublicURL = "https://yoyo.co",
