@@ -15,6 +15,7 @@
 * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
 */
 
+using System.Web;
 using DeploymentTrackerCore.Models;
 
 namespace DeploymentTrackerCore.Services.DeploymentManagement.TypeBased
@@ -22,6 +23,6 @@ namespace DeploymentTrackerCore.Services.DeploymentManagement.TypeBased
     internal class DeployedSiteStringTemplater
     {
         public string Template(IDeployedSite site, string template)
-            => template.Replace("{{SiteName}}", site.SiteName);
+            => template.Replace("{{SiteName}}", HttpUtility.UrlEncode(site.SiteName));
     }
 }

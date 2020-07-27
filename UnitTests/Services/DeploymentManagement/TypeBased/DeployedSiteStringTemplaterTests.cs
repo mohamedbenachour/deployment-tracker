@@ -1,3 +1,4 @@
+using System.Web;
 using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Services.DeploymentManagement.TypeBased;
 using FluentAssertions;
@@ -29,6 +30,18 @@ namespace UnitTests.Services.DeploymentManagement.TypeBased
                 .Template(CreateMockDeployedSite(siteName), template);
 
             templatedResult.Should().Be($"https://thing-to-template.com/destroy?siteName={siteName}");
+        }
+
+        [Test]
+        public void TheSiteNameShouldBeUrlEncodedWhenGeneratingTheUrl()
+        {
+            var siteName = "site1&test%12";
+            var template = "https://thing-to-template.com/destroy?siteName={{SiteName}}";
+
+            var templatedResult = new DeployedSiteStringTemplater()
+                .Template(CreateMockDeployedSite(siteName), template);
+
+            templatedResult.Should().Be($"https://thing-to-template.com/destroy?siteName={HttpUtility.UrlEncode(siteName)}");
         }
 
         private IDeployedSite CreateMockDeployedSite(string siteName)
