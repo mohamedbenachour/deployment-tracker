@@ -54,14 +54,15 @@ namespace DeploymentTrackerCore.Controllers
             UserManager<ApplicationUser> userManager,
             IDeploymentManager deploymentManager,
             IJiraService jiraService,
-            IHubContext<DeploymentHub, IDeploymentClient> hubContext) : base(requestState, userManager) {
+            IHubContext<DeploymentHub, IDeploymentClient> hubContext) : base(requestState, userManager)
+        {
             Context = context;
             Hydrator = new ApiDeploymentHydrator(deploymentManager, jiraService);
             Reporter = new ReportDeploymentChange(hubContext);
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Deployment>>> Deployments()
+        public async Task<ActionResult<IEnumerable<ApiDeployment>>> Deployments()
         {
             var deployments = await new ListDeployments(Context, Hydrator).Fetch();
 
@@ -70,9 +71,10 @@ namespace DeploymentTrackerCore.Controllers
 
         [HttpPost]
         [Route("destroyed")]
-        public async Task<ActionResult<ApiDeployment>> DeploymentDestroyed(ApiDeploymentDestroyed request) {
+        public async Task<ActionResult<ApiDeployment>> DeploymentDestroyed(ApiDeploymentDestroyed request)
+        {
             SetUser();
-            
+
             var destroyer = new DeploymentDestroyed(Context, request.SiteName);
             var apiHandler = new ApiActionHandler(destroyer, Hydrator, Reporter);
 

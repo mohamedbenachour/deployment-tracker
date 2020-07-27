@@ -17,8 +17,10 @@
 
 using DeploymentTrackerCore.Models;
 
-namespace DeploymentTrackerCore.Models.API {
-    public class ApiDeployment : IBranchedDeployment, IDeployedSite {
+namespace DeploymentTrackerCore.Models.API
+{
+    public class ApiDeployment : IBranchedDeployment, IDeployedSite
+    {
         public int Id { get; set; }
         public string BranchName { get; set; }
         public string PublicURL { get; set; }
@@ -37,8 +39,12 @@ namespace DeploymentTrackerCore.Models.API {
         public AuditDetail ModifiedBy { get; set; }
         public AuditDetail CreatedBy { get; set; }
 
-        public static ApiDeployment FromInternal(Deployment toConvert) {
-            return new ApiDeployment {
+        IIdentifiable IDeployedSite.Type => Type;
+
+        public static ApiDeployment FromInternal(Deployment toConvert)
+        {
+            return new ApiDeployment
+            {
                 Id = toConvert.Id,
                 BranchName = toConvert.BranchName,
                 PublicURL = toConvert.PublicURL,

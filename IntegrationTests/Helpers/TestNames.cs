@@ -7,9 +7,15 @@ namespace IntegrationTests.Helpers
 {
     public static class TestNames
     {
-        public static string SiteName => $"Site-{Guid.NewGuid()}";
-        public static string BranchName => $"test/{Guid.NewGuid()}";
-        public static string Environment => $"Env-{Guid.NewGuid()}";
-        public static string HostName => $"{Guid.NewGuid()}.test";
+        public static string SiteName => $"Site-{UniqueId}";
+        public static string BranchName => $"test/{UniqueId}";
+        public static string Environment => $"Env-{UniqueId}";
+        public static string HostName => $"{UniqueId}.test";
+
+        public static string TypeName => $"Type-{UniqueId}";
+
+        public static string PublicUrl => $"https://{UniqueId}.test.com";
+
+        private static string UniqueId => Guid.NewGuid().ToString();
     }
 }

@@ -1,8 +1,25 @@
+/*
+* This file is part of Deployment Tracker.
+* 
+* Deployment Tracker is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Deployment Tracker is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 using DeploymentTrackerCore.Services.Configuration;
 using DeploymentTrackerCore.Services.DeploymentManagement;
+using DeploymentTrackerCore.Services.DeploymentManagement.TypeBased;
 using DeploymentTrackerCore.Services.Jira;
 using DeploymentTrackerCore.Services.Token;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DeploymentTrackerCore.Services.ServiceRegistration
@@ -13,7 +30,7 @@ namespace DeploymentTrackerCore.Services.ServiceRegistration
         {
             services.AddSingleton<ConfigurationService>();
             services.AddSingleton<IJiraService, JiraService>();
-            services.AddSingleton<IDeploymentManager, JenkinsDeploymentManager>();
+            services.AddScoped<IDeploymentManager, TypeBasedDeploymentManager>();
             services.AddSingleton<ITokenVerifier, TokenVerifier>();
 
             services.AddScoped<IRequestState, RequestState>();

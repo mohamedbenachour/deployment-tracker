@@ -23,28 +23,35 @@ using DeploymentTrackerCore.Services.Jira;
 
 using DeploymentTrackerCore.Models;
 
-namespace DeploymentTrackerCore.Actions.Deployments {
-    public class ApiDeploymentHydrator {
+namespace DeploymentTrackerCore.Actions.Deployments
+{
+    public class ApiDeploymentHydrator
+    {
         private IDeploymentManager DeploymentManager { get; }
         private IJiraService JiraService { get; }
 
-        public ApiDeploymentHydrator(IDeploymentManager deploymentManager, IJiraService jiraService) {
+        public ApiDeploymentHydrator(IDeploymentManager deploymentManager, IJiraService jiraService)
+        {
             DeploymentManager = deploymentManager;
             JiraService = jiraService;
         }
 
-        public async Task Hydrate(ApiDeployment deployment) {
-            var jiraInformation = new JiraInformation {
+        public async Task Hydrate(ApiDeployment deployment)
+        {
+            var jiraInformation = new JiraInformation
+            {
                 Url = JiraService.GetJiraUrl(deployment),
                 Issue = JiraService.GetJiraIssue(deployment)
             };
 
-            if (SiteIsRunning(deployment)) {
-                deployment.TeardownUrl = DeploymentManager.GetTeardownUrl(deployment);
+            if (SiteIsRunning(deployment))
+            {
+                deployment.TeardownUrl = await DeploymentManager.GetTeardownUrl(deployment);
 
                 var jiraUrl = JiraService.GetJiraUrl(deployment);
 
-                if (jiraInformation.Url != null) {
+                if (jiraInformation.Url != null)
+                {
                     jiraInformation.Status = (await JiraService.GetJiraStatus(deployment)).ToString();
                 }
             }

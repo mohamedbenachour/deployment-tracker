@@ -34,16 +34,6 @@
     "ConnectionStrings": {
         "Application": "Data Source=<file-name>.db"
     },
-    "Jenkins": {
-        "BaseUrl": "https://<jenkins-url>",
-        "Teardown": {
-            "ProjectName": "<project-name>",
-            "Parameters": {
-                "SiteName": "<site-name-parameter>",
-                "DestroySql": "<destroy-sql-parameter>"
-            }
-        }
-    },
     "AllowManualDeploymentsToBeAdded": false,
     "Jira": {
         "Enabled": true,

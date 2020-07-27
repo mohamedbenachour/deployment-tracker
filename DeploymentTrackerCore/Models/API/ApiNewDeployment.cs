@@ -19,7 +19,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DeploymentTrackerCore.Models.API
 {
-    public class ApiNewDeployment : IBranchedDeployment, IDeployedSite {
+    public class ApiNewDeployment : IBranchedDeployment, IDeployedSite
+    {
 
         [Required]
         public string BranchName { get; set; }
@@ -35,5 +36,7 @@ namespace DeploymentTrackerCore.Models.API
         public Login SiteLogin { get; set; }
 
         public ApiType Type { get; set; }
+
+        IIdentifiable IDeployedSite.Type => Type;
     }
 }
