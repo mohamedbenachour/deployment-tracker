@@ -74,6 +74,39 @@ namespace IntegrationTests
             }
         }
 
+        [Test]
+        public async Task DestroyingADeploymentWhereTwoDeploymentsHaveBeenMadeForDifferentTypesAndSiteNamesWithTheSameBranchWillDestroyTheCorrectDeployment()
+        {
+
+            var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
+            var branchName = TestNames.BranchName;
+
+            var firstTypeId = await Types.AddUniqueTypeAndGetId();
+            var secondTypeId = await Types.AddUniqueTypeAndGetId();
+
+            var destroyedDeployment = CreateDeployment(firstTypeId);
+            var leftOverDeployment = CreateDeployment(secondTypeId);
+
+            await client.PostJsonAsync(TestEnvironment.URLs.Deployment, destroyedDeployment);
+            await client.PostJsonAsync(TestEnvironment.URLs.Deployment, leftOverDeployment);
+
+            var destroyRequest = new ApiDeploymentDestroyed
+            {
+                SiteName = leftOverDeployment.SiteName
+            };
+
+            await client.PostJsonAsync($"{TestEnvironment.URLs.Deployment}/destroyed", destroyedDeployment);
+
+
+            var currentDeployments = await GetCurrentDeployments.ForClient(client);
+
+            using (new AssertionScope())
+            {
+                currentDeployments.Single(deployment => deployment.SiteName == destroyedDeployment.SiteName).Status.Should().Be("DESTROYED");
+                currentDeployments.Single(deployment => deployment.SiteName == leftOverDeployment.SiteName).Status.Should().Be("RUNNING");
+            }
+        }
+
         private void AssertThatDeploymentExists(IEnumerable<ApiDeployment> existingDeployments, ApiNewDeployment toFind) =>
             existingDeployments.Should().ContainEquivalentOf(
                 toFind,
