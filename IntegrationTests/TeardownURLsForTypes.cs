@@ -50,9 +50,7 @@ namespace IntegrationTests
                 TeardownTemplate = teardownUrlTemplate
             };
 
-            await AddType(type);
-
-            var typeId = await GetTypeId(type);
+            var typeId = await Types.AddTypeAndGetId(type);
 
             var deploymentToCreate = new ApiNewDeployment
             {
@@ -79,48 +77,5 @@ namespace IntegrationTests
             return createdDeployment;
         }
 
-        private async Task AddType(Type type)
-        {
-            var context = GetTestContext();
-
-            context.Types.Add(type);
-
-            await context.SaveChangesAsync();
-        }
-
-        private async Task<int> GetTypeId(Type type)
-        {
-            var context = GetTestContext();
-
-            return (await context.Types
-            .SingleAsync(t => t.Name == type.Name))
-            .Id;
-        }
-
-        private DeploymentAppContext GetTestContext()
-        {
-            var contextOptions = new DbContextOptionsBuilder<DeploymentAppContext>();
-
-            TestApplicationFactory<System.String>.SetupDatabaseOptions(contextOptions);
-
-            return new DeploymentAppContext(contextOptions.Options, new TestRequestState());
-        }
-
-        private class TestRequestState : IRequestState
-        {
-            public User GetUser()
-            {
-                return new User
-                {
-                    Name = "Test User",
-                    Username = "test-user"
-                };
-            }
-
-            public void SetUser(User user)
-            {
-                throw new System.NotImplementedException();
-            }
-        }
     }
 }
