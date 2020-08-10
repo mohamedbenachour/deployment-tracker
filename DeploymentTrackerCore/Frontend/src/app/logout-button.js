@@ -8,13 +8,13 @@ import CsrfHiddenInput from '../utils/csrf-hidden-input';
 
 const LogoutButton = () => (
     <Media
-      query={{ maxWidth: 450 }}
+        query={{ maxWidth: 450 }}
     >
         {(matches) => (
             <form action="/Account/Logout" method="post">
                 <Button
-                  icon={<LogoutOutlined />}
-                    htmlType="submit"
+                    icon={<LogoutOutlined />}
+                  htmlType="submit"
                 >
                     {matches ? '' : 'Log Out'}
                 </Button>

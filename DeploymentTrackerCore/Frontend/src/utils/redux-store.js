@@ -18,7 +18,8 @@ const getReduxDevtools = () => {
 
 const composeEnhancers = getReduxDevtools() || compose;
 
-export const createStore = (reducer) => originalCreateStore(
+export const createStore = (reducer, initialState = undefined) => originalCreateStore(
     reducer,
+    initialState,
     composeEnhancers(applyMiddleware(thunk)),
 );

@@ -23,7 +23,7 @@ function postJSON(URL, object, onSuccess, onFailure) {
         body: JSON.stringify(object),
         headers: new Headers({
             'Content-Type': 'application/json',
-            'RequestVerificationToken': getCsrfToken(),
+            RequestVerificationToken: getCsrfToken(),
         }),
     }).then((response) => {
         if (response.ok) {
@@ -42,9 +42,9 @@ function postJSON(URL, object, onSuccess, onFailure) {
     });
 }
 
-const get = url => fetch(url);
+const get = (url) => fetch(url);
 
-const getJSONPromise = url => new Promise((resolve, reject) => {
+const getJSONPromise = (url) => new Promise((resolve, reject) => {
     get(url).then((response) => {
         if (response.ok) {
             if (response.status === 204) {

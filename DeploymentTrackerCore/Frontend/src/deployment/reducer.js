@@ -17,34 +17,23 @@ import {
     DEPLOYMENT_STATUS_FILTER_CHANGE,
     DEPLOYMENT_TYPE_FILTER_CHANGE,
 } from './action-types';
+import updateWindowLocation from './update-window-location';
+import createDefaultState from './default-state';
 
-const getLoadingData = (loading = false) => ({
-    loading,
-    data: null,
-    loadError: null,
-});
-
-const defaultState = {
-    addingADeployment: false,
-    saveInProgress: false,
-    deploymentBeingAdded: null,
-    filters: {
-        branchName: '',
-        status: 'running',
-        type: null,
-    },
-};
-
-const deploymentReducer = (state = defaultState, action) => {
+const deploymentReducer = (state = createDefaultState(), action) => {
     let nextState = state;
 
     switch (action.type) {
     case DEPLOYMENT_SAVE_STARTED:
-        nextState = produce(state, (draftState) => { draftState.saveInProgress = true; });
+        nextState = produce(state, (draftState) => {
+            draftState.saveInProgress = true;
+        });
         break;
 
     case DEPLOYMENT_SAVE_FAILED:
-        nextState = produce(state, (draftState) => { draftState.saveInProgress = false; });
+        nextState = produce(state, (draftState) => {
+            draftState.saveInProgress = false;
+        });
         break;
 
     case DEPLOYMENT_ADD_CANCEL:
@@ -75,6 +64,10 @@ const deploymentReducer = (state = defaultState, action) => {
     case DEPLOYMENT_STATUS_FILTER_CHANGE:
         nextState = produce(state, (draftState) => {
             draftState.filters.status = action.value;
+
+            if (!action.eventInitiated) {
+                updateWindowLocation(draftState.filters);
+            }
         });
         break;
 

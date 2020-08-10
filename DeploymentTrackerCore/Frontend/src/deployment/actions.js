@@ -12,7 +12,6 @@ import {
     DEPLOYMENT_SEARCH,
     DEPLOYMENT_STATUS_FILTER_CHANGE,
     DEPLOYMENT_TYPE_FILTER_CHANGE,
-
     JIRA_STATUS_UPDATE,
 } from './action-types';
 
@@ -47,9 +46,13 @@ export const deploymentSearch = (searchName) => ({
     searchName,
 });
 
-export const deploymentStatusFilterChanged = (value) => ({
+export const deploymentStatusFilterChanged = (
+    value,
+    eventInitiated = false,
+) => ({
     type: DEPLOYMENT_STATUS_FILTER_CHANGE,
     value,
+    eventInitiated,
 });
 
 export const deploymentBeingAddedPublicURLChanged = (publicURL) => ({
