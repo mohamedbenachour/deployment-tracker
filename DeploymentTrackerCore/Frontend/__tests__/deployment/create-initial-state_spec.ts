@@ -5,7 +5,7 @@ describe('createInitialState', () => {
     beforeEach((): void => {
         delete global.window.location;
         global.window = Object.create(window);
-        global.window.location = new URL('http://localhost/');
+        global.window.location = <Location>(<unknown> new URL('http://localhost/'));
     });
 
     const setSearchInUrl = (search: string): void => {
