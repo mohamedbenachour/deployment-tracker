@@ -17,18 +17,31 @@ import environmentsReducer from './environment/reducer';
 import deploymentsReducer from './deployment/reducer';
 
 import { loadEnvironmentList } from './environment/async-actions';
+import { deploymentStatusFilterChanged } from './deployment/actions';
 
 import DeploymentHubClient from './deployment/deployment-hub-client';
 import JiraHubClient from './jira/jira-hub-client';
 import Notifier from './app/notifier';
+import createInitialState from './deployment/create-initial-state';
+import getStatusInUrl from './deployment/get-status-in-url';
 
-const rootReducer = combineReducers({ app: appReducer, environment: environmentsReducer, deployment: deploymentsReducer });
-const store = createStore(rootReducer);
+const initialDeploymentState = createInitialState();
+
+const rootReducer = combineReducers({
+    app: appReducer,
+    environment: environmentsReducer,
+    deployment: deploymentsReducer,
+});
+const store = createStore(rootReducer, { deployment: initialDeploymentState });
 
 store.dispatch(loadEnvironmentList());
 
 new DeploymentHubClient(store, new Notifier()).start();
 new JiraHubClient(store).start();
+
+window.addEventListener('popstate', () => {
+    store.dispatch(deploymentStatusFilterChanged(getStatusInUrl(), true));
+});
 
 bootstrapToPage(
     <Provider store={store}>
