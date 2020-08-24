@@ -1,9 +1,24 @@
 import React from 'react';
 import {
-    List, Typography, Button, Input, Popover, Radio, notification, Tag, Select,
+    List,
+    Typography,
+    Button,
+    Input,
+    Popover,
+    Radio,
+    notification,
+    Tag,
+    Select,
+    Checkbox,
 } from 'antd';
 import {
-    PlusOutlined, CloseCircleFilled, CheckCircleTwoTone, CopyOutlined, SelectOutlined, DeleteOutlined, StopTwoTone,
+    PlusOutlined,
+    CloseCircleFilled,
+    CheckCircleTwoTone,
+    CopyOutlined,
+    SelectOutlined,
+    DeleteOutlined,
+    StopTwoTone,
 } from '@ant-design/icons';
 
 import { statusIsRunning } from './deployment-status';
@@ -33,7 +48,9 @@ const renderJiraDetail = ({ url, status }) => (
 );
 
 const renderType = ({ name }) => (
-    <Tag style={{ marginLeft: 10 }} color="blue">{name}</Tag>
+    <Tag style={{ marginLeft: 10 }} color="blue">
+        {name}
+    </Tag>
 );
 
 const renderTitle = ({
@@ -80,16 +97,17 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
     return (
         <div style={{ margin: 10 }}>
             <label>
-                <Typography.Text strong style={labelStyle}>{fieldName}</Typography.Text>
+                <Typography.Text strong style={labelStyle}>
+                    {fieldName}
+                </Typography.Text>
             </label>
             <Typography.Text style={valueStyle}>{value}</Typography.Text>
-            {allowCopy
-            && (
+            {allowCopy && (
                 <Button
                     icon={<CopyOutlined />}
-                  onClick={() => copyValue(value)}
+                    onClick={() => copyValue(value)}
                     style={{ marginLeft: 10 }}
-                  title="Copy to clipboard"
+                    title="Copy to clipboard"
                 />
             )}
         </div>
@@ -98,18 +116,15 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
 
 const renderLoginDetail = ({ userName, password }) => (
     <Popover
-      content={(
-            <>
-              {renderLoginContent('Username', userName)}
-              {renderLoginContent('Password', password, true)}
-          </>
+        content={(
+          <>
+                {renderLoginContent('Username', userName)}
+                {renderLoginContent('Password', password, true)}
+            </>
         )}
         trigger="click"
     >
-        <Button
-            size="small"
-            type="link"
-        >
+        <Button size="small" type="link">
             Site Login
         </Button>
     </Popover>
@@ -127,16 +142,26 @@ const getActualName = (name, userName) => {
     return null;
 };
 
-const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }, siteLogin }) => {
+const renderDescription = ({
+    status,
+    modifiedBy: { name, userName, timestamp },
+    siteLogin,
+}) => {
     const actualName = getActualName(name, userName);
     const deploymentText = statusIsRunning(status) ? 'Deployed' : 'Torndown';
-    const actualDeploymentText = actualName ? `${deploymentText} by` : deploymentText;
+    const actualDeploymentText = actualName
+        ? `${deploymentText} by`
+        : deploymentText;
 
     return (
         <>
             <Typography.Text>{`${actualDeploymentText} `}</Typography.Text>
             {actualName && <Typography.Text strong>{actualName}</Typography.Text>}
-            <Typography.Text>{` on ${FormatAsLocalDateTimeString(timestamp)}`}</Typography.Text>
+            <Typography.Text>
+                {` on ${FormatAsLocalDateTimeString(
+                    timestamp,
+                )}`}
+            </Typography.Text>
             {siteLogin && renderLoginDetail(siteLogin)}
         </>
     );
@@ -145,8 +170,13 @@ const renderDescription = ({ status, modifiedBy: { name, userName, timestamp }, 
 const getActions = ({ teardownUrl, status, siteName }, teardownDeployment) => {
     if (statusIsRunning(status)) {
         return [
-            <DeleteOutlined title="Mark as torndown" onClick={() => teardownDeployment({ siteName })} />,
-            <a title="Teardown" href={teardownUrl} target="_blank"><StopTwoTone twoToneColor="#ff0000" /></a>,
+            <DeleteOutlined
+                title="Mark as torndown"
+                onClick={() => teardownDeployment({ siteName })}
+            />,
+            <a title="Teardown" href={teardownUrl} target="_blank">
+                <StopTwoTone twoToneColor="#ff0000" />
+            </a>,
         ];
     }
 
@@ -169,7 +199,7 @@ const renderAddDeploymentButton = (addDeployment) => {
             <Button
                 onClick={addDeployment}
                 type="primary"
-              shape="circle"
+                shape="circle"
                 icon={<PlusOutlined />}
                 style={{ marginRight: 10 }}
                 size="small"
@@ -204,6 +234,16 @@ const renderStatusFilter = (statusFilter, onStatusFilterChange) => (
     </Radio.Group>
 );
 
+const renderOnlyMineFilter = (onlyMineFilter, onOnlyMineFilterChange) => (
+    <Checkbox
+        onChange={({ target: { checked } }) => onOnlyMineFilterChange(checked)}
+        checked={onlyMineFilter}
+        style={{ paddingLeft: 10 }}
+    >
+        Only Mine
+    </Checkbox>
+);
+
 const renderHeader = (
     branchNameFilter,
     addDeployment,
@@ -213,17 +253,20 @@ const renderHeader = (
     typeFilter,
     types,
     onTypeFilterChange,
+    onlyMineFilter,
+    onOnlyMineFilterChange,
 ) => (
     <>
         {renderAddDeploymentButton(addDeployment)}
         <Input.Search
-          placeholder="Search by branch name"
-          onChange={({ target: { value } }) => onSearch(value)}
-          style={{ width: 200, marginRight: 10 }}
-          value={branchNameFilter}
+            placeholder="Search by branch name"
+            onChange={({ target: { value } }) => onSearch(value)}
+            style={{ width: 200, marginRight: 10 }}
+            value={branchNameFilter}
         />
         {renderStatusFilter(statusFilter, ({ target: { value } }) => onStatusFilterChange(value))}
         {renderTypeFilter(typeFilter, types, onTypeFilterChange)}
+        {renderOnlyMineFilter(onlyMineFilter, onOnlyMineFilterChange)}
     </>
 );
 
@@ -236,6 +279,8 @@ const DeploymentList = ({
     statusFilter,
     onStatusFilterChange,
     typeFilter,
+    onlyMineFilter,
+    onOnlyMineFilterChange,
     types,
     onTypeFilterChange,
     teardownDeployment,
@@ -243,7 +288,7 @@ const DeploymentList = ({
     <>
         <NewDeploymentModal />
         <List
-          header={renderHeader(
+            header={renderHeader(
                 branchNameFilter,
                 addDeployment,
                 onSearch,
@@ -252,12 +297,14 @@ const DeploymentList = ({
                 typeFilter,
                 types,
                 onTypeFilterChange,
+                onlyMineFilter,
+                onOnlyMineFilterChange,
             )}
-          bordered
-          dataSource={deployments}
-          loading={isLoading}
-          renderItem={(deployment) => renderDeploymentItem(deployment, teardownDeployment)}
-          pagination={{ pageSize: 10 }}
+            bordered
+            dataSource={deployments}
+            loading={isLoading}
+            renderItem={(deployment) => renderDeploymentItem(deployment, teardownDeployment)}
+            pagination={{ pageSize: 10 }}
         />
     </>
 );

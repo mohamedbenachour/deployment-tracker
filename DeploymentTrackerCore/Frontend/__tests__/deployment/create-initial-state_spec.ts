@@ -3,9 +3,10 @@ import createDefaultState from '../../src/deployment/default-state';
 
 describe('createInitialState', () => {
     beforeEach((): void => {
-        delete global.window.location;
-        global.window = Object.create(window);
-        global.window.location = <Location>(<unknown> new URL('http://localhost/'));
+        delete (window as any).location;
+
+        window = Object.create(window);
+        window.location = <Location>(<unknown> new URL('http://localhost/'));
     });
 
     const setSearchInUrl = (search: string): void => {
@@ -53,6 +54,22 @@ describe('createInitialState', () => {
             expect(createInitialState().filters.status).toBe(
                 createDefaultState().filters.status,
             );
+        });
+    });
+
+    describe('when a value for the onlyMine filter has been defined', () => {
+        it('should set the expected onlyMine value in the initial state', () => {
+            setSearchInUrl('onlyMine=true');
+
+            expect(createInitialState().filters.onlyMine).toBe(true);
+        });
+    });
+
+    describe('when an invalue for the onlyMine filter has been defined', () => {
+        it('should set the default onlyMine value in the initial state', () => {
+            setSearchInUrl('onlyMine=blal');
+
+            expect(createInitialState().filters.onlyMine).toBe(false);
         });
     });
 });
