@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 interface PageProperties {
   csrfToken?: string;
 }
