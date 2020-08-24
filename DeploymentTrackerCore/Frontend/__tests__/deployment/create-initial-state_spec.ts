@@ -3,9 +3,10 @@ import createDefaultState from '../../src/deployment/default-state';
 
 describe('createInitialState', () => {
     beforeEach((): void => {
-        delete global.window.location;
-        global.window = Object.create(window);
-        global.window.location = <Location>(<unknown> new URL('http://localhost/'));
+        delete (window as any).location;
+
+        window = Object.create(window);
+        window.location = <Location>(<unknown> new URL('http://localhost/'));
     });
 
     const setSearchInUrl = (search: string): void => {
