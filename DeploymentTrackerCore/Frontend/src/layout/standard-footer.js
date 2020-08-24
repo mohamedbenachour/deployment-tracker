@@ -22,8 +22,8 @@ const StandardFooter = ({ classes: { container, version, source } }) => (
             <div className={version}>{`Deployment Tracker v${process.env.VERSION}`}</div>
             <div className={source}>
                 <a
-                    href="https://gitlab.com/pmdematagoda/deployment-tracker"
-                    target="_blank"
+                  href="https://gitlab.com/pmdematagoda/deployment-tracker"
+                  target="_blank"
                 >
                     See the Source
                     <GitlabOutlined />
