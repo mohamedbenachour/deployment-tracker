@@ -2,6 +2,7 @@ interface Filters {
   branchName: string;
   status: string;
   type: string | null;
+  onlyMine: boolean;
 }
 
 interface DeploymentState {
@@ -19,6 +20,7 @@ const createDefaultState = (): DeploymentState => ({
         branchName: '',
         status: 'running',
         type: null,
+        onlyMine: false,
     },
 });
 

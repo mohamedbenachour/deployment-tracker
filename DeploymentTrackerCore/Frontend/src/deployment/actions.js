@@ -13,6 +13,7 @@ import {
     DEPLOYMENT_STATUS_FILTER_CHANGE,
     DEPLOYMENT_TYPE_FILTER_CHANGE,
     JIRA_STATUS_UPDATE,
+    DEPLOYMENT_ONLY_MINE_FILTER_CHANGE,
 } from './action-types';
 
 export const deploymentAddClicked = () => ({
@@ -48,11 +49,11 @@ export const deploymentSearch = (searchName) => ({
 
 export const deploymentStatusFilterChanged = (
     value,
-    eventInitiated = false,
+    externallyInitiated = false,
 ) => ({
     type: DEPLOYMENT_STATUS_FILTER_CHANGE,
     value,
-    eventInitiated,
+    externallyInitiated,
 });
 
 export const deploymentBeingAddedPublicURLChanged = (publicURL) => ({
@@ -79,4 +80,13 @@ export const jiraStatusUpdate = (jiraIssue, jiraStatus) => ({
 export const deploymentTypeFilterChange = (typeId) => ({
     type: DEPLOYMENT_TYPE_FILTER_CHANGE,
     typeId,
+});
+
+export const deploymentOnlyMineFilterChange = (
+    value,
+    externallyInitiated = false,
+) => ({
+    type: DEPLOYMENT_ONLY_MINE_FILTER_CHANGE,
+    value,
+    externallyInitiated,
 });

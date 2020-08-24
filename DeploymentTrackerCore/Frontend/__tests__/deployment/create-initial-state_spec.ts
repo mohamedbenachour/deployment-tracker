@@ -55,4 +55,20 @@ describe('createInitialState', () => {
             );
         });
     });
+
+    describe('when a value for the onlyMine filter has been defined', () => {
+        it('should set the expected onlyMine value in the initial state', () => {
+            setSearchInUrl('onlyMine=true');
+
+            expect(createInitialState().filters.onlyMine).toBe(true);
+        });
+    });
+
+    describe('when an invalue for the onlyMine filter has been defined', () => {
+        it('should set the default onlyMine value in the initial state', () => {
+            setSearchInUrl('onlyMine=blal');
+
+            expect(createInitialState().filters.onlyMine).toBe(false);
+        });
+    });
 });

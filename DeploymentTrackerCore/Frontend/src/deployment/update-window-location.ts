@@ -5,6 +5,7 @@ const updateWindowLocation = (filters: Filters): void => {
     const urlSearch = new URLSearchParams();
 
     urlSearch.append('status', filters.status);
+    urlSearch.append('onlyMine', `${filters.onlyMine}`);
 
     SetCurrentParameters(urlSearch);
 };

@@ -16,6 +16,7 @@ import {
     DEPLOYMENT_SEARCH,
     DEPLOYMENT_STATUS_FILTER_CHANGE,
     DEPLOYMENT_TYPE_FILTER_CHANGE,
+    DEPLOYMENT_ONLY_MINE_FILTER_CHANGE,
 } from './action-types';
 import updateWindowLocation from './update-window-location';
 import createDefaultState from './default-state';
@@ -65,7 +66,7 @@ const deploymentReducer = (state = createDefaultState(), action) => {
         nextState = produce(state, (draftState) => {
             draftState.filters.status = action.value;
 
-            if (!action.eventInitiated) {
+            if (!action.externallyInitiated) {
                 updateWindowLocation(draftState.filters);
             }
         });
@@ -74,6 +75,16 @@ const deploymentReducer = (state = createDefaultState(), action) => {
     case DEPLOYMENT_TYPE_FILTER_CHANGE:
         nextState = produce(state, (draftState) => {
             draftState.filters.type = action.typeId;
+        });
+        break;
+
+    case DEPLOYMENT_ONLY_MINE_FILTER_CHANGE:
+        nextState = produce(state, (draftState) => {
+            draftState.filters.onlyMine = action.value;
+
+            if (!action.externallyInitiated) {
+                updateWindowLocation(draftState.filters);
+            }
         });
         break;
 
