@@ -7,12 +7,13 @@ describe('updateWindowLocation', () => {
             status: 'completed',
             branchName: '',
             type: null,
+            onlyMine: false,
         };
 
         it('sets the expected search for the URL', () => {
             updateWindowLocation(filters);
 
-            expect(window.location.search).toBe('?status=completed');
+            expect(window.location.search).toBe('?status=completed&onlyMine=false');
         });
     });
 
@@ -21,12 +22,28 @@ describe('updateWindowLocation', () => {
             status: 'torndown',
             branchName: 'test/123',
             type: 'test',
+            onlyMine: false,
         };
 
         it('only the status is included in the URL', () => {
             updateWindowLocation(filters);
 
-            expect(window.location.search).toBe('?status=torndown');
+            expect(window.location.search).toBe('?status=torndown&onlyMine=false');
+        });
+    });
+
+    describe('when the onleMine filter is true', () => {
+        const filters: Filters = {
+            status: 'torndown',
+            branchName: 'test/123',
+            type: 'test',
+            onlyMine: true,
+        };
+
+        it('sets the expected search for the URL', () => {
+            updateWindowLocation(filters);
+
+            expect(window.location.search).toBe('?status=torndown&onlyMine=true');
         });
     });
 });
