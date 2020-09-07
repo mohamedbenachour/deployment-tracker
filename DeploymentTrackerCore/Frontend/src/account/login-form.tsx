@@ -1,10 +1,7 @@
 import React from 'react';
 
 import {
-    Button,
-    Input,
-    Checkbox,
-    Typography,
+    Button, Input, Checkbox, Typography,
 } from 'antd';
 
 import { LoginOutlined } from '@ant-design/icons';
@@ -31,10 +28,21 @@ const styles = {
     },
 };
 
-const LoginForm = ({ classes }) => (
+interface LoginFormClasses {
+  loginForm: string;
+  formGroup: string;
+}
+
+interface LoginFormProps {
+  classes: LoginFormClasses;
+}
+
+const LoginForm = ({ classes }: LoginFormProps) => (
     <Centered>
         <form className={classes.loginForm} method="post">
-            <Typography.Title level={3}>Log In to Deployment Tracker</Typography.Title>
+            <Typography.Title level={3}>
+                Log In to Deployment Tracker
+            </Typography.Title>
             <hr />
             <div className={classes.formGroup}>
                 <label htmlFor="Input_UserName">User Name</label>
@@ -45,10 +53,14 @@ const LoginForm = ({ classes }) => (
                 <Input.Password id="Input_Password" name="Input.Password" />
             </div>
             <div className={classes.formGroup}>
-                <Checkbox id="Input_RememberMe" name="Input.RememberMe" value="true">Remember Me?</Checkbox>
+                <Checkbox id="Input_RememberMe" name="Input.RememberMe" value="true">
+                    Remember Me?
+                </Checkbox>
             </div>
             <div className={classes.formGroup}>
-                <Button type="primary" icon={<LoginOutlined />} htmlType="submit">Log in</Button>
+                <Button type="primary" icon={<LoginOutlined />} htmlType="submit">
+                    Log in
+                </Button>
             </div>
             <CsrfHiddenInput />
         </form>

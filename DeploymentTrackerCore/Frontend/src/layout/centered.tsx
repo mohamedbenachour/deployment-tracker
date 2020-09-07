@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 
 import withStyles from 'react-jss';
 
@@ -16,10 +16,18 @@ const styles = {
     },
 };
 
-const Centered = ({ classes, children }) => (
-    <div className={classes.container}>
-        {children}
-    </div>
-);
+interface CenteredClasses {
+  container: string;
+}
+
+interface CenteredProps {
+  classes: CenteredClasses;
+  children: JSX.Element;
+}
+
+const Centered: FunctionComponent<CenteredProps> = ({
+    classes,
+    children,
+}: CenteredProps) => <div className={classes.container}>{children}</div>;
 
 export default withStyles(styles)(Centered);
