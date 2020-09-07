@@ -1,34 +1,33 @@
 /*
-* This file is part of Deployment Tracker.
-* 
-* Deployment Tracker is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* Deployment Tracker is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
+ * This file is part of Deployment Tracker.
+ * 
+ * Deployment Tracker is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Deployment Tracker is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
- 
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using DeploymentTrackerCore.Models;
-
-using Microsoft.EntityFrameworkCore;
 
 using DeploymentTrackerCore.Actions;
+using DeploymentTrackerCore.Models.Entities;
 
-namespace DeploymentTrackerCore.Actions.Environment
-{
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace DeploymentTrackerCore.Actions.Environment {
     class DeleteEnvironment {
         private DeploymentAppContext Context { get; }
 
@@ -40,7 +39,7 @@ namespace DeploymentTrackerCore.Actions.Environment
 
         public DeleteEnvironment(DeploymentAppContext context, int environmentID) {
             Context = context;
-            EnvironmentID = environmentID;         
+            EnvironmentID = environmentID;
         }
 
         public async Task Perform() {
@@ -48,7 +47,7 @@ namespace DeploymentTrackerCore.Actions.Environment
                 var environmentReference = Context.Environments.Single(env => env.Id == EnvironmentID);
 
                 Context.Environments.Remove(environmentReference);
-                
+
                 await Context.SaveChangesAsync();
 
                 Succeeded = true;

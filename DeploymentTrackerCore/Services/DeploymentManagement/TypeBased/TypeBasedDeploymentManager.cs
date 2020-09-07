@@ -19,6 +19,7 @@ using System;
 using System.Threading.Tasks;
 
 using DeploymentTrackerCore.Models;
+using DeploymentTrackerCore.Models.Entities;
 
 using Microsoft.Extensions.Logging;
 
@@ -58,6 +59,6 @@ namespace DeploymentTrackerCore.Services.DeploymentManagement.TypeBased {
             return new DeployedSiteStringTemplater().Template(deployment, teardownTemplate);
         }
 
-        private async Task<Models.Type> GetTypeForDeployment(IDeployedSite deployment) => await DBContext.Types.FindAsync(deployment.Type.Id);
+        private async Task<Models.Entities.Type> GetTypeForDeployment(IDeployedSite deployment) => await DBContext.Types.FindAsync(deployment.Type.Id);
     }
 }

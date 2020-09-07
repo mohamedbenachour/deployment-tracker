@@ -15,28 +15,22 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.ComponentModel.DataAnnotations;
 
-using DeploymentTrackerCore.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace DeploymentTrackerCore.Models.API {
-    public class ApiNewDeployment : IBranchedDeployment, IDeployedSite {
+namespace DeploymentTrackerCore.Models.Entities {
+    [Owned]
+    public class AuditDetail {
+        [Required]
+        [StringLength(150, MinimumLength = 3)]
+        public string Name { get; set; }
 
         [Required]
-        public string BranchName { get; set; }
+        [StringLength(50, MinimumLength = 3)]
+        public string UserName { get; set; }
 
-        [Required]
-        public string SiteName { get; set; }
-
-        [Required]
-        public string PublicURL { get; set; }
-
-        public int EnvironmentId { get; set; }
-
-        public Login SiteLogin { get; set; }
-
-        public ApiType Type { get; set; }
-
-        IIdentifiable IDeployedSite.Type => Type;
+        public DateTime Timestamp { get; set; }
     }
 }

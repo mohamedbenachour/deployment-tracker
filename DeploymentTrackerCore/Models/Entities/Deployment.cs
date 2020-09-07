@@ -15,27 +15,48 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.ComponentModel.DataAnnotations;
 
-using DeploymentTrackerCore.Models.Entities;
+namespace DeploymentTrackerCore.Models.Entities {
+    public class Deployment : IAuditable, IBranchedDeployment, IDeployedSite {
+        [Key]
+        public int Id { get; set; }
 
-namespace DeploymentTrackerCore.Models.API {
-    public class ApiNewDeployment : IBranchedDeployment, IDeployedSite {
+        public virtual DeploymentEnvironment DeployedEnvironment { get; set; }
+
+        public virtual Type Type { get; set; }
 
         [Required]
+        [StringLength(200, MinimumLength = 3)]
         public string BranchName { get; set; }
 
         [Required]
+        [StringLength(100, MinimumLength = 3)]
         public string SiteName { get; set; }
 
         [Required]
+        [StringLength(150, MinimumLength = 3)]
         public string PublicURL { get; set; }
 
-        public int EnvironmentId { get; set; }
+        public DeploymentStatus Status { get; set; }
+
+        public int DeploymentCount { get; set; }
 
         public Login SiteLogin { get; set; }
 
-        public ApiType Type { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
+        [Required]
+        public AuditDetail CreatedBy { get; set; }
+
+        public void SetCreatedBy(AuditDetail detail) { CreatedBy = detail; }
+
+        public void SetModifiedBy(AuditDetail detail) { ModifiedBy = detail; }
+
+        [Required]
+        public AuditDetail ModifiedBy { get; set; }
 
         IIdentifiable IDeployedSite.Type => Type;
     }

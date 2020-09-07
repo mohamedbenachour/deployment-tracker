@@ -15,28 +15,27 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-using DeploymentTrackerCore.Models.Entities;
-
-namespace DeploymentTrackerCore.Models.API {
-    public class ApiNewDeployment : IBranchedDeployment, IDeployedSite {
-
-        [Required]
-        public string BranchName { get; set; }
+namespace DeploymentTrackerCore.Models.Entities {
+    public class Type : IIdentifiable {
+        [Key]
+        public int Id { get; set; }
 
         [Required]
-        public string SiteName { get; set; }
+        [StringLength(200, MinimumLength = 3)]
+        public string Name { get; set; }
 
-        [Required]
-        public string PublicURL { get; set; }
+        [StringLength(500, MinimumLength = 3)]
+        public string TeardownTemplate { get; set; }
 
-        public int EnvironmentId { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
 
-        public Login SiteLogin { get; set; }
+        public virtual IList<Deployment> Deployments { get; set; } = new List<Deployment>();
 
-        public ApiType Type { get; set; }
-
-        IIdentifiable IDeployedSite.Type => Type;
+        [StringLength(500, MinimumLength = 3)]
+        public string DeploymentTemplate { get; set; }
     }
 }

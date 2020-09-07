@@ -1,34 +1,38 @@
 /*
-* This file is part of Deployment Tracker.
-* 
-* Deployment Tracker is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* Deployment Tracker is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
-*/
+ * This file is part of Deployment Tracker.
+ * 
+ * Deployment Tracker is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Deployment Tracker is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+
 using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Models.API;
+using DeploymentTrackerCore.Models.Entities;
+
 using FluentAssertions;
+
 using IntegrationTests.Helpers;
 using IntegrationTests.Helpers.DeploymentsApi;
+
 using NUnit.Framework;
 
-namespace IntegrationTests
-{
+namespace IntegrationTests {
     [TestFixture]
     public class ExternalDeployments {
         private int EnvironmentId { get; set; }
@@ -54,7 +58,7 @@ namespace IntegrationTests
             var response = await client.PostAsync(TestEnvironment.URLs.DeploymentExternal, new StringContent(sampleJsonWithTrailingCommas, Encoding.UTF8, MediaTypeNames.Application.Json));
 
             var createdDeployment = await response.AssertSuccessfulResponseAndGetContent<ApiNewDeployment>();
-        
+
             createdDeployment.Should().NotBeNull();
         }
 
@@ -66,18 +70,18 @@ namespace IntegrationTests
                 EnvironmentId = EnvironmentId,
                 PublicURL = "https://externals.com.au",
                 User = new ApiUser {
-                    Name = "External Userz",
-                    Username = "external-user-here"
+                Name = "External Userz",
+                Username = "external-user-here"
                 },
                 SiteLogin = new Login {
-                    UserName = "user-name-here",
-                    Password = "passwordzz"
+                UserName = "user-name-here",
+                Password = "passwordzz"
                 },
                 Token = new ApiExternalTokenContainer {
-                    Value = TestEnvironment.ExternalToken
+                Value = TestEnvironment.ExternalToken
                 },
                 Type = new ApiType {
-                    Id = 1
+                Id = 1
                 }
             };
 
@@ -87,10 +91,10 @@ namespace IntegrationTests
 
             var createdDeployment = await response.AssertSuccessfulResponseAndGetContent<ApiNewDeployment>();
 
-            createdDeployment.Should().BeEquivalentTo(deploymentToCreate, (options) => 
+            createdDeployment.Should().BeEquivalentTo(deploymentToCreate, (options) =>
                 options.ExcludingMissingMembers()
                 .Excluding(d => d.Type.Name)
-                );
+            );
         }
 
         [Test]
@@ -101,15 +105,15 @@ namespace IntegrationTests
                 EnvironmentId = EnvironmentId,
                 PublicURL = "https://externals.com.au",
                 User = new ApiUser {
-                    Name = "External Userz",
-                    Username = "external-user-here"
+                Name = "External Userz",
+                Username = "external-user-here"
                 },
                 SiteLogin = new Login {
-                    UserName = "user-name-here",
-                    Password = "passwordzz"
+                UserName = "user-name-here",
+                Password = "passwordzz"
                 },
                 Token = new ApiExternalTokenContainer {
-                    Value = TestEnvironment.ExternalToken
+                Value = TestEnvironment.ExternalToken
                 }
             };
 
@@ -130,15 +134,15 @@ namespace IntegrationTests
                 EnvironmentId = EnvironmentId,
                 PublicURL = "https://externals.com.au/torndown",
                 User = new ApiUser {
-                    Name = "External Userz",
-                    Username = "external-user-here"
+                Name = "External Userz",
+                Username = "external-user-here"
                 },
                 SiteLogin = new Login {
-                    UserName = "user-name-here",
-                    Password = "passwordzz"
+                UserName = "user-name-here",
+                Password = "passwordzz"
                 },
                 Token = new ApiExternalTokenContainer {
-                    Value = "definitely-aint-valid"
+                Value = "definitely-aint-valid"
                 }
             };
 
@@ -157,15 +161,15 @@ namespace IntegrationTests
                 EnvironmentId = EnvironmentId,
                 PublicURL = "https://externals.com.au/torndown",
                 User = new ApiUser {
-                    Name = "External Userz",
-                    Username = "external-user-here"
+                Name = "External Userz",
+                Username = "external-user-here"
                 },
                 SiteLogin = new Login {
-                    UserName = "user-name-here",
-                    Password = "passwordzz"
+                UserName = "user-name-here",
+                Password = "passwordzz"
                 },
                 Token = new ApiExternalTokenContainer {
-                    Value = TestEnvironment.ExternalToken
+                Value = TestEnvironment.ExternalToken
                 }
             };
 
@@ -178,11 +182,11 @@ namespace IntegrationTests
             var deploymentToDestroy = new ApiExternalDeploymentDestroyed {
                 SiteName = deploymentToCreate.SiteName,
                 User = new ApiUser {
-                    Name = "External Userz",
-                    Username = "external-user-here"
+                Name = "External Userz",
+                Username = "external-user-here"
                 },
                 Token = new ApiExternalTokenContainer {
-                    Value = TestEnvironment.ExternalToken
+                Value = TestEnvironment.ExternalToken
                 }
             };
 
@@ -194,8 +198,7 @@ namespace IntegrationTests
         }
 
         [Test]
-        public async Task MultipleDeploymentsCanBeCreatedForABranchUsingDifferentSiteNames()
-        {
+        public async Task MultipleDeploymentsCanBeCreatedForABranchUsingDifferentSiteNames() {
             var client = TestEnvironment.ClientFactory.CreateClient();
             var authenticatedClient = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
 
@@ -215,25 +218,21 @@ namespace IntegrationTests
         }
 
         private ApiExternalNewDeployment CreateNewDeployment(string siteName, string branchName) =>
-            new ApiExternalNewDeployment
-            {
+            new ApiExternalNewDeployment {
                 BranchName = branchName,
                 SiteName = siteName,
                 EnvironmentId = EnvironmentId,
                 PublicURL = $"https://{siteName}.externals.com.au/torndown",
-                User = new ApiUser
-                {
-                    Name = "External Userz",
-                    Username = "external-user-here"
+                User = new ApiUser {
+                Name = "External Userz",
+                Username = "external-user-here"
                 },
-                SiteLogin = new Login
-                {
-                    UserName = "user-name-here",
-                    Password = "passwordzz"
+                SiteLogin = new Login {
+                UserName = "user-name-here",
+                Password = "passwordzz"
                 },
-                Token = new ApiExternalTokenContainer
-                {
-                    Value = TestEnvironment.ExternalToken
+                Token = new ApiExternalTokenContainer {
+                Value = TestEnvironment.ExternalToken
                 }
             };
 
@@ -248,7 +247,7 @@ namespace IntegrationTests
             var createResponse = await client.PostJsonAsync(TestEnvironment.URLs.Environment, environmentToCreate);
 
             var createdEnvironment = await createResponse.AssertSuccessfulResponseAndGetContent<ApiEnvironment>();
-        
+
             EnvironmentId = createdEnvironment.Id;
         }
     }

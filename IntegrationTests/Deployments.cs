@@ -20,26 +20,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Models.API;
+using DeploymentTrackerCore.Models.Entities;
+
 using FluentAssertions;
 using FluentAssertions.Execution;
+
 using IntegrationTests.Helpers;
 using IntegrationTests.Helpers.DeploymentsApi;
 using IntegrationTests.Helpers.TestSetup;
 
 using NUnit.Framework;
 
-namespace IntegrationTests
-{
+namespace IntegrationTests {
     [TestFixture]
-    public class Deployments
-    {
+    public class Deployments {
         private int EnvironmentId { get; set; }
 
         [Test]
-        public async Task ADeploymentCanBeCreated()
-        {
+        public async Task ADeploymentCanBeCreated() {
             var deploymentToCreate = CreateDeploymentForDefaultType();
 
             var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
@@ -50,8 +49,7 @@ namespace IntegrationTests
         }
 
         [Test]
-        public async Task DeploymentsForDifferentTypesUsingDifferentSiteNamesAndTheSameBranchNameCanBeCreated()
-        {
+        public async Task DeploymentsForDifferentTypesUsingDifferentSiteNamesAndTheSameBranchNameCanBeCreated() {
 
             var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
             var branchName = TestNames.BranchName;
@@ -67,16 +65,14 @@ namespace IntegrationTests
 
             var currentDeployments = await GetCurrentDeployments.ForClient(client);
 
-            using (new AssertionScope())
-            {
+            using(new AssertionScope()) {
                 AssertThatDeploymentExists(currentDeployments, firstDeploymentToCreate);
                 AssertThatDeploymentExists(currentDeployments, secondDeploymentToCreate);
             }
         }
 
         [Test]
-        public async Task DestroyingADeploymentWhereTwoDeploymentsHaveBeenMadeForDifferentTypesAndSiteNamesWithTheSameBranchWillDestroyTheCorrectDeployment()
-        {
+        public async Task DestroyingADeploymentWhereTwoDeploymentsHaveBeenMadeForDifferentTypesAndSiteNamesWithTheSameBranchWillDestroyTheCorrectDeployment() {
 
             var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
             var branchName = TestNames.BranchName;
@@ -90,18 +86,15 @@ namespace IntegrationTests
             await client.PostJsonAsync(TestEnvironment.URLs.Deployment, destroyedDeployment);
             await client.PostJsonAsync(TestEnvironment.URLs.Deployment, leftOverDeployment);
 
-            var destroyRequest = new ApiDeploymentDestroyed
-            {
+            var destroyRequest = new ApiDeploymentDestroyed {
                 SiteName = leftOverDeployment.SiteName
             };
 
             await client.PostJsonAsync($"{TestEnvironment.URLs.Deployment}/destroyed", destroyedDeployment);
 
-
             var currentDeployments = await GetCurrentDeployments.ForClient(client);
 
-            using (new AssertionScope())
-            {
+            using(new AssertionScope()) {
                 currentDeployments.Single(deployment => deployment.SiteName == destroyedDeployment.SiteName).Status.Should().Be("DESTROYED");
                 currentDeployments.Single(deployment => deployment.SiteName == leftOverDeployment.SiteName).Status.Should().Be("RUNNING");
             }
@@ -111,13 +104,12 @@ namespace IntegrationTests
             existingDeployments.Should().ContainEquivalentOf(
                 toFind,
                 (options) => options
-            .Including(deployment => deployment.SiteName)
-            .Including(deployment => deployment.BranchName)
-            .Including(deployment => deployment.Type.Id));
+                .Including(deployment => deployment.SiteName)
+                .Including(deployment => deployment.BranchName)
+                .Including(deployment => deployment.Type.Id));
 
         [Test]
-        public async Task DeploymentsCreatedCanBeListed()
-        {
+        public async Task DeploymentsCreatedCanBeListed() {
             var deploymentToCreate = CreateDeploymentForDefaultType();
 
             var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
@@ -133,20 +125,17 @@ namespace IntegrationTests
         [OneTimeSetUp]
         public async Task OneTimeSetup() => EnvironmentId = (await UniqueEnvironment.Create()).Id;
 
-        private ApiNewDeployment CreateDeployment(int typeId) => new ApiNewDeployment
-        {
+        private ApiNewDeployment CreateDeployment(int typeId) => new ApiNewDeployment {
             BranchName = TestNames.BranchName,
             SiteName = TestNames.SiteName,
             EnvironmentId = EnvironmentId,
             PublicURL = TestNames.PublicUrl,
-            SiteLogin = new Login
-            {
-                UserName = "user-name-here",
-                Password = "passwordzz"
+            SiteLogin = new Login {
+            UserName = "user-name-here",
+            Password = "passwordzz"
             },
-            Type = new ApiType
-            {
-                Id = typeId
+            Type = new ApiType {
+            Id = typeId
             }
         };
 

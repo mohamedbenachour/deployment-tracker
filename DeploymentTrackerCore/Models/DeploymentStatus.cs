@@ -15,28 +15,9 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
-using System.ComponentModel.DataAnnotations;
-
-using DeploymentTrackerCore.Models.Entities;
-
-namespace DeploymentTrackerCore.Models.API {
-    public class ApiNewDeployment : IBranchedDeployment, IDeployedSite {
-
-        [Required]
-        public string BranchName { get; set; }
-
-        [Required]
-        public string SiteName { get; set; }
-
-        [Required]
-        public string PublicURL { get; set; }
-
-        public int EnvironmentId { get; set; }
-
-        public Login SiteLogin { get; set; }
-
-        public ApiType Type { get; set; }
-
-        IIdentifiable IDeployedSite.Type => Type;
+namespace DeploymentTrackerCore.Models {
+    public enum DeploymentStatus {
+        RUNNING,
+        DESTROYED
     }
 }
