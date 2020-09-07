@@ -1,45 +1,41 @@
 /*
-* This file is part of Deployment Tracker.
-* 
-* Deployment Tracker is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* Deployment Tracker is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
+ * This file is part of Deployment Tracker.
+ * 
+ * Deployment Tracker is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Deployment Tracker is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 using DeploymentTrackerCore.Services;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DeploymentTrackerCore.Models
-{
-    public class DeploymentAppContext : DbContext
-    {
+namespace DeploymentTrackerCore.Models {
+    public class DeploymentAppContext : DbContext {
         private IRequestState CurrentRequestState { get; }
 
-        public DeploymentAppContext(DbContextOptions<DeploymentAppContext> options, IRequestState requestState)
-            : base(options)
-        {
+        public DeploymentAppContext(DbContextOptions<DeploymentAppContext> options, IRequestState requestState) : base(options) {
             CurrentRequestState = requestState;
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
             var converter = new EnumToStringConverter<DeploymentStatus>();
 
             modelBuilder.Entity<Deployment>()
@@ -50,27 +46,23 @@ namespace DeploymentTrackerCore.Models
                 .HasData(new { Id = 1, Name = "Default" });
         }
 
-        private void SetAuditDetails()
-        {
+        private void SetAuditDetails() {
             var auditTime = DateTime.UtcNow;
             var currentUser = CurrentRequestState.GetUser();
             var applicableEntries = from e in ChangeTracker.Entries()
-                                    where typeof(IAuditable).IsAssignableFrom(e.Entity.GetType())
-                                     && (e.State == EntityState.Added
-                                        || e.State == EntityState.Modified)
-                                    select e;
+            where typeof(IAuditable).IsAssignableFrom(e.Entity.GetType()) &&
+                (e.State == EntityState.Added ||
+                    e.State == EntityState.Modified)
+            select e;
 
-            foreach (var entry in applicableEntries)
-            {
-                var auditDetail = new AuditDetail
-                {
+            foreach (var entry in applicableEntries) {
+                var auditDetail = new AuditDetail {
                     Timestamp = DateTime.UtcNow,
                     Name = CurrentRequestState.GetUser().Name,
                     UserName = CurrentRequestState.GetUser().Username
                 };
                 var actualEntity = (IAuditable)entry.Entity;
-                if (entry.State == EntityState.Added)
-                {
+                if (entry.State == EntityState.Added) {
                     actualEntity.SetCreatedBy(auditDetail);
                 }
 
@@ -78,14 +70,12 @@ namespace DeploymentTrackerCore.Models
             }
         }
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
-        {
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken()) {
             SetAuditDetails();
             return await base.SaveChangesAsync(cancellationToken);
         }
 
-        public override int SaveChanges()
-        {
+        public override int SaveChanges() {
             SetAuditDetails();
 
             return base.SaveChanges();
@@ -96,14 +86,12 @@ namespace DeploymentTrackerCore.Models
         public DbSet<Type> Types { get; set; }
     }
 
-    public enum DeploymentStatus
-    {
+    public enum DeploymentStatus {
         RUNNING,
         DESTROYED
     }
 
-    public class Type : IIdentifiable
-    {
+    public class Type : IIdentifiable {
         [Key]
         public int Id { get; set; }
 
@@ -118,10 +106,12 @@ namespace DeploymentTrackerCore.Models
         public byte[] RowVersion { get; set; }
 
         public virtual IList<Deployment> Deployments { get; set; } = new List<Deployment>();
+
+        [StringLength(500, MinimumLength = 3)]
+        public string DeploymentTemplate { get; set; }
     }
 
-    public class Deployment : IAuditable, IBranchedDeployment, IDeployedSite
-    {
+    public class Deployment : IAuditable, IBranchedDeployment, IDeployedSite {
         [Key]
         public int Id { get; set; }
 
@@ -164,8 +154,7 @@ namespace DeploymentTrackerCore.Models
     }
 
     [Owned]
-    public class AuditDetail
-    {
+    public class AuditDetail {
         [Required]
         [StringLength(150, MinimumLength = 3)]
         public string Name { get; set; }
@@ -178,15 +167,13 @@ namespace DeploymentTrackerCore.Models
     }
 
     [Owned]
-    public class Login
-    {
+    public class Login {
         public string UserName { get; set; }
 
         public string Password { get; set; }
     }
 
-    public class DeploymentEnvironment
-    {
+    public class DeploymentEnvironment {
         [Key]
         public int Id { get; set; }
 
@@ -204,8 +191,7 @@ namespace DeploymentTrackerCore.Models
         public byte[] RowVersion { get; set; }
     }
 
-    public interface IAuditable
-    {
+    public interface IAuditable {
         void SetCreatedBy(AuditDetail detail);
 
         void SetModifiedBy(AuditDetail detail);

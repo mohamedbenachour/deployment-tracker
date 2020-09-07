@@ -3,6 +3,7 @@ const fs = require('fs');
 const webpack = require('webpack');
 
 const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+const tsImportPluginFactory = require('ts-import-plugin');
 const babelConfig = require('./babel.config');
 
 module.exports = {
@@ -40,8 +41,13 @@ module.exports = {
             },
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
+                loader: 'ts-loader',
                 exclude: /node_modules/,
+                options: {
+                    getCustomTransformers: () => ({
+                        before: [tsImportPluginFactory({ style: 'css' })],
+                    }),
+                },
             },
         ],
     },

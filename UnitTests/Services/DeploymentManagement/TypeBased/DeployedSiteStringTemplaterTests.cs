@@ -1,19 +1,20 @@
 using System.Web;
+
 using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Services.DeploymentManagement.TypeBased;
+
 using FluentAssertions;
+
 using Moq;
+
 using NUnit.Framework;
 
-namespace UnitTests.Services.DeploymentManagement.TypeBased
-{
-    public class DeployedSiteStringTemplaterTests
-    {
+namespace UnitTests.Services.DeploymentManagement.TypeBased {
+    public class DeployedSiteStringTemplaterTests {
         private const string StaticUrl = "https://thing-to-template.com";
 
         [Test]
-        public void ADeployedSiteWithAStaticValueAsATemplateReturnsTheStaticValue()
-        {
+        public void ADeployedSiteWithAStaticValueAsATemplateReturnsTheStaticValue() {
             var templatedResult = new DeployedSiteStringTemplater()
                 .Template(CreateMockDeployedSite("test"), StaticUrl);
 
@@ -21,8 +22,7 @@ namespace UnitTests.Services.DeploymentManagement.TypeBased
         }
 
         [Test]
-        public void ADeployedSiteWithATemplateForTheSiteNameHasTheSiteNameVariableReplaced()
-        {
+        public void ADeployedSiteWithATemplateForTheSiteNameHasTheSiteNameVariableReplaced() {
             var siteName = "site-name-1-2-3";
             var template = "https://thing-to-template.com/destroy?siteName={{SiteName}}";
 
@@ -33,8 +33,29 @@ namespace UnitTests.Services.DeploymentManagement.TypeBased
         }
 
         [Test]
-        public void TheSiteNameShouldBeUrlEncodedWhenGeneratingTheUrl()
-        {
+        public void ATemplateWithDifferentCasingForTheSiteNameIsReplaced() {
+            var siteName = "site-name-1-2-3";
+            var template = "https://thing-to-template.com/destroy?siteName={{sitename}}";
+
+            var templatedResult = new DeployedSiteStringTemplater()
+                .Template(CreateMockDeployedSite(siteName), template);
+
+            templatedResult.Should().Be($"https://thing-to-template.com/destroy?siteName={siteName}");
+        }
+
+        [Test]
+        public void ADeployedSiteWithATemplateForTheBranchNameHasTheBranchNameVariableReplaced() {
+            var branchName = "test/TEST-1234-Moar-and-moar";
+            var template = "https://thing-to-template.com/destroy?thingo={{BranchName}}";
+
+            var templatedResult = new DeployedSiteStringTemplater()
+                .Template(CreateMockDeployedSite("test", branchName), template);
+
+            templatedResult.Should().Be($"https://thing-to-template.com/destroy?thingo={HttpUtility.UrlEncode(branchName)}");
+        }
+
+        [Test]
+        public void TheSiteNameShouldBeUrlEncodedWhenGeneratingTheUrl() {
             var siteName = "site1&test%12";
             var template = "https://thing-to-template.com/destroy?siteName={{SiteName}}";
 
@@ -44,11 +65,11 @@ namespace UnitTests.Services.DeploymentManagement.TypeBased
             templatedResult.Should().Be($"https://thing-to-template.com/destroy?siteName={HttpUtility.UrlEncode(siteName)}");
         }
 
-        private IDeployedSite CreateMockDeployedSite(string siteName)
-        {
+        private IDeployedSite CreateMockDeployedSite(string siteName, string branchName = "foo-bar") {
             var mockSite = new Mock<IDeployedSite>();
 
             mockSite.Setup(ms => ms.SiteName).Returns(siteName);
+            mockSite.Setup(ms => ms.BranchName).Returns(branchName);
 
             return mockSite.Object;
         }

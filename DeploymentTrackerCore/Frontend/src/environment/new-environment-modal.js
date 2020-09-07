@@ -12,11 +12,11 @@ const NewEnvironmentModal = ({
     environmentBeingAdded: { name, hostName },
 }) => (
     <Modal
-      visible={visible}
-      onOk={onOk}
-      onCancel={onCancel}
-      title="Add New Environment"
-      confirmLoading={saveInProgress}
+        visible={visible}
+        onOk={onOk}
+        onCancel={onCancel}
+        title="Add New Environment"
+        confirmLoading={saveInProgress}
     >
         <Typography.Text>Name</Typography.Text>
         <Input value={name} onChange={({ target: { value } }) => onNameChange(value)} />

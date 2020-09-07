@@ -1,50 +1,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Models.API;
-using DeploymentTrackerCore.Services;
 
 using FluentAssertions;
 
-using IntegrationTests.EnvironmentSetup;
 using IntegrationTests.Helpers;
 using IntegrationTests.Helpers.TestSetup;
-
-using Microsoft.EntityFrameworkCore;
 
 using NUnit.Framework;
 
 namespace IntegrationTests {
     [TestFixture]
-    public class TeardownURLSForTypes {
+    public class DeploymentTriggerURLsForTypes {
+
         private int EnvironmentId { get; set; }
 
         [Test]
         public async Task ADeploymentCreatedForATypeWithNoTeardownUrlTemplateHasANullTeardownUrl() {
 
-            var createdDeployment = await CreateDeploymentUsingTypeWithSpecifiedTeardownUrlTemplate(null);
+            var createdDeployment = await CreateDeploymentUsingTypeWithSpecifiedDeploymentUrlTemplate(null);
 
-            createdDeployment.TeardownUrl.Should().BeNull();
+            createdDeployment.ManagementUrls.DeploymentTriggerUrl.Should().BeNull();
         }
 
         [Test]
         public async Task ADeploymentCreatedForATypeWithATeardownUrlTemplateHasTheCorrectUrlReturned() {
-            var urlTemplate = "https://deployment-destroyer.xyz/teardown?siteName={{SiteName}}&moreStuff=true";
+            var urlTemplate = "https://deployment-deployer.xyz/moar-deployments/{{BranchName}}build?moreStuff=true";
 
-            var createdDeployment = await CreateDeploymentUsingTypeWithSpecifiedTeardownUrlTemplate(urlTemplate);
+            var createdDeployment = await CreateDeploymentUsingTypeWithSpecifiedDeploymentUrlTemplate(urlTemplate);
 
-            createdDeployment.TeardownUrl.Should().Be(urlTemplate.Replace("{{SiteName}}", createdDeployment.SiteName));
+            createdDeployment.ManagementUrls.DeploymentTriggerUrl.Should().Be(urlTemplate.Replace("{{BranchName}}", HttpUtility.UrlEncode(createdDeployment.BranchName)));
         }
 
         [OneTimeSetUp]
         public async Task OneTimeSetup() => EnvironmentId = (await UniqueEnvironment.Create()).Id;
 
-        private async Task<ApiDeployment> CreateDeploymentUsingTypeWithSpecifiedTeardownUrlTemplate(string teardownUrlTemplate) {
+        private async Task<ApiDeployment> CreateDeploymentUsingTypeWithSpecifiedDeploymentUrlTemplate(string deploymentUrlTemplate) {
             var type = new Type {
                 Name = TestNames.TypeName,
-                TeardownTemplate = teardownUrlTemplate
+                DeploymentTemplate = deploymentUrlTemplate
             };
 
             var typeId = await Types.AddTypeAndGetId(type);
