@@ -5,12 +5,12 @@ import * as signalR from '@microsoft/signalr';
 import { notification } from 'antd';
 import { statusIsRunning } from './deployment-status';
 
-import {
-    newDeployment,
-} from './actions';
+import { newDeployment } from './actions';
 
 const createConnection = (store, notifier) => {
-    const connection = new signalR.HubConnectionBuilder().withUrl('/deploymentHub').build();
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl('/deploymentHub')
+        .build();
 
     connection.on('DeploymentChange', (deployment) => {
         store.dispatch(newDeployment(deployment));
@@ -20,10 +20,15 @@ const createConnection = (store, notifier) => {
     return connection;
 };
 
-const notifyUser = ({
-    branchName, publicURL, status, modifiedBy: { name },
-}, notifier) => {
-    const message = statusIsRunning(status) ? 'New Deployment' : 'Torndown Deployment';
+const notifyUser = (
+    {
+        branchName, publicURL, status, modifiedBy: { name },
+    },
+    notifier,
+) => {
+    const message = statusIsRunning(status)
+        ? 'New Deployment'
+        : 'Torndown Deployment';
 
     notification.info({
         message,
@@ -31,7 +36,9 @@ const notifyUser = ({
             <div>
                 <div>{branchName}</div>
                 <div>{`By ${name}`}</div>
-                <a href={publicURL} target="_blank">Visit</a>
+                <a href={publicURL} target="_blank">
+                    Visit
+                </a>
             </div>
         ),
     });
