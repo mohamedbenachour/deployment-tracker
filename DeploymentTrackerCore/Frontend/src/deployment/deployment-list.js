@@ -11,15 +11,7 @@ import {
     Select,
     Checkbox,
 } from 'antd';
-import {
-    PlusOutlined,
-    CloseCircleFilled,
-    CheckCircleTwoTone,
-    CopyOutlined,
-    SelectOutlined,
-    DeleteOutlined,
-    StopTwoTone,
-} from '@ant-design/icons';
+import { PlusOutlined, CopyOutlined, SelectOutlined } from '@ant-design/icons';
 
 import { statusIsRunning } from './deployment-status';
 
@@ -33,14 +25,6 @@ import JiraStatusBadge from '../jira/jira-status-badge';
 import { getPageData } from '../utils/page-data';
 
 import getActionsForDeployment from './list-sections/getActionsForDeployment';
-
-const renderStatus = (status) => {
-    if (statusIsRunning(status)) {
-        return <CheckCircleTwoTone twoToneColor="#52c41a" />;
-    }
-
-    return <CloseCircleFilled />;
-};
 
 const renderJiraDetail = ({ url, status }) => (
     <>
@@ -71,7 +55,7 @@ const renderTitle = ({
         );
     }
 
-    return branchName;
+    return <Typography.Text delete>{branchName}</Typography.Text>;
 };
 
 const copyValue = (value) => {
@@ -178,7 +162,6 @@ const renderDeploymentItem = (deployment, teardownDeployment) => (
           title={renderTitle(deployment)}
           description={renderDescription(deployment)}
         />
-        {renderStatus(deployment.status)}
     </List.Item>
 );
 
