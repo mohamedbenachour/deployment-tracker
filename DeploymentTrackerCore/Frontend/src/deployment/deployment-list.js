@@ -32,6 +32,8 @@ import JiraStatusBadge from '../jira/jira-status-badge';
 
 import { getPageData } from '../utils/page-data';
 
+import getActionsForDeployment from './list-sections/getActionsForDeployment';
+
 const renderStatus = (status) => {
     if (statusIsRunning(status)) {
         return <CheckCircleTwoTone twoToneColor="#52c41a" />;
@@ -158,33 +160,20 @@ const renderDescription = ({
             <Typography.Text>{`${actualDeploymentText} `}</Typography.Text>
             {actualName && <Typography.Text strong>{actualName}</Typography.Text>}
             <Typography.Text>
-                {` on ${FormatAsLocalDateTimeString(
-                    timestamp,
-                )}`}
+                {` on ${FormatAsLocalDateTimeString(timestamp)}`}
             </Typography.Text>
             {siteLogin && renderLoginDetail(siteLogin)}
         </>
     );
 };
 
-const getActions = ({ teardownUrl, status, siteName }, teardownDeployment) => {
-    if (statusIsRunning(status)) {
-        return [
-            <DeleteOutlined
-              title="Mark as torndown"
-              onClick={() => teardownDeployment({ siteName })}
-            />,
-            <a title="Teardown" href={teardownUrl} target="_blank">
-                <StopTwoTone twoToneColor="#ff0000" />
-            </a>,
-        ];
-    }
-
-    return [];
-};
-
 const renderDeploymentItem = (deployment, teardownDeployment) => (
-    <List.Item actions={getActions(deployment, teardownDeployment)}>
+    <List.Item
+      actions={getActionsForDeployment({
+            deployment,
+            teardownDeployment,
+        })}
+    >
         <List.Item.Meta
           title={renderTitle(deployment)}
           description={renderDescription(deployment)}

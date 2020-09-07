@@ -8,9 +8,12 @@ import getCurrentUser from '../../src/utils/current-user';
 
 let mockCurrentUser: User;
 
-jest.mock('../../src/utils/current-user', () => function () {
-    return mockCurrentUser;
-});
+jest.mock(
+    '../../src/utils/current-user',
+    () => function () {
+        return mockCurrentUser;
+    },
+);
 
 const mockedCurrentUser = <jest.Mock<typeof getCurrentUser>>(
   (getCurrentUser as unknown)
@@ -30,6 +33,11 @@ describe('deployment-matchers', () => {
         status: DeploymentStatus.Running,
         createdBy: createUserActionDetail(),
         modifiedBy: createUserActionDetail(),
+        siteName: 'boo',
+        teardownUrl: 'https://test',
+        managementUrls: {
+            deploymentTriggerUrl: 'https://deploy',
+        },
     });
 
     describe('deploymentIsForCurrentUser', () => {
