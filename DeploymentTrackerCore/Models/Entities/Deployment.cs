@@ -16,6 +16,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DeploymentTrackerCore.Models.Entities {
@@ -24,6 +25,8 @@ namespace DeploymentTrackerCore.Models.Entities {
         public int Id { get; set; }
 
         public virtual DeploymentEnvironment DeployedEnvironment { get; set; }
+
+        public virtual IList<DeploymentNote> DeploymentNotes { get; set; }
 
         public virtual Type Type { get; set; }
 

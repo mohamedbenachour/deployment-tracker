@@ -15,6 +15,7 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -31,28 +32,40 @@ namespace DeploymentTrackerCore.Controllers {
         private IRequestState CurrentRequestState { get; }
         private UserManager<ApplicationUser> Users { get; }
 
-        public BaseApiController (IRequestState requestState, UserManager<ApplicationUser> userManager) {
+        public BaseApiController(IRequestState requestState, UserManager<ApplicationUser> userManager) {
             CurrentRequestState = requestState;
             Users = userManager;
         }
 
-        protected async Task<ActionResult<T>> Handle<T> (IActionPerformer<T> performer) {
-            await performer.Perform ();
+        protected async Task<ActionResult<T>> Handle<T>(IActionPerformer<T> performer) {
+            await performer.Perform();
 
             if (performer.Succeeded) {
-                return Ok (performer.Result);
+                return Ok(performer.Result);
             }
 
-            return BadRequest (performer.Error);
+            return BadRequest(performer.Error);
         }
 
-        protected void SetUser () {
+        protected async Task<ActionResult> Handle<Output>(Func<Task<ActionOutcome<Output>>> action) {
+            SetUser();
+
+            var result = await action();
+
+            if (result.Succeeded) {
+                return Ok(result.Result);
+            }
+
+            return BadRequest(result.Error);
+        }
+
+        protected void SetUser() {
             var user = HttpContext.User;
 
             if (user != null) {
-                var applicationUser = ApplicationUser.FromClaimsPrincipal (user);
+                var applicationUser = ApplicationUser.FromClaimsPrincipal(user);
 
-                CurrentRequestState.SetUser (new User {
+                CurrentRequestState.SetUser(new User {
                     Name = applicationUser.Name,
                         Username = applicationUser.UserName
                 });

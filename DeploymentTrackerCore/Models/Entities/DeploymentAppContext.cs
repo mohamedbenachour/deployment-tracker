@@ -83,5 +83,7 @@ namespace DeploymentTrackerCore.Models.Entities {
         public DbSet<DeploymentEnvironment> Environments { get; set; }
         public DbSet<Deployment> Deployments { get; set; }
         public DbSet<Type> Types { get; set; }
+
+        public DbSet<DeploymentNote> Notes { get; set; }
     }
 }

@@ -43,6 +43,7 @@ namespace DeploymentTrackerCore {
 
             IdentityServices.Configure(Configuration, services);
             GeneralServices.Configure(services);
+            ApplicationServices.Configure(services);
 
             services.AddDbContext<DeploymentAppContext>
                 (options => options.UseSqlite(Configuration.GetSection("ConnectionStrings")["Application"]));
