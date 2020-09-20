@@ -11,11 +11,11 @@ const HeaderMenu = ({ currentSection, sectionChanged }) => (
         <Row>
             <Col span={16}>
                 <Menu
-                    onSelect={({ key }) => sectionChanged(key)}
-                  mode="horizontal"
-                  selectedKeys={[currentSection]}
-                  theme="dark"
-                  style={{ lineHeight: '64px' }}
+                  onSelect={({ key }) => sectionChanged(key)}
+                    mode="horizontal"
+                    selectedKeys={[currentSection]}
+                    theme="dark"
+                    style={{ lineHeight: '64px' }}
                 >
                     <Menu.Item key="deployments">
                         Deployments

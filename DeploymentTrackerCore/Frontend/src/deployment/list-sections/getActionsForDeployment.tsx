@@ -21,8 +21,8 @@ const getActionsForDeployment = ({
     if (statusIsRunning(status)) {
         const actionsArray = [
             <DeleteOutlined
-              title="Mark as torndown"
-              onClick={() => teardownDeployment({ siteName })}
+                title="Mark as torndown"
+                onClick={() => teardownDeployment({ siteName })}
             />,
             <a title="Teardown" href={teardownUrl} target="_blank">
                 <StopTwoTone twoToneColor="#ff0000" />
