@@ -1,9 +1,7 @@
-import React, { Key } from 'react';
+import React from 'react';
 
-import { Link, useLocation, useMatch } from 'react-router-dom';
-import {
-    Menu, Button, Row, Col,
-} from 'antd';
+import { Link, useMatch } from 'react-router-dom';
+import { Menu, Row, Col } from 'antd';
 
 import LogoutButton from './logout-button';
 import ApplicationSection from './application-section';
@@ -17,7 +15,7 @@ const getCurrentSection = (): ApplicationSection => {
     return ApplicationSection.Deployments;
 };
 
-const HeaderMenu = () => (
+const HeaderMenu = (): JSX.Element => (
     <>
         <Row>
             <Col span={16}>
