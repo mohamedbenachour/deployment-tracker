@@ -12,7 +12,15 @@ const styles = {
     },
 };
 
-const LogoutScreen = ({ classes }) => (
+interface LogoutScreenClasses {
+  logoutScreen: string;
+}
+
+interface LogoutScreenProps {
+  classes: LogoutScreenClasses;
+}
+
+const LogoutScreen = ({ classes }: LogoutScreenProps) => (
     <Centered>
         <div className={classes.logoutScreen}>
             <div>You have successfully logged out.</div>

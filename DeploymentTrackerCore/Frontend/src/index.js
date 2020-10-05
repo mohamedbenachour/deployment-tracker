@@ -3,12 +3,13 @@ import React from 'react';
 import { combineReducers } from 'redux';
 
 import { Provider } from 'react-redux';
+import { HashRouter } from 'react-router-dom';
 import bootstrapToPage from './utils/page-bootstrapper';
 
 import StandardLayout from './layout/standard-layout';
 
-import HeaderMenu from './app/connected-header-menu';
-import Content from './app/connected-content';
+import HeaderMenu from './app/header-menu';
+import Content from './app/content';
 import { createStore } from './utils/redux-store';
 
 import appReducer from './app/reducer';
@@ -50,8 +51,10 @@ window.addEventListener('popstate', () => {
 
 bootstrapToPage(
     <Provider store={store}>
-        <StandardLayout header={<HeaderMenu />}>
-            <Content />
-        </StandardLayout>
+        <HashRouter>
+            <StandardLayout header={<HeaderMenu />}>
+                <Content />
+            </StandardLayout>
+        </HashRouter>
     </Provider>,
 );

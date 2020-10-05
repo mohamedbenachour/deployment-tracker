@@ -1,8 +1,6 @@
 import ReactDom from 'react-dom';
 
-const boostrapToPage = (
-    component: React.DOMElement<React.DOMAttributes<Element>, Element>,
-): void => {
+const boostrapToPage = (component: React.ReactElement): void => {
     const applicationStart = () => {
         ReactDom.render(component, document.querySelector('.app-mount-point'));
     };

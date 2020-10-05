@@ -45,8 +45,8 @@ const JiraStatusBadge = ({ status }) => (
         {status
         && (
             <Tag
-                color={getJiraStatusColour(status)}
-                style={{ marginRight: 0 }}
+              color={getJiraStatusColour(status)}
+              style={{ marginRight: 0 }}
             >
                 {getStatusText(status)}
             </Tag>

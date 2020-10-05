@@ -13,7 +13,7 @@ describe('setCurrentParameters', () => {
         it('sets the expected URL', () => {
             SetCurrentParameters(searchParams);
 
-            expect(window.location.search).toBe('');
+            expect(window.location.hash).toBe('#/');
         });
     });
 
@@ -27,7 +27,7 @@ describe('setCurrentParameters', () => {
         it('sets the expected URL', () => {
             SetCurrentParameters(searchParams);
 
-            expect(window.location.search).toBe(`?${queryParam}=${queryValue}`);
+            expect(window.location.hash).toBe(`#/?${queryParam}=${queryValue}`);
         });
     });
 });

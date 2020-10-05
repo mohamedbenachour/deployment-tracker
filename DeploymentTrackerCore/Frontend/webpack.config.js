@@ -10,8 +10,8 @@ module.exports = {
     mode: 'development',
     entry: {
         index: './src/index.js',
-        'account.login': './src/login.js',
-        'account.logout': './src/logout.js',
+        'account.login': './src/login.tsx',
+        'account.logout': './src/logout.tsx',
     },
     devtool: 'source-map',
     resolve: {

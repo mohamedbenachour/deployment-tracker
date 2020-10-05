@@ -4,9 +4,9 @@ import { getCsrfToken } from './page-properties';
 
 const CsrfHiddenInput: FunctionComponent = () => (
     <input
-      name="__RequestVerificationToken"
-      type="hidden"
-      value={getCsrfToken()}
+        name="__RequestVerificationToken"
+        type="hidden"
+        value={getCsrfToken()}
     />
 );
 

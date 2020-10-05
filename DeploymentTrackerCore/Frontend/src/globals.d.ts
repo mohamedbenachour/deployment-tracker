@@ -15,5 +15,5 @@ interface PageData {
   user: User;
 }
 
-declare let _PAGE_PROPERTIES: PageProperties;
-declare let _PAGE_DATA: PageData;
+declare const _PAGE_PROPERTIES: PageProperties;
+declare const _PAGE_DATA: PageData;
