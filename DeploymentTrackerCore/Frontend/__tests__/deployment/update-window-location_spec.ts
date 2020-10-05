@@ -13,7 +13,7 @@ describe('updateWindowLocation', () => {
         it('sets the expected search for the URL', () => {
             updateWindowLocation(filters);
 
-            expect(window.location.search).toBe('?status=completed&onlyMine=false');
+            expect(window.location.hash).toBe('#/?status=completed&onlyMine=false');
         });
     });
 
@@ -28,7 +28,7 @@ describe('updateWindowLocation', () => {
         it('only the status is included in the URL', () => {
             updateWindowLocation(filters);
 
-            expect(window.location.search).toBe('?status=torndown&onlyMine=false');
+            expect(window.location.hash).toBe('#/?status=torndown&onlyMine=false');
         });
     });
 
@@ -43,7 +43,7 @@ describe('updateWindowLocation', () => {
         it('sets the expected search for the URL', () => {
             updateWindowLocation(filters);
 
-            expect(window.location.search).toBe('?status=torndown&onlyMine=true');
+            expect(window.location.hash).toBe('#/?status=torndown&onlyMine=true');
         });
     });
 });

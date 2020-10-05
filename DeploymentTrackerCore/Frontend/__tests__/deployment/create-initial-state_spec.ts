@@ -10,7 +10,7 @@ describe('createInitialState', () => {
     });
 
     const setSearchInUrl = (search: string): void => {
-        window.location.search = search;
+        window.location.hash = `?${search}`;
     };
 
     describe('when no parameters have been defined in the URL', () => {
