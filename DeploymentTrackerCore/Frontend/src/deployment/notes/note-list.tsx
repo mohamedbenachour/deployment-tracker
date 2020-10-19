@@ -52,7 +52,12 @@ const renderNotes = (notes: DeploymentNote[]): JSX.Element => {
 const renderListContent = (
     notes: DeploymentNote[],
     isLoading: boolean,
+    hasErrored: boolean,
 ): JSX.Element => {
+    if (hasErrored) {
+        return <div>An error occurred</div>;
+    }
+
     if (isLoading) {
         return <SubtleSpinner />;
     }
@@ -65,6 +70,7 @@ const NoteList = ({
     classes: { container },
 }: NoteListProps): JSX.Element => {
     const [isLoading, setIsLoading] = useState(true);
+    const [hasErrored, setHasErrored] = useState(false);
     const [notes, setNotes] = useState<DeploymentNote[]>([]);
 
     useEffect(() => {
@@ -75,12 +81,19 @@ const NoteList = ({
                     setNotes(fetchedNotes ?? []);
                     setIsLoading(false);
                 },
-                () => console.error('WOOOT??'),
+                () => {
+                    setIsLoading(false);
+                    setHasErrored(true);
+                },
             );
         }
     });
 
-    return <div className={container}>{renderListContent(notes, isLoading)}</div>;
+    return (
+        <div className={container}>
+            {renderListContent(notes, isLoading, hasErrored)}
+        </div>
+    );
 };
 
 export default withStyles(styles)(NoteList);
