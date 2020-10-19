@@ -6,7 +6,7 @@ namespace DeploymentTrackerCore.Actions {
 
         public object Error { get; private set; }
 
-        public static ActionOutcome<object> WithError(object error) => new ActionOutcome<object> {
+        public static ActionOutcome<T> WithError(object error) => new ActionOutcome<T> {
             Succeeded = false,
             Error = error
         };

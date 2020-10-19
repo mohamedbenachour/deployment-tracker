@@ -31,10 +31,47 @@ namespace IntegrationTests {
 
             var deployment = await DeploymentProvider.Create();
 
-            var deploymentNotes = (await (await client.GetAsync(GetNotesUrlForDeployment(deployment)))
-                .AssertSuccessfulResponseAndGetContent<IEnumerable<ApiNote>>());
+            var deploymentNotes = await GetNotesForDeployment(client, deployment);
 
             deploymentNotes.Should().BeEmpty();
+        }
+
+        [Test]
+        public async Task ADeploymentNoteCanBeDeleted() {
+            var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
+
+            var deployment = await DeploymentProvider.Create();
+
+
+            await CreateNoteForDeployment(client, deployment, "About to be deleted");
+
+            var deploymentNoteToDelete = (await GetNotesForDeployment(client, deployment)).First().Id;
+
+            await DeleteDeploymentNote(client, deployment, deploymentNoteToDelete);
+        }
+
+        [Test]
+        public async Task ADeletedDeploymentNoteIsNotReturned() {
+            var client = await TestEnvironment.ClientFactory.GetAuthenticatedClient();
+
+            var deployment = await DeploymentProvider.Create();
+
+
+            await CreateNoteForDeployment(client, deployment, "About to be deleted");
+
+            var deploymentNoteToDelete = (await GetNotesForDeployment(client, deployment)).First().Id;
+
+            await DeleteDeploymentNote(client, deployment, deploymentNoteToDelete);
+
+            var deploymentNotes = await GetNotesForDeployment(client, deployment);
+
+            deploymentNotes.Should().BeEmpty();
+        }
+
+        private async Task DeleteDeploymentNote(HttpClient client, ApiDeployment deployment, int noteId) {
+            var deleteUrl = $"{GetNotesUrlForDeployment(deployment)}/{noteId}";
+
+            (await client.DeleteAsync(deleteUrl)).AssertSuccessfulResponse();
         }
 
         [Test]
@@ -55,14 +92,17 @@ namespace IntegrationTests {
 
             await CreateNoteForDeployment(client, deployment, noteContent);
 
-            var deploymentNotes = (await (await client.GetAsync(GetNotesUrlForDeployment(deployment)))
-                .AssertSuccessfulResponseAndGetContent<IEnumerable<ApiNote>>());
+            var deploymentNotes = await GetNotesForDeployment(client, deployment);
 
             using(new AssertionScope()) {
                 deploymentNotes.Should().HaveCount(1);
                 deploymentNotes.Single().Content.Should().Be(noteContent);
             }
         }
+
+        private async Task<IEnumerable<ApiNote>> GetNotesForDeployment(HttpClient client, ApiDeployment deployment) 
+            =>  (await (await client.GetAsync(GetNotesUrlForDeployment(deployment)))
+                .AssertSuccessfulResponseAndGetContent<IEnumerable<ApiNote>>());
 
         [Test]
         public async Task NotesForOtherDeploymentsAreNotAccidentallyReturned() {
@@ -76,8 +116,7 @@ namespace IntegrationTests {
             await CreateNoteForDeployment(client, deploymentA, noteForDeploymentA);
             await CreateNoteForDeployment(client, deploymentB, noteForDeploymentB);
 
-            var deploymentNotes = (await (await client.GetAsync(GetNotesUrlForDeployment(deploymentB)))
-                .AssertSuccessfulResponseAndGetContent<IEnumerable<ApiNote>>());
+            var deploymentNotes = await GetNotesForDeployment(client, deploymentB);
 
             using(new AssertionScope()) {
                 deploymentNotes.Should().HaveCount(1);
