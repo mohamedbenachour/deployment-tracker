@@ -15,7 +15,7 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
-using DeploymentTrackerCore.Models;
+using DeploymentTrackerCore.Models.Entities;
 
 namespace DeploymentTrackerCore.Models.API {
     public class ApiDeployment : IBranchedDeployment, IDeployedSite {

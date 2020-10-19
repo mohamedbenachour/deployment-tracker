@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,7 +26,7 @@ using DeploymentTrackerCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DeploymentTrackerCore.Models {
+namespace DeploymentTrackerCore.Models.Entities {
     public class DeploymentAppContext : DbContext {
         private IRequestState CurrentRequestState { get; }
 
@@ -84,116 +83,7 @@ namespace DeploymentTrackerCore.Models {
         public DbSet<DeploymentEnvironment> Environments { get; set; }
         public DbSet<Deployment> Deployments { get; set; }
         public DbSet<Type> Types { get; set; }
-    }
 
-    public enum DeploymentStatus {
-        RUNNING,
-        DESTROYED
-    }
-
-    public class Type : IIdentifiable {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        [StringLength(200, MinimumLength = 3)]
-        public string Name { get; set; }
-
-        [StringLength(500, MinimumLength = 3)]
-        public string TeardownTemplate { get; set; }
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
-
-        public virtual IList<Deployment> Deployments { get; set; } = new List<Deployment>();
-
-        [StringLength(500, MinimumLength = 3)]
-        public string DeploymentTemplate { get; set; }
-    }
-
-    public class Deployment : IAuditable, IBranchedDeployment, IDeployedSite {
-        [Key]
-        public int Id { get; set; }
-
-        public virtual DeploymentEnvironment DeployedEnvironment { get; set; }
-
-        public virtual Type Type { get; set; }
-
-        [Required]
-        [StringLength(200, MinimumLength = 3)]
-        public string BranchName { get; set; }
-
-        [Required]
-        [StringLength(100, MinimumLength = 3)]
-        public string SiteName { get; set; }
-
-        [Required]
-        [StringLength(150, MinimumLength = 3)]
-        public string PublicURL { get; set; }
-
-        public DeploymentStatus Status { get; set; }
-
-        public int DeploymentCount { get; set; }
-
-        public Login SiteLogin { get; set; }
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
-
-        [Required]
-        public AuditDetail CreatedBy { get; set; }
-
-        public void SetCreatedBy(AuditDetail detail) { CreatedBy = detail; }
-
-        public void SetModifiedBy(AuditDetail detail) { ModifiedBy = detail; }
-
-        [Required]
-        public AuditDetail ModifiedBy { get; set; }
-
-        IIdentifiable IDeployedSite.Type => Type;
-    }
-
-    [Owned]
-    public class AuditDetail {
-        [Required]
-        [StringLength(150, MinimumLength = 3)]
-        public string Name { get; set; }
-
-        [Required]
-        [StringLength(50, MinimumLength = 3)]
-        public string UserName { get; set; }
-
-        public DateTime Timestamp { get; set; }
-    }
-
-    [Owned]
-    public class Login {
-        public string UserName { get; set; }
-
-        public string Password { get; set; }
-    }
-
-    public class DeploymentEnvironment {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        [StringLength(50, MinimumLength = 3)]
-        public string HostName { get; set; }
-
-        [Required]
-        [StringLength(50, MinimumLength = 3)]
-        public string Name { get; set; }
-
-        public virtual IList<Deployment> Deployments { get; set; } = new List<Deployment>();
-
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
-    }
-
-    public interface IAuditable {
-        void SetCreatedBy(AuditDetail detail);
-
-        void SetModifiedBy(AuditDetail detail);
+        public DbSet<DeploymentNote> DeploymentNote { get; set; }
     }
 }

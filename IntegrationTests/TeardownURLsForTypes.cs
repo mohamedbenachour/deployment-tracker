@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Models.API;
+using DeploymentTrackerCore.Models.Entities;
 using DeploymentTrackerCore.Services;
 
 using FluentAssertions;

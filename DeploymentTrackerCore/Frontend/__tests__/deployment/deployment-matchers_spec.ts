@@ -1,9 +1,9 @@
 import {
     Deployment,
     DeploymentStatus,
-    UserActionDetail,
 } from '../../src/deployment/deployment-definition';
 import deploymentIsForCurrentUser from '../../src/deployment/deployment-matchers';
+import UserActionDetail from '../../src/shared/definitions/user-action-detail';
 import getCurrentUser from '../../src/utils/current-user';
 
 let mockCurrentUser: User;
@@ -26,6 +26,7 @@ describe('deployment-matchers', () => {
     ): UserActionDetail => ({
         name: 'Foo Bar',
         userName,
+        timestamp: '',
     });
 
     const createDefaultDeployment = (): Deployment => ({

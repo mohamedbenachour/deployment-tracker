@@ -1,3 +1,5 @@
+import UserActionDetail from '../shared/definitions/user-action-detail';
+
 interface Filters {
   branchName: string;
   status: string;
@@ -5,10 +7,16 @@ interface Filters {
   onlyMine: boolean;
 }
 
+interface DeploymentNote {
+  content: string;
+  id: number;
+  createdBy: UserActionDetail;
+}
+
 interface DeploymentState {
   addingADeployment: boolean;
   saveInProgress: boolean;
-  deploymentBeingAdded: any;
+  deploymentBeingAdded: unknown;
   filters: Filters;
 }
 
@@ -24,6 +32,6 @@ const createDefaultState = (): DeploymentState => ({
     },
 });
 
-export { Filters, DeploymentState };
+export { Filters, DeploymentState, DeploymentNote };
 
 export default createDefaultState;

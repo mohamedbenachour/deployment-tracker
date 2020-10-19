@@ -1,30 +1,31 @@
 /*
-* This file is part of Deployment Tracker.
-* 
-* Deployment Tracker is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* Deployment Tracker is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
+ * This file is part of Deployment Tracker.
+ * 
+ * Deployment Tracker is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Deployment Tracker is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+
 using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Models.API;
+using DeploymentTrackerCore.Models.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace DeploymentTrackerCore.Actions.Deployments
-{
+namespace DeploymentTrackerCore.Actions.Deployments {
     class NewDeployment : IActionPerformer<Deployment> {
         private DeploymentAppContext Context { get; }
 
@@ -38,7 +39,7 @@ namespace DeploymentTrackerCore.Actions.Deployments
 
         public NewDeployment(DeploymentAppContext context, ApiNewDeployment deployment) {
             Context = context;
-            Deployment = deployment;         
+            Deployment = deployment;
         }
 
         public async Task Perform() {
@@ -47,7 +48,7 @@ namespace DeploymentTrackerCore.Actions.Deployments
                     .Include(d => d.DeployedEnvironment)
                     .SingleOrDefault(deployment => deployment.SiteName == Deployment.SiteName);
                 Deployment newDeployment;
-                
+
                 if (matchingDeployment != null) {
                     newDeployment = matchingDeployment;
                     newDeployment.DeploymentCount = newDeployment.DeploymentCount + 1;
@@ -66,7 +67,7 @@ namespace DeploymentTrackerCore.Actions.Deployments
                 newDeployment.Status = DeploymentStatus.RUNNING;
                 newDeployment.SiteLogin = Deployment.SiteLogin ?? new Login();
                 newDeployment.Type = await GetTypeForNewDeployment(Deployment);
-                
+
                 await Context.SaveChangesAsync();
 
                 Result = newDeployment;
@@ -77,7 +78,7 @@ namespace DeploymentTrackerCore.Actions.Deployments
             }
         }
 
-        private async Task<Models.Type> GetTypeForNewDeployment(ApiNewDeployment deployment) {
+        private async Task<Models.Entities.Type> GetTypeForNewDeployment(ApiNewDeployment deployment) {
             if (deployment.Type == null) {
                 return await Context.Types.FirstAsync();
             }

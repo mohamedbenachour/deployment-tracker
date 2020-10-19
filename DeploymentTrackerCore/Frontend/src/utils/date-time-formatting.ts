@@ -1,14 +1,20 @@
 import { DateTime, Settings } from 'luxon';
 
-// eslint-disable-next-line import/prefer-default-export
-export const FormatAsLocalDateTimeString = (
+const parseServerTimestampToLocalDateTime = (
     serverTimestamp: string,
-): string => {
+): DateTime => {
     const serverDateTime = DateTime.fromISO(serverTimestamp, {
         zone: 'UTC',
     });
 
-    const localDateTime = serverDateTime.setZone(Settings.defaultZone);
+    return serverDateTime.setZone(Settings.defaultZone);
+};
+
+// eslint-disable-next-line import/prefer-default-export
+export const FormatAsLocalDateTimeString = (
+    serverTimestamp: string,
+): string => {
+    const localDateTime = parseServerTimestampToLocalDateTime(serverTimestamp);
 
     return `${localDateTime.toLocaleString(
         DateTime.DATE_FULL,

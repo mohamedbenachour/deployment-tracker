@@ -26,6 +26,8 @@ import { getPageData } from '../utils/page-data';
 
 import getActionsForDeployment from './list-sections/getActionsForDeployment';
 
+import NoteIndicator from './notes/note-indicator';
+
 const renderJiraDetail = ({ url, status }) => (
     <>
         <JiraUrl url={url} style={{ marginLeft: 10 }} />
@@ -132,6 +134,7 @@ const renderDescription = ({
     status,
     modifiedBy: { name, userName, timestamp },
     siteLogin,
+    id,
 }) => {
     const actualName = getActualName(name, userName);
     const deploymentText = statusIsRunning(status) ? 'Deployed' : 'Torndown';
@@ -147,6 +150,7 @@ const renderDescription = ({
                 {` on ${FormatAsLocalDateTimeString(timestamp)}`}
             </Typography.Text>
             {siteLogin && renderLoginDetail(siteLogin)}
+            <NoteIndicator deploymentId={id} />
         </>
     );
 };

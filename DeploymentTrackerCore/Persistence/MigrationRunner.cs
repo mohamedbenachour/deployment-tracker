@@ -1,6 +1,7 @@
-
 using System;
-using DeploymentTrackerCore.Models;
+
+using DeploymentTrackerCore.Models.Entities;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +12,7 @@ namespace DeploymentTrackerCore.Persistence {
     public class MigrationRunner {
 
         public static void Run(IHost host) {
-            using (var scope = host.Services.CreateScope()) {
+            using(var scope = host.Services.CreateScope()) {
                 var services = scope.ServiceProvider;
 
                 try {

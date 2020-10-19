@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-using DeploymentTrackerCore.Models;
 using DeploymentTrackerCore.Models.API;
+using DeploymentTrackerCore.Models.Entities;
 
 using FluentAssertions;
 
