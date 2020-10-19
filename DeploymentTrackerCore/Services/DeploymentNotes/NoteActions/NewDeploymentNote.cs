@@ -18,7 +18,8 @@ namespace DeploymentTrackerCore.Services.DeploymentNotes.NoteActions {
         public async Task<ActionOutcome<ApiNote>> Perform(NewNoteRequest input) {
             var newNote = new DeploymentNote {
                 Content = input.Note.Content,
-                Deployment = await GetDeployment(input.DeploymentId)
+                Deployment = await GetDeployment(input.DeploymentId),
+                IsActive = true
             };
 
             AppContext.DeploymentNote.Add(newNote);
