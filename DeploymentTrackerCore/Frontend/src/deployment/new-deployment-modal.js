@@ -10,9 +10,9 @@ const renderEnvironmentOptions = (environments) => environments.map((environment
 
 const renderEnvironmentSelect = (environments, selectedEnvironmentId, onEnvironmentChange) => (
     <Select
-      style={{ width: '100%' }}
-      value={selectedEnvironmentId}
-      onChange={(value) => onEnvironmentChange(value)}
+        style={{ width: '100%' }}
+        value={selectedEnvironmentId}
+        onChange={(value) => onEnvironmentChange(value)}
     >
         {renderEnvironmentOptions(environments)}
     </Select>
@@ -33,11 +33,11 @@ const NewDeploymentModal = ({
     },
 }) => (
     <Modal
-      visible={visible}
-      onOk={onOk}
-      onCancel={onCancel}
-      title="Add New Deployment"
-      confirmLoading={saveInProgress}
+        visible={visible}
+        onOk={onOk}
+        onCancel={onCancel}
+        title="Add New Deployment"
+        confirmLoading={saveInProgress}
     >
         <Typography.Text>Branch Name</Typography.Text>
         <Input value={branchName} onChange={({ target: { value } }) => onBranchNameChange(value)} />

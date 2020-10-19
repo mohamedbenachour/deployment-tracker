@@ -38,8 +38,8 @@ const StandardFooter = ({
             </div>
             <div className={source}>
                 <a
-                    href="https://gitlab.com/pmdematagoda/deployment-tracker"
-                    target="_blank"
+                  href="https://gitlab.com/pmdematagoda/deployment-tracker"
+                  target="_blank"
                 >
                     See the Source
                     <GitlabOutlined />

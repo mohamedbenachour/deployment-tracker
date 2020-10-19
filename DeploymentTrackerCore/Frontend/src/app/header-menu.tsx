@@ -20,10 +20,10 @@ const HeaderMenu = (): JSX.Element => (
         <Row>
             <Col span={16}>
                 <Menu
-                  mode="horizontal"
-                  selectedKeys={[`${getCurrentSection()}`]}
-                  theme="dark"
-                  style={{ lineHeight: '64px' }}
+                    mode="horizontal"
+                    selectedKeys={[`${getCurrentSection()}`]}
+                    theme="dark"
+                    style={{ lineHeight: '64px' }}
                 >
                     <Menu.Item key={ApplicationSection.Deployments}>
                         <Link to={ApplicationRoute.Deployments}>Deployments</Link>
