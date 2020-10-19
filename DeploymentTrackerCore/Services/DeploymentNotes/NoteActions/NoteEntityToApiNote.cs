@@ -7,7 +7,8 @@ namespace DeploymentTrackerCore.Services.DeploymentNotes.NoteActions {
         public override ApiNote Perform(DeploymentNote input) => new ApiNote {
             Content = input.Content,
             DeploymentId = input.Deployment.Id,
-            Id = input.Id
+            Id = input.Id,
+            CreatedBy = input.CreatedBy
         };
     }
 }

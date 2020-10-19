@@ -1,11 +1,8 @@
+import UserActionDetail from '../shared/definitions/user-action-detail';
+
 enum DeploymentStatus {
   Destroyed = 'DESTROYED',
   Running = 'RUNNING',
-}
-
-interface UserActionDetail {
-  name: string;
-  userName: string;
 }
 
 interface DeploymentManagementUrls {
@@ -22,4 +19,4 @@ interface Deployment {
   managementUrls: DeploymentManagementUrls;
 }
 
-export { Deployment, DeploymentStatus, UserActionDetail };
+export { Deployment, DeploymentStatus };

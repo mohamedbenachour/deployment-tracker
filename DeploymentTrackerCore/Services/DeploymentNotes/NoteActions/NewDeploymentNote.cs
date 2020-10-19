@@ -21,7 +21,7 @@ namespace DeploymentTrackerCore.Services.DeploymentNotes.NoteActions {
                 Deployment = await GetDeployment(input.DeploymentId)
             };
 
-            AppContext.Notes.Add(newNote);
+            AppContext.DeploymentNote.Add(newNote);
 
             await AppContext.SaveChangesAsync();
 
