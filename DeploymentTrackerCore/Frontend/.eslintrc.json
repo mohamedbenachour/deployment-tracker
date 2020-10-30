@@ -29,7 +29,12 @@
       1,
       { "extensions": [".js", ".jsx", ".tsx"] }
     ],
-    "react/jsx-indent": ["warn", 4]
+    "react/jsx-indent": ["warn", 4],
+
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": "error",
+
+    "@typescript-eslint/no-unused-vars": "error"
   },
   "globals": {
     "fetch": true,
