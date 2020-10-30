@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TextArea from 'antd/lib/input/TextArea';
 import { observer } from 'mobx-react-lite';
 import SubtleSpinner from '../../shared/interactivity/subtle-spinner';
-import { postJSON } from '../../utils/io';
 import NoteStore from './note-store';
 
 interface NewNoteProps {

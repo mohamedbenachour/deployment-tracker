@@ -50,7 +50,9 @@ class NoteStore {
               this.isSaving = false;
               this.load();
           },
-          () => (this.isSaving = false),
+          () => {
+              this.isSaving = false;
+          },
       );
   }
 }
