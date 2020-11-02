@@ -17,6 +17,7 @@ interface Deployment {
   siteName: string;
   teardownUrl: string;
   managementUrls: DeploymentManagementUrls;
+  hasNotes: boolean;
 }
 
 export { Deployment, DeploymentStatus };

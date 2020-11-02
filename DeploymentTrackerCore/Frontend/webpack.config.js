@@ -26,6 +26,12 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
+                resolve: {
+                    fullySpecified: false,
+                },
+            },
+            {
+                test: /\.m?js$/,
                 exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: 'babel-loader',
@@ -55,5 +61,5 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env.VERSION': JSON.stringify(packageJson.version),
         }),
-    ],
+    ]
 };

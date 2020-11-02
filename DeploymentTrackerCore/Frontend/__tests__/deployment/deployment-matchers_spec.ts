@@ -39,6 +39,7 @@ describe('deployment-matchers', () => {
         managementUrls: {
             deploymentTriggerUrl: 'https://deploy',
         },
+        hasNotes: false,
     });
 
     describe('deploymentIsForCurrentUser', () => {

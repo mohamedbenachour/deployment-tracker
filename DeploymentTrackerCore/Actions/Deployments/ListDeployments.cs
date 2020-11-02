@@ -38,6 +38,7 @@ namespace DeploymentTrackerCore.Actions.Deployments {
             return (await Context.Deployments
                     .Include(d => d.DeployedEnvironment)
                     .Include(d => d.Type)
+                    .Include(d => d.DeploymentNotes)
                     .ToListAsync())
                 .Select(ConvertToApi).Select(t => t.Result);
         }

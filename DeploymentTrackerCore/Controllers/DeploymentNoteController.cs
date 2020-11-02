@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 
 using DeploymentTrackerCore.Models.API.DeploymentNotes;
-using DeploymentTrackerCore.Models.Entities;
 using DeploymentTrackerCore.Services;
 using DeploymentTrackerCore.Services.DeploymentNotes;
 using DeploymentTrackerCore.Services.Identity;
@@ -34,6 +33,12 @@ namespace DeploymentTrackerCore.Controllers {
         [HttpPost]
         public async Task<ActionResult<ApiNote>> CreateNoteForDeployment(int deploymentId, ApiNewNote newNote) {
             return await Handle(() => NotesService.CreateNewNote(deploymentId, newNote));
+        }
+
+        [HttpDelete]
+        [Route("{noteId}")]
+        public async Task<ActionResult<int>> DeleteNoteForDeployment(int deploymentId, int noteId) {
+            return await Handle(() => NotesService.DeleteNote(deploymentId, noteId));
         }
     }
 }

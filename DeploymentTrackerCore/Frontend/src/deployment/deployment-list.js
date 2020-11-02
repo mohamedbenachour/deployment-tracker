@@ -135,6 +135,7 @@ const renderDescription = ({
     modifiedBy: { name, userName, timestamp },
     siteLogin,
     id,
+    hasNotes,
 }) => {
     const actualName = getActualName(name, userName);
     const deploymentText = statusIsRunning(status) ? 'Deployed' : 'Torndown';
@@ -150,7 +151,7 @@ const renderDescription = ({
                 {` on ${FormatAsLocalDateTimeString(timestamp)}`}
             </Typography.Text>
             {siteLogin && renderLoginDetail(siteLogin)}
-            <NoteIndicator deploymentId={id} />
+            <NoteIndicator deploymentId={id} hasNotes={hasNotes} />
         </>
     );
 };

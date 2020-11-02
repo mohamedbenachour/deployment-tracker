@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import withStyles from 'react-jss';
+import { observer } from 'mobx-react-lite';
 import { DeploymentNote } from '../default-state';
 import NoteEntry from './note-entry';
-import { getJSON } from '../../utils/io';
 import SubtleSpinner from '../../shared/interactivity/subtle-spinner';
+import NoteStore from './note-store';
 
 const containerWidth = 200;
 const containerMaxHeight = 85;
@@ -27,23 +28,32 @@ interface NoteListClasses {
 }
 
 interface NoteListProps {
-  deploymentId: number;
+  noteStore: NoteStore;
   classes: NoteListClasses;
 }
 
-const renderNotes = (notes: DeploymentNote[]): JSX.Element => {
+const renderNotes = (
+    notes: DeploymentNote[],
+    noteStore: NoteStore,
+): JSX.Element => {
     if (notes.length === 0) {
         return <div>No notes</div>;
     }
 
-    const notesInOrder = notes.sort(
-        (noteA: DeploymentNote, noteB: DeploymentNote): number => noteB.id - noteA.id,
-    );
+    const notesInOrder = notes
+        .slice()
+        .sort(
+            (noteA: DeploymentNote, noteB: DeploymentNote): number => noteB.id - noteA.id,
+        );
 
     return (
         <>
             {notesInOrder.map((note: DeploymentNote) => (
-                <NoteEntry key={note.id} note={note} />
+                <NoteEntry
+                  key={note.id}
+                  note={note}
+                  onDelete={() => noteStore.delete(note.id)}
+                />
             ))}
         </>
     );
@@ -53,6 +63,7 @@ const renderListContent = (
     notes: DeploymentNote[],
     isLoading: boolean,
     hasErrored: boolean,
+    noteStore: NoteStore,
 ): JSX.Element => {
     if (hasErrored) {
         return <div>An error occurred</div>;
@@ -62,38 +73,21 @@ const renderListContent = (
         return <SubtleSpinner />;
     }
 
-    return renderNotes(notes);
+    return renderNotes(notes, noteStore);
 };
 
 const NoteList = ({
-    deploymentId,
+    noteStore,
     classes: { container },
-}: NoteListProps): JSX.Element => {
-    const [isLoading, setIsLoading] = useState(true);
-    const [hasErrored, setHasErrored] = useState(false);
-    const [notes, setNotes] = useState<DeploymentNote[]>([]);
+}: NoteListProps): JSX.Element => (
+    <div className={container}>
+        {renderListContent(
+            noteStore.notes,
+            noteStore.isLoading,
+            noteStore.hasFailed,
+            noteStore,
+        )}
+    </div>
+);
 
-    useEffect(() => {
-        if (isLoading) {
-            getJSON<DeploymentNote[]>(
-                `/api/deployment/${deploymentId}/note`,
-                (fetchedNotes: DeploymentNote[] | null) => {
-                    setNotes(fetchedNotes ?? []);
-                    setIsLoading(false);
-                },
-                () => {
-                    setIsLoading(false);
-                    setHasErrored(true);
-                },
-            );
-        }
-    });
-
-    return (
-        <div className={container}>
-            {renderListContent(notes, isLoading, hasErrored)}
-        </div>
-    );
-};
-
-export default withStyles(styles)(NoteList);
+export default withStyles(styles)(observer(NoteList));

@@ -15,9 +15,14 @@ namespace DeploymentTrackerCore.Services.DeploymentNotes {
 
         public async Task<ActionOutcome<ApiNote>> CreateNewNote(int deploymentId, ApiNewNote newNote) => await new NewDeploymentNote(AppContext).Perform(new NewNoteRequest {
             DeploymentId = deploymentId,
-                Note = newNote
+                Note = newNote,
         });
 
         public async Task<ActionOutcome<IEnumerable<ApiNote>>> ListNotes(int deploymentId) => await new ListNotesForDeployment(AppContext).Perform(deploymentId);
+
+        public async Task<ActionOutcome<int>> DeleteNote(int deploymentId, int noteId) => await new DeleteNoteForDeployment(AppContext).Perform(new DeleteNoteRequest {
+            DeploymentId = deploymentId,
+            NoteId = noteId
+        });
     }
 }

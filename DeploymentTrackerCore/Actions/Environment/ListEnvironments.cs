@@ -39,6 +39,10 @@ namespace DeploymentTrackerCore.Actions.Environment {
             return (await Context.Environments
                     .Include(env => env.Deployments)
                     .ThenInclude(d => d.Type)
+
+                    .Include(env => env.Deployments)
+                    .ThenInclude(d => d.DeploymentNotes)
+
                     .ToListAsync())
                 .Select(ConvertToApi)
                 .Select(t => t.Result);

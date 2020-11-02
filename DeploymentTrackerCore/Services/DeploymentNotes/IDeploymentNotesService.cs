@@ -9,5 +9,7 @@ namespace DeploymentTrackerCore.Services.DeploymentNotes {
         Task<ActionOutcome<ApiNote>> CreateNewNote(int deploymentId, ApiNewNote newNote);
 
         Task<ActionOutcome<IEnumerable<ApiNote>>> ListNotes(int deploymentId);
+
+        Task<ActionOutcome<int>> DeleteNote(int deploymentId, int noteId);
     }
 }

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TextArea from 'antd/lib/input/TextArea';
+import { observer } from 'mobx-react-lite';
 import SubtleSpinner from '../../shared/interactivity/subtle-spinner';
-import { postJSON } from '../../utils/io';
+import NoteStore from './note-store';
 
 interface NewNoteProps {
-  deploymentId: number;
+  noteStore: NoteStore;
 }
 
 const isSaveButtonPress = ({
@@ -14,32 +15,17 @@ const isSaveButtonPress = ({
 
 const handleKeyPress = (
     event: React.KeyboardEvent<HTMLTextAreaElement>,
-    setIsSaving: (isSaving: boolean) => void,
-    deploymentId: number,
+    noteStore: NoteStore,
 ): void => {
     if (isSaveButtonPress(event)) {
-        setIsSaving(true);
-
-        const note = {
-            content: event.currentTarget.value,
-        };
-        const url = `/api/deployment/${deploymentId}/note`;
-
-        postJSON(
-            url,
-            note,
-            () => setIsSaving(false),
-            () => console.error('Unable to save'),
-        );
+        noteStore.save(event.currentTarget.value);
     }
 };
 
-const NewNote = ({ deploymentId }: NewNoteProps): JSX.Element => {
+const NewNote = ({ noteStore }: NewNoteProps): JSX.Element => {
     const helpText = 'Ctrl+Enter to Save.';
-    const [currentContent, setCurrentContent] = useState('');
-    const [isSaving, setIsSaving] = useState(false);
 
-    if (isSaving) {
+    if (noteStore.isSaving) {
         return (
             <div>
                 <SubtleSpinner />
@@ -54,14 +40,9 @@ const NewNote = ({ deploymentId }: NewNoteProps): JSX.Element => {
           placeholder={helpText}
           autoSize={{ minRows: 3 }}
           allowClear
-          onKeyPress={(event: React.KeyboardEvent<HTMLTextAreaElement>) => handleKeyPress(event, setIsSaving, deploymentId)}
-          onChange={({
-                target: { value },
-            }: React.ChangeEvent<HTMLTextAreaElement>) => {
-                setCurrentContent(value);
-            }}
+          onKeyPress={(event: React.KeyboardEvent<HTMLTextAreaElement>) => handleKeyPress(event, noteStore)}
         />
     );
 };
 
-export default NewNote;
+export default observer(NewNote);
