@@ -55,7 +55,7 @@ namespace DeploymentTrackerCore.Models.API {
                     ModifiedBy = toConvert.ModifiedBy,
                     SiteLogin = toConvert.SiteLogin,
                     Type = ApiType.FromInternal(toConvert.Type),
-                    HasNotes = toConvert.DeploymentNotes.Any()
+                    HasNotes = toConvert.DeploymentNotes?.Any() ?? false
             };
         }
     }
