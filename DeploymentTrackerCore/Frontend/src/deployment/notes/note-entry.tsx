@@ -6,6 +6,8 @@ import { Button } from 'antd';
 import { DeploymentNote } from '../default-state';
 import UserNameBadge from '../../shared/user-names/user-name-badge';
 import NoteTooltip from './note-tooltip';
+import UserActionDetail from '../../shared/definitions/user-action-detail';
+import { getPageData } from '../../utils/page-data';
 
 const sectionPadding = '0px 5px 0px 5px';
 
@@ -40,6 +42,8 @@ interface NoteEntryProps {
   onDelete: () => void;
 }
 
+const shouldDisplayDeleteAction = (noteCreatedBy: UserActionDetail): boolean => getPageData().user.userName === noteCreatedBy.userName;
+
 const NoteEntry = ({
     note: { content, createdBy },
     classes: { container, noteOutline, actionsContainer },
@@ -53,13 +57,15 @@ const NoteEntry = ({
             </span>
         </NoteTooltip>
         <div className={actionsContainer}>
-            <Button
-              onClick={onDelete}
-              size="small"
-              shape="circle"
-              danger
-              icon={<DeleteOutlined />}
-            />
+            {shouldDisplayDeleteAction(createdBy) && (
+                <Button
+                  onClick={onDelete}
+                  size="small"
+                  shape="circle"
+                  danger
+                  icon={<DeleteOutlined />}
+                />
+            )}
         </div>
     </div>
 );
