@@ -15,7 +15,6 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

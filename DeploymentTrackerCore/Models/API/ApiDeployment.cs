@@ -15,6 +15,7 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System.Linq;
 using DeploymentTrackerCore.Models.Entities;
 
 namespace DeploymentTrackerCore.Models.API {
@@ -38,6 +39,8 @@ namespace DeploymentTrackerCore.Models.API {
         public AuditDetail CreatedBy { get; set; }
         public ApiDeploymentManagementUrls ManagementUrls { get; set; }
 
+        public bool HasNotes { get; set; }
+
         IIdentifiable IDeployedSite.Type => Type;
 
         public static ApiDeployment FromInternal(Deployment toConvert) {
@@ -51,7 +54,8 @@ namespace DeploymentTrackerCore.Models.API {
                     CreatedBy = toConvert.CreatedBy,
                     ModifiedBy = toConvert.ModifiedBy,
                     SiteLogin = toConvert.SiteLogin,
-                    Type = ApiType.FromInternal(toConvert.Type)
+                    Type = ApiType.FromInternal(toConvert.Type),
+                    HasNotes = toConvert.DeploymentNotes.Any()
             };
         }
     }
