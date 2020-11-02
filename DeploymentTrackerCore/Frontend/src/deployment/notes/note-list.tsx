@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import withStyles from 'react-jss';
 import { observer } from 'mobx-react-lite';
 import { DeploymentNote } from '../default-state';
 import NoteEntry from './note-entry';
-import { getJSON } from '../../utils/io';
 import SubtleSpinner from '../../shared/interactivity/subtle-spinner';
 import NoteStore from './note-store';
 
@@ -33,7 +32,10 @@ interface NoteListProps {
   classes: NoteListClasses;
 }
 
-const renderNotes = (notes: DeploymentNote[]): JSX.Element => {
+const renderNotes = (
+    notes: DeploymentNote[],
+    noteStore: NoteStore,
+): JSX.Element => {
     if (notes.length === 0) {
         return <div>No notes</div>;
     }
@@ -47,7 +49,11 @@ const renderNotes = (notes: DeploymentNote[]): JSX.Element => {
     return (
         <>
             {notesInOrder.map((note: DeploymentNote) => (
-                <NoteEntry key={note.id} note={note} />
+                <NoteEntry
+                  key={note.id}
+                  note={note}
+                  onDelete={() => noteStore.delete(note.id)}
+                />
             ))}
         </>
     );
@@ -57,6 +63,7 @@ const renderListContent = (
     notes: DeploymentNote[],
     isLoading: boolean,
     hasErrored: boolean,
+    noteStore: NoteStore,
 ): JSX.Element => {
     if (hasErrored) {
         return <div>An error occurred</div>;
@@ -66,7 +73,7 @@ const renderListContent = (
         return <SubtleSpinner />;
     }
 
-    return renderNotes(notes);
+    return renderNotes(notes, noteStore);
 };
 
 const NoteList = ({
@@ -78,6 +85,7 @@ const NoteList = ({
             noteStore.notes,
             noteStore.isLoading,
             noteStore.hasFailed,
+            noteStore,
         )}
     </div>
 );

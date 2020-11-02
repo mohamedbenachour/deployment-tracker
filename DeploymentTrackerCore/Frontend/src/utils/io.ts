@@ -17,18 +17,47 @@
 
 import { getCsrfToken } from './page-properties';
 
+const getHeadersWithCsrfToken = (
+    additionalHeaders: Record<string, string>,
+): Headers => new Headers({
+    ...additionalHeaders,
+    RequestVerificationToken: getCsrfToken() ?? '',
+});
+
+const handlePromiseAsJSON = <T>(
+    originalPromise: Promise<Response>,
+): Promise<T> => new Promise<T>((resolve, reject) => {
+    originalPromise
+        .then((response) => {
+            if (response.ok) {
+                if (response.status === 204) {
+                    resolve();
+                } else {
+                    response
+                        .json()
+                        .then(resolve)
+                        .catch(() => console.error('Failed to convert to JSON'));
+                }
+            } else {
+                reject();
+            }
+        })
+        .catch((failure) => {
+            reject(failure);
+        });
+});
+
 function postJSON<T, O>(
     URL: string,
     object: T,
     onSuccess: (response: O) => void,
     onFailure: (error: any) => void,
-) {
+): void {
     fetch(URL, {
         method: 'POST',
         body: JSON.stringify(object),
-        headers: new Headers({
+        headers: getHeadersWithCsrfToken({
             'Content-Type': 'application/json',
-            RequestVerificationToken: getCsrfToken() ?? '',
         }),
     })
         .then((response) => {
@@ -51,33 +80,30 @@ function postJSON<T, O>(
 
 const get = (url: string): Promise<Response> => fetch(url);
 
-const getJSONPromise = <T>(url: string): Promise<T | null> => new Promise<T>((resolve, reject) => {
-    get(url)
-        .then((response) => {
-            if (response.ok) {
-                if (response.status === 204) {
-                    resolve();
-                } else {
-                    response
-                        .json()
-                        .then(resolve)
-                        .catch(() => console.error('Failed to convert to JSON'));
-                }
-            } else {
-                reject();
-            }
-        })
-        .catch((failure) => {
-            reject(failure);
-        });
-});
+const getJSONPromise = <T>(url: string): Promise<T | null> => handlePromiseAsJSON(get(url));
 
 const getJSON = <T>(
     url: string,
     onSuccess: (response: T | null) => void,
     onFailure: (error: any) => void,
-) => {
+): void => {
     getJSONPromise<T>(url).then(onSuccess).catch(onFailure);
 };
 
-export { postJSON, getJSON, getJSONPromise };
+const deleteJSON = <T>(url: string, payload?: unknown): Promise<T> => {
+    const body = payload !== undefined ? JSON.stringify(payload) : null;
+
+    const ioPromise = fetch(url, {
+        method: 'DELETE',
+        body,
+        headers: getHeadersWithCsrfToken({
+            'Content-Type': 'application/json',
+        }),
+    });
+
+    return handlePromiseAsJSON(ioPromise);
+};
+
+export {
+    postJSON, getJSON, getJSONPromise, deleteJSON,
+};

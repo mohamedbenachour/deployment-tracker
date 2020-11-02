@@ -1,6 +1,10 @@
 import { makeAutoObservable } from 'mobx';
-import { getJSON, postJSON } from '../../utils/io';
+import { deleteJSON, getJSON, postJSON } from '../../utils/io';
+import URLBuilder from '../../utils/url-builder';
+import { getDeploymentApiUrl } from '../../utils/urls';
 import { DeploymentNote } from '../default-state';
+
+const getDeploymentNoteApiUrl = (deploymentId: number): URLBuilder => getDeploymentApiUrl().appendPath(deploymentId).appendPath('note');
 
 class NoteStore {
   notes: DeploymentNote[] = [];
@@ -23,7 +27,7 @@ class NoteStore {
       this.isLoading = true;
 
       getJSON<DeploymentNote[]>(
-          `/api/deployment/${this.deploymentId}/note`,
+          getDeploymentNoteApiUrl(this.deploymentId).getURL(),
           (fetchedNotes: DeploymentNote[] | null) => {
               this.notes = fetchedNotes ?? [];
               this.isLoading = false;
@@ -39,7 +43,7 @@ class NoteStore {
       const note = {
           content,
       };
-      const url = `/api/deployment/${this.deploymentId}/note`;
+      const url = getDeploymentNoteApiUrl(this.deploymentId).getURL();
 
       this.isSaving = true;
 
@@ -54,6 +58,20 @@ class NoteStore {
               this.isSaving = false;
           },
       );
+  }
+
+  delete(noteId: number): void {
+      const url = getDeploymentNoteApiUrl(this.deploymentId)
+          .appendPath(noteId)
+          .getURL();
+
+      deleteJSON(url, null)
+          .then(() => {
+              this.load();
+          })
+          .catch(() => {
+              console.error('Error');
+          });
   }
 }
 
