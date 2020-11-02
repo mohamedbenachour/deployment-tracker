@@ -9,8 +9,8 @@
         "build-watch": "webpack -w",
         "test": "jest",
         "test-watch": "jest --watch",
-        "lint": "eslint --ext .js,.ts src/ __tests__/",
-        "lint-fix": "eslint --ext .js,.ts,.tsx --fix src/ __tests__/"
+        "lint": "eslint --cache --ext .js,.ts src/ __tests__/",
+        "lint-fix": "eslint --cache --ext .js,.ts,.tsx --fix src/ __tests__/"
     },
     "author": "Pramod Dematagoda",
     "license": "GPL-3.0-or-later",
