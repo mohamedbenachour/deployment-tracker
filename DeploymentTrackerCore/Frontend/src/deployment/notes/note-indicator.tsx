@@ -1,7 +1,7 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 
 import { CommentOutlined } from '@ant-design/icons';
-import withStyles from 'react-jss';
+import withStyles, { WithStylesProps } from 'react-jss';
 import { Popover } from 'antd';
 import NotePopover from './note-popover';
 import { DarkBlue } from '../../shared/styles/colours';
@@ -12,25 +12,20 @@ const styles = {
         paddingLeft: 5,
         cursor: 'pointer',
     },
-    iconColour: ({ hasNotes }: NoteIndicatorProps) => ({
-        color: hasNotes ? DarkBlue : undefined,
-    }),
+    iconColourHighlighted: {
+        color: DarkBlue,
+    },
 };
 
-interface NoteIndicatorClasses {
-  container: string;
-  iconColour: string;
-}
-
-interface NoteIndicatorProps {
+interface NoteIndicatorProps extends WithStylesProps<typeof styles> {
   deploymentId: number;
   hasNotes: boolean;
-  classes: NoteIndicatorClasses;
 }
 
 const NoteIndicator = ({
     deploymentId,
-    classes: { container, iconColour },
+    hasNotes,
+    classes: { container, iconColourHighlighted },
 }: NoteIndicatorProps): JSX.Element => (
     <Popover
       content={<NotePopover deploymentId={deploymentId} />}
@@ -38,7 +33,7 @@ const NoteIndicator = ({
       destroyTooltipOnHide
     >
         <div className={container}>
-            <CommentOutlined className={iconColour} />
+            <CommentOutlined className={hasNotes ? iconColourHighlighted : ''} />
         </div>
     </Popover>
 );
