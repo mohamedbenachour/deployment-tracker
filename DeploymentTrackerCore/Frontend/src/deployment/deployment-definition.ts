@@ -9,7 +9,13 @@ interface DeploymentManagementUrls {
   deploymentTriggerUrl: string | null;
 }
 
+interface DeploymentType {
+  id: number;
+  name: string;
+}
+
 interface Deployment {
+  id: number;
   branchName: string;
   status: DeploymentStatus;
   modifiedBy: UserActionDetail;
@@ -18,6 +24,7 @@ interface Deployment {
   teardownUrl: string;
   managementUrls: DeploymentManagementUrls;
   hasNotes: boolean;
+  type: DeploymentType;
 }
 
-export { Deployment, DeploymentStatus };
+export { Deployment, DeploymentStatus, DeploymentType };
