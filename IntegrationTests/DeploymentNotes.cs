@@ -11,6 +11,7 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 
 using IntegrationTests.Helpers;
+using IntegrationTests.Helpers.DeploymentsApi.NotesApi;
 using IntegrationTests.Helpers.TestSetup;
 
 using NUnit.Framework;
@@ -42,8 +43,7 @@ namespace IntegrationTests {
 
             var deployment = await DeploymentProvider.Create();
 
-
-            await CreateNoteForDeployment(client, deployment, "About to be deleted");
+            await CreateNoteForDeployment.Create(client, deployment, "About to be deleted");
 
             var deploymentNoteToDelete = (await GetNotesForDeployment(client, deployment)).First().Id;
 
@@ -56,8 +56,7 @@ namespace IntegrationTests {
 
             var deployment = await DeploymentProvider.Create();
 
-
-            await CreateNoteForDeployment(client, deployment, "About to be deleted");
+            await CreateNoteForDeployment.Create(client, deployment, "About to be deleted");
 
             var deploymentNoteToDelete = (await GetNotesForDeployment(client, deployment)).First().Id;
 
@@ -69,7 +68,7 @@ namespace IntegrationTests {
         }
 
         private async Task DeleteDeploymentNote(HttpClient client, ApiDeployment deployment, int noteId) {
-            var deleteUrl = $"{GetNotesUrlForDeployment(deployment)}/{noteId}";
+            var deleteUrl = $"{NoteUrlForDeployment.GetForDeployment(deployment)}/{noteId}";
 
             (await client.DeleteAsync(deleteUrl)).AssertSuccessfulResponse();
         }
@@ -80,7 +79,7 @@ namespace IntegrationTests {
 
             var deployment = await DeploymentProvider.Create();
 
-            await CreateNoteForDeployment(client, deployment, "Hello World!!");
+            await CreateNoteForDeployment.Create(client, deployment, "Hello World!!");
         }
 
         [Test]
@@ -90,7 +89,7 @@ namespace IntegrationTests {
 
             var deployment = await DeploymentProvider.Create();
 
-            await CreateNoteForDeployment(client, deployment, noteContent);
+            await CreateNoteForDeployment.Create(client, deployment, noteContent);
 
             var deploymentNotes = await GetNotesForDeployment(client, deployment);
 
@@ -99,10 +98,6 @@ namespace IntegrationTests {
                 deploymentNotes.Single().Content.Should().Be(noteContent);
             }
         }
-
-        private async Task<IEnumerable<ApiNote>> GetNotesForDeployment(HttpClient client, ApiDeployment deployment) 
-            =>  (await (await client.GetAsync(GetNotesUrlForDeployment(deployment)))
-                .AssertSuccessfulResponseAndGetContent<IEnumerable<ApiNote>>());
 
         [Test]
         public async Task NotesForOtherDeploymentsAreNotAccidentallyReturned() {
@@ -113,8 +108,8 @@ namespace IntegrationTests {
             var deploymentA = await DeploymentProvider.Create();
             var deploymentB = await DeploymentProvider.Create();
 
-            await CreateNoteForDeployment(client, deploymentA, noteForDeploymentA);
-            await CreateNoteForDeployment(client, deploymentB, noteForDeploymentB);
+            await CreateNoteForDeployment.Create(client, deploymentA, noteForDeploymentA);
+            await CreateNoteForDeployment.Create(client, deploymentB, noteForDeploymentB);
 
             var deploymentNotes = await GetNotesForDeployment(client, deploymentB);
 
@@ -124,13 +119,7 @@ namespace IntegrationTests {
             }
         }
 
-        private async Task CreateNoteForDeployment(HttpClient client, ApiDeployment deployment, string content) => (await client.PostJsonAsync(
-            GetNotesUrlForDeployment(deployment),
-            new ApiNewNote {
-                Content = content
-            }
-        )).AssertSuccessfulResponse();
-
-        private static string GetNotesUrlForDeployment(ApiDeployment deployment) => $"{TestEnvironment.URLs.Deployment}/{deployment.Id}/note";
+        private async Task<IEnumerable<ApiNote>> GetNotesForDeployment(HttpClient client, ApiDeployment deployment) => (await (await client.GetAsync(NoteUrlForDeployment.GetForDeployment(deployment)))
+            .AssertSuccessfulResponseAndGetContent<IEnumerable<ApiNote>>());
     }
 }

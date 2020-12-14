@@ -3,14 +3,16 @@ using System;
 using DeploymentTrackerCore.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DeploymentTrackerCore.Migrations
 {
     [DbContext(typeof(DeploymentAppContext))]
-    partial class DeploymentAppContextModelSnapshot : ModelSnapshot
+    [Migration("20201130055159_User-entity-links")]
+    partial class Userentitylinks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
