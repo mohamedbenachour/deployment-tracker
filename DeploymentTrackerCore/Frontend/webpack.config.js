@@ -13,7 +13,7 @@ module.exports = {
         'account.login': './src/login.tsx',
         'account.logout': './src/logout.tsx',
     },
-    devtool: 'source-map',
+    devtool: 'eval-source-map',
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
     },
