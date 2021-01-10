@@ -53,10 +53,13 @@ namespace IntegrationTests {
             var currentMentions = await GetCurrentMentions(clientB);
 
             currentMentions.Should().BeEquivalentTo(new List<EntityLinks> {
-                new EntityLinks {
-                    ReferencedEntity = $"Deployment::{newNote.DeploymentId}::DeploymentNote::{newNote.Id}"
-                }
-            }, options => options.Excluding(link => link.CreatedBy));
+                    new EntityLinks {
+                        ReferencedEntity = $"Deployment::{newNote.DeploymentId}::DeploymentNote::{newNote.Id}"
+                    }
+                }, options => options
+                .Excluding(link => link.CreatedBy)
+                .Excluding(link => link.ModifiedBy)
+            );
         }
 
         [Test]
