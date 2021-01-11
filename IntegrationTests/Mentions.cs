@@ -65,51 +65,57 @@ namespace IntegrationTests {
 
         [Test]
         public async Task ANoteWithAMentionHasTheExpectedTimestamp() {
-            var userA = TestNames.UserName;
-            var userB = TestNames.UserName;
-            var clientA = await TestEnvironment.ClientFactory.GetAuthenticatedClient(userA);
-            var clientB = await TestEnvironment.ClientFactory.GetAuthenticatedClient(userB);
             var dateTimeBeforeNoteCreation = DateTime.UtcNow;
+            var client = await SimulateAMentionAndReturnReceivingUserClient();
 
-            await CreateDeploymentWithNote(clientA, $"What do you think of this <@{userB}>?");
-
-            var newMention = (await GetCurrentMentions(clientB)).Single();
+            var newMention = (await GetCurrentMentions(client)).Single();
 
             newMention.CreatedBy.Timestamp.Should().BeAfter(dateTimeBeforeNoteCreation);
         }
 
         [Test]
+        public async Task AMentionIncludesAnId() {
+            var dateTimeBeforeNoteCreation = DateTime.UtcNow;
+            var client = await SimulateAMentionAndReturnReceivingUserClient();
+
+            var newMention = (await GetCurrentMentions(client)).Single();
+
+            newMention.Id.Should().BeGreaterThan(0);
+        }
+
+        [Test]
         public async Task AMentionCanBeAcknowledged() {
-            var userA = TestNames.UserName;
-            var userB = TestNames.UserName;
-            var clientA = await TestEnvironment.ClientFactory.GetAuthenticatedClient(userA);
-            var clientB = await TestEnvironment.ClientFactory.GetAuthenticatedClient(userB);
+            var client = await SimulateAMentionAndReturnReceivingUserClient();
 
-            var newNote = await CreateDeploymentWithNote(clientA, $"What do you think of this <@{userB}>?");
-
-            var currentMentions = await GetCurrentMentions(clientB);
+            var currentMentions = await GetCurrentMentions(client);
 
             var mentionToAcknowledge = currentMentions.First();
 
-            await AcknowledgeMention(clientB, mentionToAcknowledge.Id);
+            await AcknowledgeMention(client, mentionToAcknowledge.Id);
         }
 
         [Test]
         public async Task AMentionThatIsAcknowledgedWillNotAppearInTheListOfCurrentMentions() {
+            var client = await SimulateAMentionAndReturnReceivingUserClient();
+
+            var mentionToAcknowledge = (await GetCurrentMentions(client)).First();
+
+            await AcknowledgeMention(client, mentionToAcknowledge.Id);
+
+            var currentMentions = await GetCurrentMentions(client);
+
+            currentMentions.Should().BeEmpty();
+        }
+
+        private async Task<HttpClient> SimulateAMentionAndReturnReceivingUserClient() {
             var userA = TestNames.UserName;
             var userB = TestNames.UserName;
             var clientA = await TestEnvironment.ClientFactory.GetAuthenticatedClient(userA);
             var clientB = await TestEnvironment.ClientFactory.GetAuthenticatedClient(userB);
 
-            var newNote = await CreateDeploymentWithNote(clientA, $"What do you think of this <@{userB}>?");
+            await CreateDeploymentWithNote(clientA, $"What do you think of this <@{userB}>?");
 
-            var mentionToAcknowledge = (await GetCurrentMentions(clientB)).First();
-
-            await AcknowledgeMention(clientB, mentionToAcknowledge.Id);
-
-            var currentMentions = await GetCurrentMentions(clientB);
-
-            currentMentions.Should().BeEmpty();
+            return clientB;
         }
 
         private async Task AcknowledgeMention(HttpClient client, int mentionId) {
