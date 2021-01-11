@@ -91,7 +91,19 @@ namespace IntegrationTests {
 
             var mentionToAcknowledge = currentMentions.First();
 
-            await AcknowledgeMention(client, mentionToAcknowledge.Id);
+            await AcknowledgeMentionAndAssertSuccess(client, mentionToAcknowledge.Id);
+        }
+
+        [Test]
+        public async Task YouCannotAcknowledgeAMentionForAnotherUser() {
+            var clientTheMentionBelongsTo = await SimulateAMentionAndReturnReceivingUserClient();
+            var differentClient = await TestEnvironment.ClientFactory.GetAuthenticatedClient(TestNames.UserName);
+
+            var currentMentions = await GetCurrentMentions(clientTheMentionBelongsTo);
+
+            var mentionToAcknowledge = currentMentions.First();
+
+            (await AcknowledgeMention(differentClient, mentionToAcknowledge.Id)).AssertBadRequest();
         }
 
         [Test]
@@ -100,7 +112,7 @@ namespace IntegrationTests {
 
             var mentionToAcknowledge = (await GetCurrentMentions(client)).First();
 
-            await AcknowledgeMention(client, mentionToAcknowledge.Id);
+            await AcknowledgeMentionAndAssertSuccess(client, mentionToAcknowledge.Id);
 
             var currentMentions = await GetCurrentMentions(client);
 
@@ -118,10 +130,12 @@ namespace IntegrationTests {
             return clientB;
         }
 
-        private async Task AcknowledgeMention(HttpClient client, int mentionId) {
+        private async Task AcknowledgeMentionAndAssertSuccess(HttpClient client, int mentionId) => (await AcknowledgeMention(client, mentionId)).AssertSuccessfulResponse();
+
+        private async Task<HttpResponseMessage> AcknowledgeMention(HttpClient client, int mentionId) {
             var deleteUrl = $"{TestEnvironment.URLs.Mention}/{mentionId}";
 
-            (await client.DeleteAsync(deleteUrl)).AssertSuccessfulResponse();
+            return await client.DeleteAsync(deleteUrl);
         }
 
         private async Task<IEnumerable<EntityLinks>> GetCurrentMentions(HttpClient client) => (await (await client

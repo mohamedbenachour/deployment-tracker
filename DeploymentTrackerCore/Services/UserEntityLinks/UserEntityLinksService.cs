@@ -37,6 +37,6 @@ namespace DeploymentTrackerCore.Services.UserEntityLinks {
 
         public async Task<ActionOutcome<int>> CreateDeploymentNoteLinks(IEnumerable<NewDeploymentNoteLink> noteLinks) => await new CreateNewUserEntityLinks(AppContext, RequestState).Perform(noteLinks);
 
-        public async Task<ActionOutcome<bool>> MakeInactive(int userEntityLinkId) => await new MakeEntityLinkInactive(AppContext).Perform(userEntityLinkId);
+        public async Task<ActionOutcome<bool>> MakeInactive(int userEntityLinkId) => await new MakeEntityLinkInactive(AppContext, RequestState).Perform(userEntityLinkId);
     }
 }

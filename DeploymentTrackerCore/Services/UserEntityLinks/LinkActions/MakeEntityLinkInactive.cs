@@ -26,15 +26,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DeploymentTrackerCore.Services.UserEntityLinks.LinkActions {
     public class MakeEntityLinkInactive : IResultBasedAction<int, bool> {
-        public MakeEntityLinkInactive(DeploymentAppContext appContext) {
+        public MakeEntityLinkInactive(DeploymentAppContext appContext, IRequestState requestState) {
+            RequestState = requestState;
             AppContext = appContext;
         }
 
+        private IRequestState RequestState { get; }
         private DeploymentAppContext AppContext { get; }
 
         public async Task<ActionOutcome<bool>> Perform(int userEntityLinkId) {
             var userEntityLink = await AppContext.UserEntityLinks
-                .SingleAsync(entityLink => entityLink.Id == userEntityLinkId);
+                .Where(entityLink => entityLink.TargetUserName == RequestState.GetUser().Username)
+                .SingleOrDefaultAsync(entityLink => entityLink.Id == userEntityLinkId);
+
+            if (userEntityLink == null) {
+                return ActionOutcome<bool>.WithError("No such entity link found.");
+            }
 
             userEntityLink.IsActive = false;
 
