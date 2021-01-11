@@ -4,12 +4,12 @@ import React from 'react';
 import { Deployment } from '../deployment-definition';
 
 interface MarkAsTorndownParameters {
-  siteName: string;
+    siteName: string;
 }
 
 interface MoreActionsDropdownProps {
-  deployment: Deployment;
-  markAsTorndown: (siteParameter: MarkAsTorndownParameters) => void;
+    deployment: Deployment;
+    markAsTorndown: (siteParameter: MarkAsTorndownParameters) => void;
 }
 
 const actionsMenu = (

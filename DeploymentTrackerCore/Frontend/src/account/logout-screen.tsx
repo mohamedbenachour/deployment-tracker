@@ -13,11 +13,11 @@ const styles = {
 };
 
 interface LogoutScreenClasses {
-  logoutScreen: string;
+    logoutScreen: string;
 }
 
 interface LogoutScreenProps {
-  classes: LogoutScreenClasses;
+    classes: LogoutScreenClasses;
 }
 
 const LogoutScreen = ({ classes }: LogoutScreenProps) => (

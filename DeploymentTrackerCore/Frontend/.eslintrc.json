@@ -24,7 +24,7 @@
         "tsx": "never"
       }
     ],
-    "indent": ["error", 4],
+    "indent": "off",
     "react/jsx-filename-extension": [
       1,
       { "extensions": [".js", ".jsx", ".tsx"] }
@@ -34,7 +34,17 @@
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": "error",
 
-    "@typescript-eslint/no-unused-vars": "error"
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/indent": [
+      "error",
+      4,
+      {
+        "ignoredNodes": [
+          "JSXElement *",
+          "JSXElement"
+        ]
+      }
+    ]
   },
   "globals": {
     "fetch": true,

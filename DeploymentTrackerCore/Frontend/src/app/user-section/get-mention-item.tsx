@@ -9,9 +9,9 @@ import getDeploymentForMention from './get-deployment-for-mention';
 import { Mention } from './mention-definitions';
 
 interface MentionItemProps {
-  mention: Mention;
-  currentDeployments: Deployment[];
-  onMentionAcknowledged: () => void;
+    mention: Mention;
+    currentDeployments: Deployment[];
+    onMentionAcknowledged: () => void;
 }
 
 const getMentionText = (
@@ -40,7 +40,7 @@ const getMentionItem = ({
     <List.Item
       key={mention.id}
       actions={[
-            <Button
+          <Button
             onClick={onMentionAcknowledged}
             size="small"
             shape="circle"

@@ -4,46 +4,46 @@ import { getMentionsApiUrl } from '../../utils/urls';
 import { Mention } from './mention-definitions';
 
 class MentionStore {
-  mentions: Mention[] = [];
+    mentions: Mention[] = [];
 
-  isLoading = false;
+    isLoading = false;
 
-  hasFailed = false;
+    hasFailed = false;
 
-  isSaving = false;
+    isSaving = false;
 
-  constructor() {
-      makeAutoObservable(this);
-      this.load();
-  }
+    constructor() {
+        makeAutoObservable(this);
+        this.load();
+    }
 
-  load(): void {
-      this.isLoading = true;
+    load(): void {
+        this.isLoading = true;
 
-      getJSON<Mention[]>(
-          getMentionsApiUrl().getURL(),
-          (fetchedMentions: Mention[] | null) => {
-              this.mentions = fetchedMentions ?? [];
-              this.isLoading = false;
-          },
-          () => {
-              this.isLoading = false;
-              this.hasFailed = true;
-          },
-      );
-  }
+        getJSON<Mention[]>(
+            getMentionsApiUrl().getURL(),
+            (fetchedMentions: Mention[] | null) => {
+                this.mentions = fetchedMentions ?? [];
+                this.isLoading = false;
+            },
+            () => {
+                this.isLoading = false;
+                this.hasFailed = true;
+            },
+        );
+    }
 
-  acknowledge(mentionId: number): void {
-      const url = getMentionsApiUrl().appendPath(mentionId).getURL();
+    acknowledge(mentionId: number): void {
+        const url = getMentionsApiUrl().appendPath(mentionId).getURL();
 
-      deleteJSON(url, null)
-          .then(() => {
-              this.load();
-          })
-          .catch(() => {
-              console.error('Error');
-          });
-  }
+        deleteJSON(url, null)
+            .then(() => {
+                this.load();
+            })
+            .catch(() => {
+                console.error('Error');
+            });
+    }
 }
 
 export default MentionStore;

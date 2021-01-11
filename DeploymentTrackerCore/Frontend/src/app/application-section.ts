@@ -1,6 +1,6 @@
 enum ApplicationSection {
-  Deployments,
-  Environments,
+    Deployments,
+    Environments,
 }
 
 export default ApplicationSection;

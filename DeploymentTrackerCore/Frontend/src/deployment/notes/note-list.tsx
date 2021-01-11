@@ -24,12 +24,12 @@ const styles = {
 };
 
 interface NoteListClasses {
-  container: string;
+    container: string;
 }
 
 interface NoteListProps {
-  noteStore: NoteStore;
-  classes: NoteListClasses;
+    noteStore: NoteStore;
+    classes: NoteListClasses;
 }
 
 const renderNotes = (

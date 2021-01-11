@@ -1,6 +1,6 @@
 interface LoadableData<T> {
-  data: T | null;
-  loading: boolean;
+    data: T | null;
+    loading: boolean;
 }
 
 export { LoadableData };

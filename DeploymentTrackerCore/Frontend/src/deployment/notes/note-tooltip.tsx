@@ -4,8 +4,8 @@ import UserActionDetail from '../../shared/definitions/user-action-detail';
 import { FormatAsLocalDateTimeString } from '../../utils/date-time-formatting';
 
 interface NoteTooltipProps {
-  createdBy: UserActionDetail;
-  children: JSX.Element;
+    createdBy: UserActionDetail;
+    children: JSX.Element;
 }
 
 const getTooltipText = (createdBy: UserActionDetail): string => `By ${createdBy.name} on ${FormatAsLocalDateTimeString(createdBy.timestamp)}`;

@@ -5,7 +5,7 @@ import SubtleSpinner from '../../shared/interactivity/subtle-spinner';
 import NoteStore from './note-store';
 
 interface NewNoteProps {
-  noteStore: NoteStore;
+    noteStore: NoteStore;
 }
 
 const isSaveButtonPress = ({

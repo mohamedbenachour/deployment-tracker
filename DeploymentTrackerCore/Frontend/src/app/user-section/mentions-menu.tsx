@@ -6,8 +6,8 @@ import { Mention } from './mention-definitions';
 import MentionStore from './mention-store';
 
 interface MentionsMenuProps {
-  mentionStore: MentionStore;
-  deployments: Deployment[];
+    mentionStore: MentionStore;
+    deployments: Deployment[];
 }
 
 const MentionsMenu = ({

@@ -6,8 +6,8 @@ import { Deployment } from '../deployment-definition';
 import MoreActionsDropdown from './more-actions-dropdown';
 
 interface ActionsProps {
-  deployment: Deployment;
-  teardownDeployment: (parameters: unknown) => void;
+    deployment: Deployment;
+    teardownDeployment: (parameters: unknown) => void;
 }
 
 const getActionsForDeployment = ({

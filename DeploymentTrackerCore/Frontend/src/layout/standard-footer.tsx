@@ -17,13 +17,13 @@ const styles = {
 };
 
 interface Classes {
-  container: string;
-  version: string;
-  source: string;
+    container: string;
+    version: string;
+    source: string;
 }
 
 interface StandardFooterProps {
-  classes: Classes;
+    classes: Classes;
 }
 
 const StandardFooter = ({
