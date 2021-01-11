@@ -36,7 +36,7 @@ const getMentionItem = ({
     mention,
     currentDeployments,
     onMentionAcknowledged,
-}: MentionItemProps) => (
+}: MentionItemProps): JSX.Element => (
     <List.Item
       key={mention.id}
       actions={[
