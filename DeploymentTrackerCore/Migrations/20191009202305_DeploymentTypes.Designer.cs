@@ -90,7 +90,7 @@ namespace DeploymentTrackerCore.Migrations {
 
                 b.HasKey("Id");
 
-                b.ToTable("Type");
+                b.ToTable("Types");
 
                 b.HasData(
                     new {
