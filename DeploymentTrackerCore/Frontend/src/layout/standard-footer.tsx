@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout } from 'antd';
+import { Layout, Space } from 'antd';
 import { GitlabOutlined } from '@ant-design/icons';
 import withStyles from 'react-jss';
 
@@ -32,17 +32,17 @@ const StandardFooter = ({
     <Layout.Footer>
         <div className={container}>
             <div className={version}>
-                {`Deployment Tracker v${
-                    process.env.VERSION ?? ''
-                }`}
+                {`Deployment Tracker v${process.env.VERSION ?? ''}`}
             </div>
             <div className={source}>
                 <a
                   href="https://gitlab.com/pmdematagoda/deployment-tracker"
                   target="_blank"
                 >
-                    See the Source
-                    <GitlabOutlined />
+                    <Space>
+                        See the Source
+                        <GitlabOutlined />
+                    </Space>
                 </a>
             </div>
         </div>
