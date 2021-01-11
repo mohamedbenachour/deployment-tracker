@@ -24,6 +24,7 @@ const MentionsButton = (): JSX.Element => {
         <Popover
           placement="bottom"
           content={<ConnectedMentionsMenu mentionStore={mentionStore} />}
+          trigger="click"
         >
             <Button>
                 <Badge size="small" count={loadedMentions.length}>
