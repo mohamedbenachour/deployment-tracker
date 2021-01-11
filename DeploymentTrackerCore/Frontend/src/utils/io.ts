@@ -26,12 +26,12 @@ const getHeadersWithCsrfToken = (
 
 const handlePromiseAsJSON = <T>(
     originalPromise: Promise<Response>,
-): Promise<T> => new Promise<T>((resolve, reject) => {
+): Promise<T | null> => new Promise<T | null>((resolve, reject) => {
     originalPromise
         .then((response) => {
             if (response.ok) {
                 if (response.status === 204) {
-                    resolve();
+                    resolve(null);
                 } else {
                     response
                         .json()
@@ -90,7 +90,7 @@ const getJSON = <T>(
     getJSONPromise<T>(url).then(onSuccess).catch(onFailure);
 };
 
-const deleteJSON = <T>(url: string, payload?: unknown): Promise<T> => {
+const deleteJSON = <T>(url: string, payload?: unknown): Promise<T | null> => {
     const body = payload !== undefined ? JSON.stringify(payload) : null;
 
     const ioPromise = fetch(url, {
