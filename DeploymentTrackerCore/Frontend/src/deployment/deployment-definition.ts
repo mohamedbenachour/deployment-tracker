@@ -1,23 +1,30 @@
 import UserActionDetail from '../shared/definitions/user-action-detail';
 
 enum DeploymentStatus {
-  Destroyed = 'DESTROYED',
-  Running = 'RUNNING',
+    Destroyed = 'DESTROYED',
+    Running = 'RUNNING',
 }
 
 interface DeploymentManagementUrls {
-  deploymentTriggerUrl: string | null;
+    deploymentTriggerUrl: string | null;
+}
+
+interface DeploymentType {
+    id: number;
+    name: string;
 }
 
 interface Deployment {
-  branchName: string;
-  status: DeploymentStatus;
-  modifiedBy: UserActionDetail;
-  createdBy: UserActionDetail;
-  siteName: string;
-  teardownUrl: string;
-  managementUrls: DeploymentManagementUrls;
-  hasNotes: boolean;
+    id: number;
+    branchName: string;
+    status: DeploymentStatus;
+    modifiedBy: UserActionDetail;
+    createdBy: UserActionDetail;
+    siteName: string;
+    teardownUrl: string;
+    managementUrls: DeploymentManagementUrls;
+    hasNotes: boolean;
+    type: DeploymentType;
 }
 
-export { Deployment, DeploymentStatus };
+export { Deployment, DeploymentStatus, DeploymentType };

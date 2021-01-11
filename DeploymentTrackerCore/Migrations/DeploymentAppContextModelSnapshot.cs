@@ -14,7 +14,7 @@ namespace DeploymentTrackerCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7");
+                .HasAnnotation("ProductVersion", "3.1.9");
 
             modelBuilder.Entity("DeploymentTrackerCore.Models.Entities.Deployment", b =>
                 {
@@ -153,6 +153,34 @@ namespace DeploymentTrackerCore.Migrations
                             Id = 1,
                             Name = "Default"
                         });
+                });
+
+            modelBuilder.Entity("DeploymentTrackerCore.Models.Entities.UserEntityLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ReferencedEntity")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("TargetUserName")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("TargetUserName");
+
+                    b.ToTable("UserEntityLinks");
                 });
 
             modelBuilder.Entity("DeploymentTrackerCore.Models.Entities.Deployment", b =>
@@ -295,6 +323,61 @@ namespace DeploymentTrackerCore.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("DeploymentNoteId");
+                        });
+                });
+
+            modelBuilder.Entity("DeploymentTrackerCore.Models.Entities.UserEntityLink", b =>
+                {
+                    b.OwnsOne("DeploymentTrackerCore.Models.Entities.AuditDetail", "CreatedBy", b1 =>
+                        {
+                            b1.Property<int>("UserEntityLinkId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("TEXT")
+                                .HasMaxLength(150);
+
+                            b1.Property<DateTime>("Timestamp")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("UserName")
+                                .IsRequired()
+                                .HasColumnType("TEXT")
+                                .HasMaxLength(50);
+
+                            b1.HasKey("UserEntityLinkId");
+
+                            b1.ToTable("UserEntityLinks");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserEntityLinkId");
+                        });
+
+                    b.OwnsOne("DeploymentTrackerCore.Models.Entities.AuditDetail", "ModifiedBy", b1 =>
+                        {
+                            b1.Property<int>("UserEntityLinkId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("TEXT")
+                                .HasMaxLength(150);
+
+                            b1.Property<DateTime>("Timestamp")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("UserName")
+                                .IsRequired()
+                                .HasColumnType("TEXT")
+                                .HasMaxLength(50);
+
+                            b1.HasKey("UserEntityLinkId");
+
+                            b1.ToTable("UserEntityLinks");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserEntityLinkId");
                         });
                 });
 #pragma warning restore 612, 618

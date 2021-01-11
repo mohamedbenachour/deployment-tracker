@@ -4,7 +4,7 @@ import withStyles from 'react-jss';
 import nameToShortForm from './name-to-short-form';
 
 interface UserNameBadgeProps {
-  name: string;
+    name: string;
 }
 
 const UserNameBadge = (

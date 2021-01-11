@@ -18,8 +18,8 @@ const styles = {
 };
 
 interface NoteIndicatorProps extends WithStylesProps<typeof styles> {
-  deploymentId: number;
-  hasNotes: boolean;
+    deploymentId: number;
+    hasNotes: boolean;
 }
 
 const NoteIndicator = ({

@@ -4,8 +4,8 @@ import { Layout } from 'antd';
 import StandardFooter from './standard-footer';
 
 interface StandardLayoutProps {
-  header: JSX.Element;
-  children: JSX.Element;
+    header: JSX.Element;
+    children: JSX.Element;
 }
 
 const StandardLayout = ({

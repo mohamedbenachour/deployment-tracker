@@ -1,6 +1,6 @@
 enum ApplicationRoute {
-  Deployments = '/',
-  Environments = '/environments',
+    Deployments = '/',
+    Environments = '/environments',
 }
 
 export default ApplicationRoute;

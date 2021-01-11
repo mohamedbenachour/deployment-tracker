@@ -4,7 +4,7 @@ import Media from 'react-media';
 import { Button } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 
-import CsrfHiddenInput from '../utils/csrf-hidden-input';
+import CsrfHiddenInput from '../../utils/csrf-hidden-input';
 
 const LogoutButton = (): JSX.Element => (
     <Media query={{ maxWidth: 450 }}>

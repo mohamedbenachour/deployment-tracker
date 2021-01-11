@@ -92,10 +92,10 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
             <Typography.Text style={valueStyle}>{value}</Typography.Text>
             {allowCopy && (
                 <Button
-                    icon={<CopyOutlined />}
-                    onClick={() => copyValue(value)}
-                    style={{ marginLeft: 10 }}
-                    title="Copy to clipboard"
+                  icon={<CopyOutlined />}
+                  onClick={() => copyValue(value)}
+                  style={{ marginLeft: 10 }}
+                  title="Copy to clipboard"
                 />
             )}
         </div>
@@ -104,13 +104,13 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
 
 const renderLoginDetail = ({ userName, password }) => (
     <Popover
-        content={(
+      content={(
           <>
-                {renderLoginContent('Username', userName)}
-                {renderLoginContent('Password', password, true)}
-            </>
+              {renderLoginContent('Username', userName)}
+              {renderLoginContent('Password', password, true)}
+          </>
         )}
-        trigger="click"
+      trigger="click"
     >
         <Button size="small" type="link">
             Site Login
@@ -158,14 +158,14 @@ const renderDescription = ({
 
 const renderDeploymentItem = (deployment, teardownDeployment) => (
     <List.Item
-        actions={getActionsForDeployment({
+      actions={getActionsForDeployment({
             deployment,
             teardownDeployment,
         })}
     >
         <List.Item.Meta
-            title={renderTitle(deployment)}
-            description={renderDescription(deployment)}
+          title={renderTitle(deployment)}
+          description={renderDescription(deployment)}
         />
     </List.Item>
 );
@@ -174,12 +174,12 @@ const renderAddDeploymentButton = (addDeployment) => {
     if (getPageData().allowManualDeploymentsToBeAdded) {
         return (
             <Button
-                onClick={addDeployment}
-                type="primary"
-                shape="circle"
-                icon={<PlusOutlined />}
-                style={{ marginRight: 10 }}
-                size="small"
+              onClick={addDeployment}
+              type="primary"
+              shape="circle"
+              icon={<PlusOutlined />}
+              style={{ marginRight: 10 }}
+              size="small"
             />
         );
     }
@@ -195,9 +195,9 @@ const renderTypeOptions = (types) => types.map(({ id, name }) => (
 
 const renderTypeFilter = (typeFilter, types, onChange) => (
     <Select
-        value={typeFilter}
-        onChange={onChange}
-        style={{ width: 120, marginLeft: 10 }}
+      value={typeFilter}
+      onChange={onChange}
+      style={{ width: 120, marginLeft: 10 }}
     >
         {renderTypeOptions(types)}
     </Select>
@@ -213,9 +213,9 @@ const renderStatusFilter = (statusFilter, onStatusFilterChange) => (
 
 const renderOnlyMineFilter = (onlyMineFilter, onOnlyMineFilterChange) => (
     <Checkbox
-        onChange={({ target: { checked } }) => onOnlyMineFilterChange(checked)}
-        checked={onlyMineFilter}
-        style={{ paddingLeft: 10 }}
+      onChange={({ target: { checked } }) => onOnlyMineFilterChange(checked)}
+      checked={onlyMineFilter}
+      style={{ paddingLeft: 10 }}
     >
         Only Mine
     </Checkbox>
@@ -236,10 +236,10 @@ const renderHeader = (
     <>
         {renderAddDeploymentButton(addDeployment)}
         <Input.Search
-            placeholder="Search by branch name"
-            onChange={({ target: { value } }) => onSearch(value)}
-            style={{ width: 200, marginRight: 10 }}
-            value={branchNameFilter}
+          placeholder="Search by branch name"
+          onChange={({ target: { value } }) => onSearch(value)}
+          style={{ width: 200, marginRight: 10 }}
+          value={branchNameFilter}
         />
         {renderStatusFilter(statusFilter, ({ target: { value } }) => onStatusFilterChange(value))}
         {renderTypeFilter(typeFilter, types, onTypeFilterChange)}
@@ -265,7 +265,7 @@ const DeploymentList = ({
     <>
         <NewDeploymentModal />
         <List
-            header={renderHeader(
+          header={renderHeader(
                 branchNameFilter,
                 addDeployment,
                 onSearch,
@@ -277,11 +277,11 @@ const DeploymentList = ({
                 onlyMineFilter,
                 onOnlyMineFilterChange,
             )}
-            bordered
-            dataSource={deployments}
-            loading={isLoading}
-            renderItem={(deployment) => renderDeploymentItem(deployment, teardownDeployment)}
-            pagination={{ pageSize: 10 }}
+          bordered
+          dataSource={deployments}
+          loading={isLoading}
+          renderItem={(deployment) => renderDeploymentItem(deployment, teardownDeployment)}
+          pagination={{ pageSize: 10 }}
         />
     </>
 );

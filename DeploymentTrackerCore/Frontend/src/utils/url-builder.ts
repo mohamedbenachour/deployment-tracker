@@ -1,19 +1,19 @@
 class URLBuilder {
-  private currentUrl = '';
+    private currentUrl = '';
 
-  constructor(urlBase: string) {
-      this.currentUrl = urlBase;
-  }
+    constructor(urlBase: string) {
+        this.currentUrl = urlBase;
+    }
 
-  appendPath(path: string | number | boolean): URLBuilder {
-      this.currentUrl += `/${path.toString()}`;
+    appendPath(path: string | number | boolean): URLBuilder {
+        this.currentUrl += `/${path.toString()}`;
 
-      return this;
-  }
+        return this;
+    }
 
-  getURL(): string {
-      return this.currentUrl;
-  }
+    getURL(): string {
+        return this.currentUrl;
+    }
 }
 
 export default URLBuilder;

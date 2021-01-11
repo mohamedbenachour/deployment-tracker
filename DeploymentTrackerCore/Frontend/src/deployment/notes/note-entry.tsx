@@ -30,16 +30,16 @@ const styles = {
 };
 
 interface NoteEntryClasses {
-  container: string;
-  noteOutline: string;
-  actionsContainer: string;
-  deleteIcon: string;
+    container: string;
+    noteOutline: string;
+    actionsContainer: string;
+    deleteIcon: string;
 }
 
 interface NoteEntryProps {
-  note: DeploymentNote;
-  classes: NoteEntryClasses;
-  onDelete: () => void;
+    note: DeploymentNote;
+    classes: NoteEntryClasses;
+    onDelete: () => void;
 }
 
 const shouldDisplayDeleteAction = (noteCreatedBy: UserActionDetail): boolean => getPageData().user.userName === noteCreatedBy.userName;

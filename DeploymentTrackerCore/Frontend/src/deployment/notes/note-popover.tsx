@@ -6,7 +6,7 @@ import NewNote from './new-note';
 import NoteStore from './note-store';
 
 interface NotePopoverProps {
-  deploymentId: number;
+    deploymentId: number;
 }
 
 const NotePopover = ({ deploymentId }: NotePopoverProps): JSX.Element => {

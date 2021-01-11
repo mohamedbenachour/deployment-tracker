@@ -19,71 +19,71 @@ export const DEPLOYMENT_ONLY_MINE_FILTER_CHANGE = 'DOMFC';
 export const JIRA_STATUS_UPDATE = 'JSU';
 
 interface DeploymentAddClickedAction {
-  type: typeof DEPLOYMENT_ADD_CLICKED;
+    type: typeof DEPLOYMENT_ADD_CLICKED;
 }
 
 interface DeploymentAddCancelledAction {
-  type: typeof DEPLOYMENT_ADD_CANCEL;
+    type: typeof DEPLOYMENT_ADD_CANCEL;
 }
 
 interface DeploymentBeingSavedAction {
-  type: typeof DEPLOYMENT_SAVE_STARTED;
+    type: typeof DEPLOYMENT_SAVE_STARTED;
 }
 
 interface DeploymentSaveFailedAction {
-  type: typeof DEPLOYMENT_SAVE_FAILED;
+    type: typeof DEPLOYMENT_SAVE_FAILED;
 }
 
 interface DeploymentBeingAddedBranchNameChangedAction {
-  type: typeof DEPLOYMENT_ADD_BRANCH_NAME_CHANGE;
-  branchName: string;
+    type: typeof DEPLOYMENT_ADD_BRANCH_NAME_CHANGE;
+    branchName: string;
 }
 
 interface DeploymentBeingAddedSiteNameChangedAction {
-  type: typeof DEPLOYMENT_ADD_SITE_NAME_CHANGE;
-  siteName: string;
+    type: typeof DEPLOYMENT_ADD_SITE_NAME_CHANGE;
+    siteName: string;
 }
 
 interface DeploymentBeingAddedPublicURLChangedAction {
-  type: typeof DEPLOYMENT_ADD_PUBLIC_URL_CHANGE;
-  publicURL: string;
+    type: typeof DEPLOYMENT_ADD_PUBLIC_URL_CHANGE;
+    publicURL: string;
 }
 interface DeploymentBeingAddedEnvironmentChangedAction {
-  type: typeof DEPLOYMENT_ADD_ENVIRONMENT_CHANGE;
-  environmentId: number;
+    type: typeof DEPLOYMENT_ADD_ENVIRONMENT_CHANGE;
+    environmentId: number;
 }
 
 interface NewDeploymentAction {
-  type: typeof DEPLOYMENT_NEW;
-  deployment: Deployment;
+    type: typeof DEPLOYMENT_NEW;
+    deployment: Deployment;
 }
 
 interface DeploymentSearchAction {
-  type: typeof DEPLOYMENT_SEARCH;
-  searchName: string;
+    type: typeof DEPLOYMENT_SEARCH;
+    searchName: string;
 }
 
 interface DeploymentStatusFilterChangedAction {
-  type: typeof DEPLOYMENT_STATUS_FILTER_CHANGE;
-  value: string;
-  externallyInitiated: boolean;
+    type: typeof DEPLOYMENT_STATUS_FILTER_CHANGE;
+    value: string;
+    externallyInitiated: boolean;
 }
 
 interface DeploymentOnlyMinelterChangedAction {
-  type: typeof DEPLOYMENT_ONLY_MINE_FILTER_CHANGE;
-  value: boolean;
-  externallyInitiated: boolean;
+    type: typeof DEPLOYMENT_ONLY_MINE_FILTER_CHANGE;
+    value: boolean;
+    externallyInitiated: boolean;
 }
 
 interface DeploymentTypeFilterChangedAction {
-  type: typeof DEPLOYMENT_TYPE_FILTER_CHANGE;
-  typeId: number;
+    type: typeof DEPLOYMENT_TYPE_FILTER_CHANGE;
+    typeId: number;
 }
 
 interface JiraStatusUpdateAction {
-  type: typeof JIRA_STATUS_UPDATE;
-  jiraIssue: string;
-  jiraStatus: string;
+    type: typeof JIRA_STATUS_UPDATE;
+    jiraIssue: string;
+    jiraStatus: string;
 }
 
 export type DeploymentActionTypes =

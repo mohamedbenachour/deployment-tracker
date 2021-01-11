@@ -3,9 +3,9 @@ import React from 'react';
 import { Link, useMatch } from 'react-router-dom';
 import { Menu, Row, Col } from 'antd';
 
-import LogoutButton from './logout-button';
 import ApplicationSection from './application-section';
 import ApplicationRoute from './application-route';
+import UserMenuSection from './user-section/user-menu-section';
 
 const getCurrentSection = (): ApplicationSection => {
     if (useMatch(ApplicationRoute.Environments)) {
@@ -20,10 +20,10 @@ const HeaderMenu = (): JSX.Element => (
         <Row>
             <Col span={16}>
                 <Menu
-                    mode="horizontal"
-                    selectedKeys={[`${getCurrentSection()}`]}
-                    theme="dark"
-                    style={{ lineHeight: '64px' }}
+                  mode="horizontal"
+                  selectedKeys={[`${getCurrentSection()}`]}
+                  theme="dark"
+                  style={{ lineHeight: '64px' }}
                 >
                     <Menu.Item key={ApplicationSection.Deployments}>
                         <Link to={ApplicationRoute.Deployments}>Deployments</Link>
@@ -33,8 +33,8 @@ const HeaderMenu = (): JSX.Element => (
                     </Menu.Item>
                 </Menu>
             </Col>
-            <Col span={1} offset={6}>
-                <LogoutButton />
+            <Col span={3} offset={4}>
+                <UserMenuSection />
             </Col>
         </Row>
     </>

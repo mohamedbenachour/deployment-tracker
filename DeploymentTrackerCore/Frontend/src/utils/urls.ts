@@ -5,4 +5,8 @@ const getBaseApiUrl = (): URLBuilder => getBaseUrl().appendPath('api');
 
 const getDeploymentApiUrl = (): URLBuilder => getBaseApiUrl().appendPath('deployment');
 
-export { getBaseUrl, getBaseApiUrl, getDeploymentApiUrl };
+const getMentionsApiUrl = (): URLBuilder => getBaseApiUrl().appendPath('mention');
+
+export {
+    getBaseUrl, getBaseApiUrl, getDeploymentApiUrl, getMentionsApiUrl,
+};

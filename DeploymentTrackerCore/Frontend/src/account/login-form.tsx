@@ -29,12 +29,12 @@ const styles = {
 };
 
 interface LoginFormClasses {
-  loginForm: string;
-  formGroup: string;
+    loginForm: string;
+    formGroup: string;
 }
 
 interface LoginFormProps {
-  classes: LoginFormClasses;
+    classes: LoginFormClasses;
 }
 
 const LoginForm = ({ classes }: LoginFormProps) => (

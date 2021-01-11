@@ -17,12 +17,12 @@ const styles = {
 };
 
 interface CenteredClasses {
-  container: string;
+    container: string;
 }
 
 interface CenteredProps {
-  classes: CenteredClasses;
-  children: JSX.Element;
+    classes: CenteredClasses;
+    children: JSX.Element;
 }
 
 const Centered: FunctionComponent<CenteredProps> = ({

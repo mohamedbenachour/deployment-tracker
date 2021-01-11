@@ -3,30 +3,32 @@ import { DeleteOutlined, StopTwoTone, SyncOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import { statusIsRunning } from '../deployment-status';
 import { Deployment } from '../deployment-definition';
+import MoreActionsDropdown from './more-actions-dropdown';
 
 interface ActionsProps {
-  deployment: Deployment;
-  teardownDeployment: (parameters: unknown) => void;
+    deployment: Deployment;
+    teardownDeployment: (parameters: unknown) => void;
 }
 
 const getActionsForDeployment = ({
-    deployment: {
-        status,
-        siteName,
-        teardownUrl,
-        managementUrls: { deploymentTriggerUrl },
-    },
+    deployment,
     teardownDeployment,
 }: ActionsProps): Array<JSX.Element> => {
+    const {
+        status,
+        teardownUrl,
+        managementUrls: { deploymentTriggerUrl },
+    } = deployment;
+
     if (statusIsRunning(status)) {
         const actionsArray = [
-            <DeleteOutlined
-              title="Mark as torndown"
-              onClick={() => teardownDeployment({ siteName })}
-            />,
             <a title="Teardown" href={teardownUrl} target="_blank">
                 <StopTwoTone twoToneColor="#ff0000" />
             </a>,
+            <MoreActionsDropdown
+              deployment={deployment}
+              markAsTorndown={teardownDeployment}
+            />,
         ];
 
         if (deploymentTriggerUrl !== null) {

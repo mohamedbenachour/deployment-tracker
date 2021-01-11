@@ -43,6 +43,8 @@ namespace DeploymentTrackerCore.Models.Entities {
 
             modelBuilder.Entity<Type>()
                 .HasData(new { Id = 1, Name = "Default" });
+
+            TableIndexes.DefineIndexes(modelBuilder);
         }
 
         private void SetAuditDetails() {
@@ -85,5 +87,7 @@ namespace DeploymentTrackerCore.Models.Entities {
         public DbSet<Type> Types { get; set; }
 
         public DbSet<DeploymentNote> DeploymentNote { get; set; }
+
+        public DbSet<UserEntityLink> UserEntityLinks { get; set; }
     }
 }

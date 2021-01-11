@@ -30,6 +30,7 @@ describe('deployment-matchers', () => {
     });
 
     const createDefaultDeployment = (): Deployment => ({
+        id: 23,
         branchName: 'test/test-2000',
         status: DeploymentStatus.Running,
         createdBy: createUserActionDetail(),
@@ -40,6 +41,10 @@ describe('deployment-matchers', () => {
             deploymentTriggerUrl: 'https://deploy',
         },
         hasNotes: false,
+        type: {
+            id: 1,
+            name: 'whu?',
+        },
     });
 
     describe('deploymentIsForCurrentUser', () => {

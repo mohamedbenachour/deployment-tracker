@@ -4,15 +4,18 @@ using System.Threading.Tasks;
 using DeploymentTrackerCore.Actions;
 using DeploymentTrackerCore.Models.API.DeploymentNotes;
 using DeploymentTrackerCore.Models.Entities;
+using DeploymentTrackerCore.Services.UserEntityLinks;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace DeploymentTrackerCore.Services.DeploymentNotes.NoteActions {
     public class NewDeploymentNote : IResultBasedAction<NewNoteRequest, ApiNote> {
         private DeploymentAppContext AppContext { get; }
+        private IUserEntityLinksService UserEntityLinksService { get; }
 
-        public NewDeploymentNote(DeploymentAppContext appContext) {
+        public NewDeploymentNote(DeploymentAppContext appContext, IUserEntityLinksService userEntityLinksService) {
             AppContext = appContext;
+            UserEntityLinksService = userEntityLinksService;
         }
 
         public async Task<ActionOutcome<ApiNote>> Perform(NewNoteRequest input) {
@@ -26,11 +29,15 @@ namespace DeploymentTrackerCore.Services.DeploymentNotes.NoteActions {
 
             await AppContext.SaveChangesAsync();
 
-            return ActionOutcome<ApiNote>.WithResult(new ApiNote {
+            var createdNote = new ApiNote {
                 Id = newNote.Id,
-                    Content = newNote.Content,
-                    DeploymentId = newNote.Deployment.Id
-            });
+                Content = newNote.Content,
+                DeploymentId = newNote.Deployment.Id
+            };
+
+            await new CreateMentionsForDeploymentNote(UserEntityLinksService).Perform(createdNote);
+
+            return ActionOutcome<ApiNote>.WithResult(createdNote);
         }
 
         public async Task<Deployment> GetDeployment(int deploymentId) => await AppContext.Deployments.SingleAsync(deployment => deployment.Id == deploymentId);
