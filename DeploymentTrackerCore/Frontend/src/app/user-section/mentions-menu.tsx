@@ -1,46 +1,31 @@
-import { Menu } from 'antd';
+import { ConfigProvider, List } from 'antd';
 import React from 'react';
 import { Deployment } from '../../deployment/deployment-definition';
-import getDeploymentForMention from './get-deployment-for-mention';
+import getMentionItem from './get-mention-item';
 import { Mention } from './mention-definitions';
+import MentionStore from './mention-store';
 
 interface MentionsMenuProps {
-  mentions: Mention[];
+  mentionStore: MentionStore;
   deployments: Deployment[];
 }
 
-const getMentionText = (
-    mention: Mention,
-    deployments: Deployment[],
-): string | null => {
-    const mentionedDeployment = getDeploymentForMention(deployments, mention);
-
-    if (mentionedDeployment !== null) {
-        return `${mention.createdBy.name} mentioned you on ${mentionedDeployment.branchName}`;
-    }
-
-    return null;
-};
-
-const getMentionsItems = (
-    mentions: Mention[],
-    deployments: Deployment[],
-): JSX.Element | JSX.Element[] => {
-    if (mentions.length === 0) {
-        return <Menu.Item>No Mentions</Menu.Item>;
-    }
-
-    return mentions
-        .map((mention) => getMentionText(mention, deployments))
-        .filter((mentionText) => mentionText !== null)
-        .map((mentionText) => <Menu.Item>{mentionText}</Menu.Item>);
-};
-
 const MentionsMenu = ({
-    mentions,
+    mentionStore,
     deployments,
 }: MentionsMenuProps): JSX.Element => (
-    <Menu>{getMentionsItems(mentions, deployments)}</Menu>
+    <ConfigProvider renderEmpty={() => 'No mentions'}>
+        <List<Mention>
+          size="small"
+          dataSource={mentionStore.mentions}
+          bordered
+          renderItem={(mention) => getMentionItem({
+                mention,
+                currentDeployments: deployments,
+                onMentionAcknowledged: () => mentionStore.acknowledge(mention.id),
+            })}
+        />
+    </ConfigProvider>
 );
 
 export default MentionsMenu;

@@ -1,40 +1,16 @@
 import { LoadingOutlined, MessageOutlined } from '@ant-design/icons';
-import { Badge, Button, Dropdown } from 'antd';
+import {
+    Badge, Button, Dropdown, Popover,
+} from 'antd';
+import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
-import { getJSONPromise } from '../../utils/io';
 import ConnectedMentionsMenu from './connected-mentions-menu';
-import { Mention } from './mention-definitions';
-import MentionsMenu from './mentions-menu';
-
-const getMentions = (): Mention[] | null => {
-    const [isLoading, setIsLoading] = useState(true);
-    const [mentions, setMentions] = useState<Mention[]>([]);
-    useState<Promise<Mention[] | null>>(() => {
-        const loadingPromise = getJSONPromise<Mention[]>('/api/mention');
-
-        loadingPromise.then((loadedMentions) => {
-            setIsLoading(false);
-
-            if (loadedMentions !== null) {
-                setMentions(loadedMentions);
-            }
-        });
-
-        return loadingPromise;
-    });
-
-    if (isLoading) {
-        return null;
-    }
-
-    return mentions;
-};
+import MentionStore from './mention-store';
 
 const MentionsButton = (): JSX.Element => {
-    const mentions = getMentions();
-    const isLoading = mentions === null;
+    const [mentionStore] = useState(new MentionStore());
 
-    if (isLoading) {
+    if (mentionStore.isLoading) {
         return (
             <Button>
                 <Badge size="small" count={<LoadingOutlined />}>
@@ -44,17 +20,20 @@ const MentionsButton = (): JSX.Element => {
         );
     }
 
-    const loadedMentions = mentions ?? [];
+    const loadedMentions = mentionStore.mentions;
 
     return (
-        <Dropdown overlay={<ConnectedMentionsMenu mentions={loadedMentions} />}>
+        <Popover
+          placement="bottomLeft"
+          content={<ConnectedMentionsMenu mentionStore={mentionStore} />}
+        >
             <Button>
                 <Badge size="small" count={loadedMentions.length}>
                     <MessageOutlined />
                 </Badge>
             </Button>
-        </Dropdown>
+        </Popover>
     );
 };
 
-export default MentionsButton;
+export default observer(MentionsButton);

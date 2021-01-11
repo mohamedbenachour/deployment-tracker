@@ -8,6 +8,7 @@ describe('getDeploymentForMention', () => {
     const defaultEntityReference = `Deployment::${defaultDeploymentId}::DeploymentNote::${defaultDeploymentNoteId}`;
 
     const getMention = (reference: string): Mention => ({
+        id: 1,
         referencedEntity: reference,
         createdBy: {
             name: 'Blahh',
