@@ -24,7 +24,7 @@ const MentionsButton = (): JSX.Element => {
 
     return (
         <Popover
-          placement="bottomLeft"
+          placement="bottom"
           content={<ConnectedMentionsMenu mentionStore={mentionStore} />}
         >
             <Button>
