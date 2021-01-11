@@ -9,5 +9,6 @@ namespace DeploymentTrackerCore.Services.UserEntityLinks {
 
         Task<ActionOutcome<IEnumerable<EntityLinks>>> FetchEntityLinksForCurrentUser();
 
+        Task<ActionOutcome<bool>> MakeInactive(int userEntityLinkId);
     }
 }

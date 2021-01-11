@@ -57,6 +57,7 @@ namespace IntegrationTests {
                         ReferencedEntity = $"Deployment::{newNote.DeploymentId}::DeploymentNote::{newNote.Id}"
                     }
                 }, options => options
+                .Excluding(link => link.Id)
                 .Excluding(link => link.CreatedBy)
                 .Excluding(link => link.ModifiedBy)
             );
@@ -75,6 +76,46 @@ namespace IntegrationTests {
             var newMention = (await GetCurrentMentions(clientB)).Single();
 
             newMention.CreatedBy.Timestamp.Should().BeAfter(dateTimeBeforeNoteCreation);
+        }
+
+        [Test]
+        public async Task AMentionCanBeAcknowledged() {
+            var userA = TestNames.UserName;
+            var userB = TestNames.UserName;
+            var clientA = await TestEnvironment.ClientFactory.GetAuthenticatedClient(userA);
+            var clientB = await TestEnvironment.ClientFactory.GetAuthenticatedClient(userB);
+
+            var newNote = await CreateDeploymentWithNote(clientA, $"What do you think of this <@{userB}>?");
+
+            var currentMentions = await GetCurrentMentions(clientB);
+
+            var mentionToAcknowledge = currentMentions.First();
+
+            await AcknowledgeMention(clientB, mentionToAcknowledge.Id);
+        }
+
+        [Test]
+        public async Task AMentionThatIsAcknowledgedWillNotAppearInTheListOfCurrentMentions() {
+            var userA = TestNames.UserName;
+            var userB = TestNames.UserName;
+            var clientA = await TestEnvironment.ClientFactory.GetAuthenticatedClient(userA);
+            var clientB = await TestEnvironment.ClientFactory.GetAuthenticatedClient(userB);
+
+            var newNote = await CreateDeploymentWithNote(clientA, $"What do you think of this <@{userB}>?");
+
+            var mentionToAcknowledge = (await GetCurrentMentions(clientB)).First();
+
+            await AcknowledgeMention(clientB, mentionToAcknowledge.Id);
+
+            var currentMentions = await GetCurrentMentions(clientB);
+
+            currentMentions.Should().BeEmpty();
+        }
+
+        private async Task AcknowledgeMention(HttpClient client, int mentionId) {
+            var deleteUrl = $"{TestEnvironment.URLs.Mention}/{mentionId}";
+
+            (await client.DeleteAsync(deleteUrl)).AssertSuccessfulResponse();
         }
 
         private async Task<IEnumerable<EntityLinks>> GetCurrentMentions(HttpClient client) => (await (await client

@@ -27,5 +27,9 @@ namespace DeploymentTrackerCore.Controllers {
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EntityLinks>>> GetCurrentMentions() => await Handle(() => UserEntityLinksService.FetchEntityLinksForCurrentUser());
+
+        [HttpDelete]
+        [Route("{mentionId}")]
+        public async Task<ActionResult<IEnumerable<EntityLinks>>> AcknowledgeMention(int mentionId) => await Handle(() => UserEntityLinksService.MakeInactive(mentionId));
     }
 }

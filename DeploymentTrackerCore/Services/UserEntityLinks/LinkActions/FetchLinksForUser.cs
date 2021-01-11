@@ -24,7 +24,8 @@ namespace DeploymentTrackerCore.Services.UserEntityLinks.LinkActions {
             return ActionOutcome<IEnumerable<EntityLinks>>.WithResult(userEntityLinks.Select(userEntityLink => new EntityLinks {
                 CreatedBy = userEntityLink.CreatedBy,
                     ReferencedEntity = userEntityLink.ReferencedEntity,
-                    ModifiedBy = userEntityLink.ModifiedBy
+                    ModifiedBy = userEntityLink.ModifiedBy,
+                    Id = userEntityLink.Id
             }));
         }
     }
