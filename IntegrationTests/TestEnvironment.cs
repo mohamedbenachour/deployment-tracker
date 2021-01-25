@@ -28,6 +28,8 @@ namespace IntegrationTests {
             public const string Mention = "/api/mention";
 
             public const string DeploymentExternal = "/api/deployment/external";
+
+            public const string Users = "/api/user";
         }
 
         public static TestApplicationFactory<DeploymentTrackerCore.Startup> ClientFactory = new TestApplicationFactory<DeploymentTrackerCore.Startup>();

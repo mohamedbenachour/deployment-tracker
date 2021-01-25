@@ -15,7 +15,9 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System.Collections.Generic;
 using System.DirectoryServices;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +25,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace DeploymentTrackerCore.Services.Identity.LDAP {
-    public class LDAPUserStore : IUserStore<ApplicationUser> {
+    public class LDAPUserStore : IUserStore<ApplicationUser>, IUserCollection {
         public LDAPUserStore(LDAPClient ldapClient, ILogger<LDAPUserStore> logger) {
             LDAPClient = ldapClient;
             Logger = logger;
@@ -94,5 +96,7 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
         public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken) {
             throw new System.NotImplementedException();
         }
+
+        public IEnumerable<ApplicationUser> ListUsers() => LDAPClient.ListUsers().Select(ConvertToUser);
     }
 }
