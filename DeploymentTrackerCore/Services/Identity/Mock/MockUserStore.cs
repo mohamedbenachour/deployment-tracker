@@ -12,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace DeploymentTrackerCore.Services.Identity.Mock {
-    public class MockUserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser> {
+    public class MockUserStore : IUserCollection, IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser> {
         private IDictionary<String, ApplicationUser> UsersStore { get; set; } = new Dictionary<string, ApplicationUser>();
         private ILogger Logger { get; }
 
@@ -141,5 +141,7 @@ namespace DeploymentTrackerCore.Services.Identity.Mock {
         public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken) {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<ApplicationUser> ListUsers() => UsersStore.Values;
     }
 }

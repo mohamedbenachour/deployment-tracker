@@ -16,7 +16,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.DirectoryServices;
+using System.Linq;
+
+using Microsoft.Extensions.Logging;
 using SearchScope = System.DirectoryServices.SearchScope;
 
 namespace DeploymentTrackerCore.Services.Identity.LDAP {
@@ -27,24 +31,43 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
             LDAPProperties.Email.Name
         };
 
-        public LDAPClient(LDAPConfiguration configuration) {
+        public LDAPClient(LDAPConfiguration configuration, ILogger<LDAPClient> logger) {
             Configuration = configuration;
+            Logger = logger;
         }
 
         private LDAPConfiguration Configuration { get; }
 
+        private ILogger<LDAPClient> Logger { get; }
+
         public LDAPUserEntry GetDetailsForUser(string userName) {
             try {
-                using(var dirEntry = ConstructDirectoryEntry(Configuration.BindUsername, Configuration.BindPassword)) {
-                    DirectorySearcher ds = GetSearcher(dirEntry);
+                using var dirEntry = ConstructDirectoryEntry(Configuration.BindUsername, Configuration.BindPassword);
+                DirectorySearcher ds = GetSearcher(dirEntry);
 
-                    ds.Filter = String.Format(Configuration.UserFilter, userName);
+                ds.Filter = String.Format(Configuration.UserFilter, userName);
 
-                    var result = ds.FindOne();
+                var result = ds.FindOne();
 
-                    return FromLDAPResult(result?.Properties);
-                }
-            } catch (Exception) { }
+                return FromLDAPResult(result?.Properties);
+            } catch (Exception exc) {
+                Logger.LogError(exc, $"Error retrieving details for user '{userName}'");
+            }
+
+            return null;
+        }
+
+        public IEnumerable<LDAPUserEntry> ListUsers() {
+            try {
+                using var dirEntry = ConstructDirectoryEntry(Configuration.BindUsername, Configuration.BindPassword);
+                DirectorySearcher ds = GetSearcher(dirEntry);
+
+                var results = ds.FindAll();
+
+                return ((IEnumerable<SearchResult>)results).Select(result => FromLDAPResult(result?.Properties));
+            } catch (Exception exc) {
+                Logger.LogError(exc, $"Error listing available users.");
+            }
 
             return null;
         }
@@ -57,7 +80,9 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
                     ds.FindOne();
                 }
                 return true;
-            } catch (Exception) { }
+            } catch (Exception exc) {
+                Logger.LogError(exc, $"Error authenticating user '{userName}'");
+            }
 
             return false;
         }
@@ -76,7 +101,7 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
 
         private static string GetProperty(ResultPropertyCollection collection, string propertyName) => (string)(collection[propertyName])[0];
 
-        private DirectorySearcher GetSearcher(DirectoryEntry directoryEntry) {
+        private static DirectorySearcher GetSearcher(DirectoryEntry directoryEntry) {
             var searcher = new DirectorySearcher(directoryEntry, String.Empty, RetrievedProperties);
 
             searcher.SearchScope = SearchScope.Subtree;

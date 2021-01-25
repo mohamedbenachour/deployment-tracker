@@ -3,6 +3,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import { observer } from 'mobx-react-lite';
 import SubtleSpinner from '../../shared/interactivity/subtle-spinner';
 import NoteStore from './note-store';
+import NewNoteInput from './new-note-input';
 
 interface NewNoteProps {
     noteStore: NoteStore;
@@ -34,15 +35,7 @@ const NewNote = ({ noteStore }: NewNoteProps): JSX.Element => {
         );
     }
 
-    return (
-        <TextArea
-          title={helpText}
-          placeholder={helpText}
-          autoSize={{ minRows: 3 }}
-          allowClear
-          onKeyPress={(event: React.KeyboardEvent<HTMLTextAreaElement>) => handleKeyPress(event, noteStore)}
-        />
-    );
+    return <NewNoteInput onSave={(newNote) => noteStore.save(newNote)} />;
 };
 
 export default observer(NewNote);
