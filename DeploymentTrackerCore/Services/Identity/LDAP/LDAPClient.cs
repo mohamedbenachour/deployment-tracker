@@ -17,6 +17,7 @@
 
 using System;
 using System.DirectoryServices;
+using Microsoft.Extensions.Logging;
 using SearchScope = System.DirectoryServices.SearchScope;
 
 namespace DeploymentTrackerCore.Services.Identity.LDAP {
@@ -27,12 +28,14 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
             LDAPProperties.Email.Name
         };
 
-        public LDAPClient(LDAPConfiguration configuration) {
+        public LDAPClient(LDAPConfiguration configuration, ILogger<LDAPClient> logger) {
             Configuration = configuration;
+            Logger = logger;
         }
 
         private LDAPConfiguration Configuration { get; }
 
+        private ILogger<LDAPClient> Logger { get; }
         public LDAPUserEntry GetDetailsForUser(string userName) {
             try {
                 using(var dirEntry = ConstructDirectoryEntry(Configuration.BindUsername, Configuration.BindPassword)) {
@@ -57,7 +60,9 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
                     ds.FindOne();
                 }
                 return true;
-            } catch (Exception) { }
+            } catch (Exception exc) {
+                Logger.LogError(exc, $"Error authenticating user '{userName}'");
+            }
 
             return false;
         }
