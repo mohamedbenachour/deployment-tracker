@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/DeploymentTrackerCore/bin/Debug/netcoreapp3.1/DeploymentTrackerCore.dll",
+            "program": "${workspaceFolder}/DeploymentTrackerCore/bin/Debug/net5.0/DeploymentTrackerCore.dll",
             "args": [],
             "cwd": "${workspaceFolder}/DeploymentTrackerCore",
             "serverReadyAction": {
