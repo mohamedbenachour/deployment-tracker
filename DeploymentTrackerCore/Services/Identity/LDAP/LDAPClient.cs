@@ -102,7 +102,7 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
         private static string GetProperty(ResultPropertyCollection collection, string propertyName) => (string)(collection[propertyName])[0];
 
         private static DirectorySearcher GetSearcher(DirectoryEntry directoryEntry) {
-            var searcher = new DirectorySearcher(directoryEntry, String.Empty, RetrievedProperties);
+            var searcher = new DirectorySearcher(directoryEntry, null, RetrievedProperties);
 
             searcher.SearchScope = SearchScope.Subtree;
 
