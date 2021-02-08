@@ -15,6 +15,7 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Linq;
@@ -97,6 +98,6 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<ApplicationUser> ListUsers() => LDAPClient.ListUsers().Select(ConvertToUser);
+        public IEnumerable<ApplicationUser> ListUsers() => LDAPClient.ListUsers().Select(ConvertToUser).Where(user => !String.IsNullOrWhiteSpace(user.UserName));
     }
 }

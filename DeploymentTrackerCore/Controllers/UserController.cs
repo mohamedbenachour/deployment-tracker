@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,7 +14,7 @@ namespace DeploymentTrackerCore.Controllers {
     [Authorize]
     public class UserController {
         public UserController(IUserCollection userCollection) {
-            this.UserCollection = userCollection;
+            UserCollection = userCollection;
         }
 
         private IUserCollection UserCollection { get; }
