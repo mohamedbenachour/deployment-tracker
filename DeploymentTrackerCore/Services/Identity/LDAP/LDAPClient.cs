@@ -75,9 +75,7 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
         public bool Authenticate(string userName, string password) {
             try {
                 using(var dirEntry = ConstructDirectoryEntry(userName, password)) {
-                    DirectorySearcher ds = GetSearcher(dirEntry);
-
-                    ds.FindOne();
+                    FetchPropertyToValidateUserCredentials(dirEntry);
                 }
                 return true;
             } catch (Exception exc) {
@@ -85,6 +83,10 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
             }
 
             return false;
+        }
+
+        private static void FetchPropertyToValidateUserCredentials(DirectoryEntry directoryEntry) {
+            var _ = directoryEntry.NativeGuid;
         }
 
         private static LDAPUserEntry FromLDAPResult(ResultPropertyCollection propertyCollection) {
