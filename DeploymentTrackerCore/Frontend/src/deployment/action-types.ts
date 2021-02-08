@@ -61,6 +61,7 @@ interface NewDeploymentAction {
 interface DeploymentSearchAction {
     type: typeof DEPLOYMENT_SEARCH;
     searchName: string;
+    externallyInitiated: boolean;
 }
 
 interface DeploymentStatusFilterChangedAction {
@@ -69,7 +70,7 @@ interface DeploymentStatusFilterChangedAction {
     externallyInitiated: boolean;
 }
 
-interface DeploymentOnlyMinelterChangedAction {
+interface DeploymentOnlyMineFilterChangedAction {
     type: typeof DEPLOYMENT_ONLY_MINE_FILTER_CHANGE;
     value: boolean;
     externallyInitiated: boolean;
@@ -98,6 +99,6 @@ export type DeploymentActionTypes =
   | NewDeploymentAction
   | DeploymentSearchAction
   | DeploymentStatusFilterChangedAction
-  | DeploymentOnlyMinelterChangedAction
+  | DeploymentOnlyMineFilterChangedAction
   | DeploymentTypeFilterChangedAction
   | JiraStatusUpdateAction;

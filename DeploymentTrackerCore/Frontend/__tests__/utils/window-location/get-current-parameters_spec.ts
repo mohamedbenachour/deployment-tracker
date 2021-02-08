@@ -29,4 +29,25 @@ describe('getCurrentParameters', () => {
             );
         });
     });
+
+    describe('when a URL encoded parameter is present', () => {
+        const parameterName = 'whyt';
+        const parameterValue = 'test/123';
+
+        window.history.pushState(
+            {},
+            '',
+            `/?${parameterName}=${encodeURI(parameterValue)}`,
+        );
+
+        it('the parameter values are returned', () => {
+            const expectedSearchParams = new URLSearchParams();
+
+            expectedSearchParams.append(parameterName, parameterValue);
+
+            expect(serialise(getCurrentParameters())).toEqual(
+                serialise(expectedSearchParams),
+            );
+        });
+    });
 });

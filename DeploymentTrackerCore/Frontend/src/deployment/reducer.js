@@ -59,6 +59,10 @@ const deploymentReducer = (state = createDefaultState(), action) => {
     case DEPLOYMENT_SEARCH:
         nextState = produce(state, (draftState) => {
             draftState.filters.branchName = action.searchName;
+
+            if (!action.externallyInitiated) {
+                updateWindowLocation(draftState.filters);
+            }
         });
         break;
 
