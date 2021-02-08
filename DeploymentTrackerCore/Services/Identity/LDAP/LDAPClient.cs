@@ -64,7 +64,7 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
 
                 var results = ds.FindAll();
 
-                return ((IEnumerable<SearchResult>)results).Select(result => FromLDAPResult(result?.Properties));
+                return ConvertToListOfUserEntries(results);
             } catch (Exception exc) {
                 Logger.LogError(exc, $"Error listing available users.");
             }
@@ -89,19 +89,48 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
             var _ = directoryEntry.NativeGuid;
         }
 
+        private IEnumerable<LDAPUserEntry> ConvertToListOfUserEntries(SearchResultCollection searchResults) {
+            var results = new List<LDAPUserEntry>();
+
+            foreach (SearchResult searchResult in searchResults) {
+                results.Add(FromLDAPResult(searchResult?.Properties));
+            }
+
+            return results;
+        }
+
         private static LDAPUserEntry FromLDAPResult(ResultPropertyCollection propertyCollection) {
             if (propertyCollection == null) {
                 return null;
             }
 
+            var propertyDictionary = PropertyCollectionToDictionary(propertyCollection);
+
             return new LDAPUserEntry {
-                UserName = GetProperty(propertyCollection, LDAPProperties.UserName.Name),
-                    DisplayName = GetProperty(propertyCollection, LDAPProperties.DisplayName.Name),
-                    Email = GetProperty(propertyCollection, LDAPProperties.Email.Name)
+                UserName = GetProperty(propertyDictionary, LDAPProperties.UserName.Name),
+                    DisplayName = GetProperty(propertyDictionary, LDAPProperties.DisplayName.Name),
+                    Email = GetProperty(propertyDictionary, LDAPProperties.Email.Name)
             };
         }
 
-        private static string GetProperty(ResultPropertyCollection collection, string propertyName) => (string)(collection[propertyName])[0];
+        private static string GetProperty(IDictionary<string, object> properties, string propertyName) {
+            if (properties.ContainsKey(propertyName)) {
+                return (string)properties[propertyName];
+            }
+
+            return null;
+
+        }
+
+        private static IDictionary<string, object> PropertyCollectionToDictionary(ResultPropertyCollection collection) {
+            var result = new Dictionary<string, object>();
+
+            foreach (string propertyName in collection.PropertyNames) {
+                result[propertyName] = collection[propertyName][0];
+            }
+
+            return result;
+        }
 
         private static DirectorySearcher GetSearcher(DirectoryEntry directoryEntry) {
             var searcher = new DirectorySearcher(directoryEntry, null, RetrievedProperties);
