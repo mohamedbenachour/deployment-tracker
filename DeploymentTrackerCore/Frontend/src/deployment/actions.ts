@@ -49,9 +49,11 @@ export const deploymentBeingAddedSiteNameChanged = (
 
 export const deploymentSearch = (
     searchName: string,
+    externallyInitiated = false,
 ): DeploymentActionTypes => ({
     type: DEPLOYMENT_SEARCH,
     searchName,
+    externallyInitiated,
 });
 
 export const deploymentStatusFilterChanged = (

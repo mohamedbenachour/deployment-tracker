@@ -21,6 +21,7 @@ import { loadEnvironmentList } from './environment/async-actions';
 import {
     deploymentStatusFilterChanged,
     deploymentOnlyMineFilterChange,
+    deploymentSearch,
 } from './deployment/actions';
 
 import DeploymentHubClient from './deployment/deployment-hub-client';
@@ -29,6 +30,7 @@ import Notifier from './app/notifier';
 import createInitialState from './deployment/create-initial-state';
 import getStatusInUrl from './deployment/get-status-in-url';
 import getOnlyMineInUrl from './deployment/filters/get-only-mine-in-url';
+import getSearchTermInUrl from './deployment/filters/get-search-term-in-url';
 
 const initialDeploymentState = createInitialState();
 
@@ -47,6 +49,7 @@ new JiraHubClient(store).start();
 window.addEventListener('popstate', () => {
     store.dispatch(deploymentStatusFilterChanged(getStatusInUrl(), true));
     store.dispatch(deploymentOnlyMineFilterChange(getOnlyMineInUrl(), true));
+    store.dispatch(deploymentSearch(getSearchTermInUrl(), true));
 });
 
 bootstrapToPage(
