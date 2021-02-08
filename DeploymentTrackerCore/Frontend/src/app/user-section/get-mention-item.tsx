@@ -7,6 +7,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { Deployment } from '../../deployment/deployment-definition';
 import getDeploymentForMention from './get-deployment-for-mention';
 import { Mention } from './mention-definitions';
+import getUrlForDeployment from './get-url-for-deployment';
 
 interface MentionItemProps {
     mention: Mention;
@@ -22,10 +23,14 @@ const getMentionText = (
 
     if (mentionedDeployment !== null) {
         return (
-            <Space direction="horizontal">
-                <Typography.Text>{`${mention.createdBy.name} mentioned you on`}</Typography.Text>
-                <Typography.Text strong>{mentionedDeployment.siteName}</Typography.Text>
-            </Space>
+            <a href={getUrlForDeployment(mentionedDeployment)}>
+                <Space direction="horizontal">
+                    <Typography.Text>{`${mention.createdBy.name} mentioned you on`}</Typography.Text>
+                    <Typography.Text strong>
+                        {mentionedDeployment.siteName}
+                    </Typography.Text>
+                </Space>
+            </a>
         );
     }
 
@@ -47,7 +52,7 @@ const getMentionItem = ({
             danger
             icon={<CloseOutlined />}
           />,
-        ]}
+    ]}
     >
         {getMentionText(mention, currentDeployments)}
     </List.Item>
