@@ -75,7 +75,6 @@ namespace IntegrationTests {
 
         [Test]
         public async Task AMentionIncludesAnId() {
-            var dateTimeBeforeNoteCreation = DateTime.UtcNow;
             var client = await SimulateAMentionAndReturnReceivingUserClient();
 
             var newMention = (await GetCurrentMentions(client)).Single();
