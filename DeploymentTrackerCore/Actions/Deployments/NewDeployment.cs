@@ -17,6 +17,7 @@
 
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using DeploymentTrackerCore.Models;
@@ -67,6 +68,7 @@ namespace DeploymentTrackerCore.Actions.Deployments {
                 newDeployment.Status = DeploymentStatus.RUNNING;
                 newDeployment.SiteLogin = Deployment.SiteLogin ?? new Login();
                 newDeployment.Type = await GetTypeForNewDeployment(Deployment);
+                newDeployment.Properties = JsonSerializer.Serialize(Deployment.Properties);
 
                 await Context.SaveChangesAsync();
 

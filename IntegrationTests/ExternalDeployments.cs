@@ -15,6 +15,7 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
@@ -82,7 +83,44 @@ namespace IntegrationTests {
                 },
                 Type = new ApiType {
                 Id = 1
-                }
+                },
+                Properties = new Dictionary<string, string> { { "Foo", "bar" } }
+            };
+
+            var client = TestEnvironment.ClientFactory.CreateClient();
+
+            var response = await client.PostJsonAsync(TestEnvironment.URLs.DeploymentExternal, deploymentToCreate);
+
+            var createdDeployment = await response.AssertSuccessfulResponseAndGetContent<ApiNewDeployment>();
+
+            createdDeployment.Should().BeEquivalentTo(deploymentToCreate, (options) =>
+                options.ExcludingMissingMembers()
+                .Excluding(d => d.Type.Name)
+            );
+        }
+
+        [Test]
+        public async Task ADeploymentCanBeAddedWithoutPropertiesSpecified() {
+            var deploymentToCreate = new ApiExternalNewDeployment {
+                BranchName = "external-one-being-added",
+                SiteName = "some-name",
+                EnvironmentId = EnvironmentId,
+                PublicURL = "https://externals.com.au",
+                User = new ApiUser {
+                Name = "External Userz",
+                Username = "external-user-here"
+                },
+                SiteLogin = new Login {
+                UserName = "user-name-here",
+                Password = "passwordzz"
+                },
+                Token = new ApiExternalTokenContainer {
+                Value = TestEnvironment.ExternalToken
+                },
+                Type = new ApiType {
+                Id = 1
+                },
+                Properties = null
             };
 
             var client = TestEnvironment.ClientFactory.CreateClient();

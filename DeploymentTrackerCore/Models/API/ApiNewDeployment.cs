@@ -15,6 +15,7 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using DeploymentTrackerCore.Models.Entities;
@@ -36,6 +37,8 @@ namespace DeploymentTrackerCore.Models.API {
         public Login SiteLogin { get; set; }
 
         public ApiType Type { get; set; }
+
+        public IDictionary<string, string> Properties { get; set; }
 
         IIdentifiable IDeployedSite.Type => Type;
     }

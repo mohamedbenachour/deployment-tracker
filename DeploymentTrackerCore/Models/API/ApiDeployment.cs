@@ -15,7 +15,10 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+
 using DeploymentTrackerCore.Models.Entities;
 
 namespace DeploymentTrackerCore.Models.API {
@@ -39,6 +42,8 @@ namespace DeploymentTrackerCore.Models.API {
         public AuditDetail CreatedBy { get; set; }
         public ApiDeploymentManagementUrls ManagementUrls { get; set; }
 
+        public IDictionary<string, string> Properties { get; set; }
+
         public bool HasNotes { get; set; }
 
         IIdentifiable IDeployedSite.Type => Type;
@@ -55,7 +60,8 @@ namespace DeploymentTrackerCore.Models.API {
                     ModifiedBy = toConvert.ModifiedBy,
                     SiteLogin = toConvert.SiteLogin,
                     Type = ApiType.FromInternal(toConvert.Type),
-                    HasNotes = toConvert.DeploymentNotes?.Any(note => note.IsActive) ?? false
+                    HasNotes = toConvert.DeploymentNotes?.Any(note => note.IsActive) ?? false,
+                    Properties = JsonSerializer.Deserialize<Dictionary<string, string>>(toConvert.Properties)
             };
         }
     }

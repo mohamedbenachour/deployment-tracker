@@ -41,6 +41,8 @@ namespace DeploymentTrackerCore.Models.Entities {
         [StringLength(150, MinimumLength = 3)]
         public string PublicURL { get; set; }
 
+        public string Properties { get; set; }
+
         public DeploymentStatus Status { get; set; }
 
         public int DeploymentCount { get; set; }
