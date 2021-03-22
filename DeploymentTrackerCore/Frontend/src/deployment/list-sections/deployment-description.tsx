@@ -4,6 +4,7 @@ import { Deployment, SiteLogin } from '../deployment-definition';
 import LoginDetail from './login-detail';
 import NoteIndicator from '../notes/note-indicator';
 import { statusIsRunning } from '../deployment-status';
+import DeploymentPropertiesIndicator from './deployment-properties-indicator';
 
 interface DeploymentDescriptionProps {
     deployment: Deployment;
@@ -32,6 +33,7 @@ const DeploymentDescription = ({
         siteLogin,
         id,
         hasNotes,
+        properties,
     },
 }: DeploymentDescriptionProps): JSX.Element => {
     const actualName = getActualName(name, userName);
@@ -48,6 +50,7 @@ const DeploymentDescription = ({
                 {` on ${FormatAsLocalDateTimeString(timestamp)}`}
             </Typography.Text>
             {siteLogin && renderLoginDetail(siteLogin)}
+            <DeploymentPropertiesIndicator properties={properties} />
             <NoteIndicator deploymentId={id} hasNotes={hasNotes} />
         </>
     );
