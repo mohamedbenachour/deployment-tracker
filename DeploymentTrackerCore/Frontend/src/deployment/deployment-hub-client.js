@@ -1,5 +1,3 @@
-import React from 'react';
-
 import * as signalR from '@microsoft/signalr';
 
 import { notification } from 'antd';

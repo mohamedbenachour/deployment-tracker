@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
     Modal, Input, Select, Typography,
 } from 'antd';

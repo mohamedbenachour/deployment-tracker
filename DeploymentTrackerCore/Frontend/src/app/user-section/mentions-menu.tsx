@@ -1,5 +1,4 @@
 import { ConfigProvider, List } from 'antd';
-import React from 'react';
 import { Deployment } from '../../deployment/deployment-definition';
 import getMentionItem from './get-mention-item';
 import { Mention } from './mention-definitions';

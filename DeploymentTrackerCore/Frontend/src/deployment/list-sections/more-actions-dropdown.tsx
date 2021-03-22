@@ -1,6 +1,5 @@
 import { MoreOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu } from 'antd';
-import React from 'react';
 import { Deployment } from '../deployment-definition';
 
 interface MarkAsTorndownParameters {

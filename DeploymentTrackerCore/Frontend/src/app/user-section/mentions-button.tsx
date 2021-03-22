@@ -1,7 +1,7 @@
 import { LoadingOutlined, MessageOutlined } from '@ant-design/icons';
 import { Badge, Button, Popover } from 'antd';
 import { observer } from 'mobx-react-lite';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ConnectedMentionsMenu from './connected-mentions-menu';
 import MentionStore from './mention-store';
 

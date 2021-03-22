@@ -1,5 +1,3 @@
-import React from 'react';
-
 import withStyles from 'react-jss';
 
 import { Button } from 'antd';

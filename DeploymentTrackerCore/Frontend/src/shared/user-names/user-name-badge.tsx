@@ -1,5 +1,5 @@
 import { Avatar } from 'antd';
-import React, { forwardRef, Ref } from 'react';
+import { forwardRef, Ref } from 'react';
 import withStyles from 'react-jss';
 import nameToShortForm from './name-to-short-form';
 

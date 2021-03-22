@@ -1,5 +1,3 @@
-import React from 'react';
-
 import withStyles from 'react-jss';
 import { observer } from 'mobx-react-lite';
 import { DeploymentNote } from '../default-state';

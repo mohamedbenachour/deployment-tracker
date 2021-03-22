@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { CommentOutlined } from '@ant-design/icons';
 import withStyles, { WithStylesProps } from 'react-jss';
 import { Popover } from 'antd';

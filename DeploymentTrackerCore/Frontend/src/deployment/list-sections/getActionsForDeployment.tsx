@@ -1,4 +1,3 @@
-import React from 'react';
 import { DeleteOutlined, StopTwoTone, SyncOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import { statusIsRunning } from '../deployment-status';
