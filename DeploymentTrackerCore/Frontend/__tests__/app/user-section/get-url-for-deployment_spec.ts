@@ -3,6 +3,7 @@ import {
     Deployment,
     DeploymentStatus,
 } from '../../../src/deployment/deployment-definition';
+import JiraStatus from '../../../src/jira/jira-status';
 import UserActionDetail from '../../../src/shared/definitions/user-action-detail';
 
 describe('getUrlForDeployment', () => {
@@ -12,9 +13,7 @@ describe('getUrlForDeployment', () => {
         userName: 'foo-bar',
     };
 
-    const getDeploymentForBranchName = (
-        branchName = 'test',
-    ): Deployment => ({
+    const getDeploymentForBranchName = (branchName = 'test'): Deployment => ({
         branchName,
         createdBy: dummyUserAction,
         hasNotes: false,
@@ -30,6 +29,18 @@ describe('getUrlForDeployment', () => {
             id: 1,
             name: 'test',
         },
+        environmentId: 1,
+        jira: {
+            status: JiraStatus.Completed,
+            url: '',
+        },
+        properties: {},
+        publicURL: '',
+        siteLogin: {
+            password: '',
+            userName: '',
+        },
+        url: '',
     });
 
     it('returns a URL with the branchName query parameter set', () => {

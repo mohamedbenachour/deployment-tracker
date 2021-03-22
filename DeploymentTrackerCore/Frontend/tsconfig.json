@@ -3,7 +3,7 @@
     "noImplicitReturns": true,
     "module": "es6",
     "target": "es2019",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

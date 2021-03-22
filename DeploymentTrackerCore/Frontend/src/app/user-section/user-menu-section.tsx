@@ -1,4 +1,3 @@
-import React from 'react';
 import LogoutButton from './logout-button';
 import MentionsButton from './mentions-button';
 

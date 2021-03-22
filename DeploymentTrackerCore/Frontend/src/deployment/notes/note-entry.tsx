@@ -1,5 +1,4 @@
 import withStyles from 'react-jss';
-import React from 'react';
 
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button } from 'antd';

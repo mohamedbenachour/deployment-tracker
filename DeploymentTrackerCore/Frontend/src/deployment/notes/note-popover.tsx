@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 import { Divider } from 'antd';
 import NoteList from './note-list';
@@ -10,7 +10,7 @@ interface NotePopoverProps {
 }
 
 const NotePopover = ({ deploymentId }: NotePopoverProps): JSX.Element => {
-    const [noteStore] = React.useState(new NoteStore(deploymentId));
+    const [noteStore] = useState(new NoteStore(deploymentId));
 
     return (
         <>

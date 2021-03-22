@@ -1,5 +1,4 @@
 import { Tooltip } from 'antd';
-import React from 'react';
 import UserActionDetail from '../../shared/definitions/user-action-detail';
 import { FormatAsLocalDateTimeString } from '../../utils/date-time-formatting';
 

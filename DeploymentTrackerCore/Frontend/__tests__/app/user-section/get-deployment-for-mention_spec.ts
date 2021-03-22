@@ -4,6 +4,7 @@ import {
     Deployment,
     DeploymentStatus,
 } from '../../../src/deployment/deployment-definition';
+import JiraStatus from '../../../src/jira/jira-status';
 import UserActionDetail from '../../../src/shared/definitions/user-action-detail';
 
 describe('getDeploymentForMention', () => {
@@ -51,6 +52,18 @@ describe('getDeploymentForMention', () => {
                 id: 1,
                 name: 'test',
             },
+            environmentId: 1,
+            jira: {
+                status: JiraStatus.Completed,
+                url: '',
+            },
+            properties: {},
+            publicURL: '',
+            siteLogin: {
+                password: '',
+                userName: '',
+            },
+            url: '',
         };
 
         it('returns the expected deployment for a mention', () => {

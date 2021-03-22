@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
     Button, Input, Checkbox, Typography,
 } from 'antd';

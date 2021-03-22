@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Layout } from 'antd';
 import StandardFooter from './standard-footer';
 

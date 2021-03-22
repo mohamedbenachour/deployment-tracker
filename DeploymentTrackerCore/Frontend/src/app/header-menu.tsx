@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Link, useMatch } from 'react-router-dom';
 import { Menu, Row, Col } from 'antd';
 
