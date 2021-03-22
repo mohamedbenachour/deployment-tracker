@@ -15,6 +15,7 @@
  * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -61,7 +62,9 @@ namespace DeploymentTrackerCore.Models.API {
                     SiteLogin = toConvert.SiteLogin,
                     Type = ApiType.FromInternal(toConvert.Type),
                     HasNotes = toConvert.DeploymentNotes?.Any(note => note.IsActive) ?? false,
-                    Properties = JsonSerializer.Deserialize<Dictionary<string, string>>(toConvert.Properties)
+                    Properties = String.IsNullOrEmpty(toConvert.Properties) ?
+                    new Dictionary<string, string>() :
+                    JsonSerializer.Deserialize<Dictionary<string, string>>(toConvert.Properties)
             };
         }
     }
