@@ -26,7 +26,7 @@ import {
     DeploymentType,
     JiraDetail,
 } from './deployment-definition';
-import DeploymentDescription from './list-sections/deploymentDescription';
+import DeploymentDescription from './list-sections/deployment-description';
 
 const renderJiraDetail = ({ url, status }: JiraDetail): JSX.Element => (
     <>

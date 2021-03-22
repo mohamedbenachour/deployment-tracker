@@ -1,7 +1,7 @@
 import { Typography } from 'antd';
 import { FormatAsLocalDateTimeString } from '../../utils/date-time-formatting';
 import { Deployment, SiteLogin } from '../deployment-definition';
-import LoginDetail from './loginDetail';
+import LoginDetail from './login-detail';
 import NoteIndicator from '../notes/note-indicator';
 import { statusIsRunning } from '../deployment-status';
 
