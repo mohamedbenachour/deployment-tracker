@@ -3,18 +3,14 @@ import {
     Typography,
     Button,
     Input,
-    Popover,
     Radio,
-    notification,
     Tag,
     Select,
     Checkbox,
 } from 'antd';
-import { PlusOutlined, CopyOutlined, SelectOutlined } from '@ant-design/icons';
+import { PlusOutlined, SelectOutlined } from '@ant-design/icons';
 
 import { statusIsRunning } from './deployment-status';
-
-import { FormatAsLocalDateTimeString } from '../utils/date-time-formatting';
 
 import NewDeploymentModal from './connected-new-deployment-modal';
 
@@ -25,14 +21,12 @@ import { getPageData } from '../utils/page-data';
 
 import getActionsForDeployment from './list-sections/getActionsForDeployment';
 
-import NoteIndicator from './notes/note-indicator';
 import {
     Deployment,
     DeploymentType,
     JiraDetail,
-    SiteLogin,
 } from './deployment-definition';
-import LoginDetail from './list-sections/loginDetail';
+import DeploymentDescription from './list-sections/deploymentDescription';
 
 const renderJiraDetail = ({ url, status }: JiraDetail): JSX.Element => (
     <>
@@ -70,48 +64,6 @@ const renderTitle = ({
     return <Typography.Text delete>{branchName}</Typography.Text>;
 };
 
-const renderLoginDetail = (login: SiteLogin): JSX.Element => (
-    <LoginDetail login={login} />
-);
-
-const getActualName = (name: string, userName: string): string | null => {
-    if (name && name.length > 0) {
-        return name;
-    }
-
-    if (userName && userName.length > 0) {
-        return `(${userName})`;
-    }
-
-    return null;
-};
-
-const renderDescription = ({
-    status,
-    modifiedBy: { name, userName, timestamp },
-    siteLogin,
-    id,
-    hasNotes,
-}: Deployment): JSX.Element => {
-    const actualName = getActualName(name, userName);
-    const deploymentText = statusIsRunning(status) ? 'Deployed' : 'Torndown';
-    const actualDeploymentText = actualName
-        ? `${deploymentText} by`
-        : deploymentText;
-
-    return (
-        <>
-            <Typography.Text>{`${actualDeploymentText} `}</Typography.Text>
-            {actualName && <Typography.Text strong>{actualName}</Typography.Text>}
-            <Typography.Text>
-                {` on ${FormatAsLocalDateTimeString(timestamp)}`}
-            </Typography.Text>
-            {siteLogin && renderLoginDetail(siteLogin)}
-            <NoteIndicator deploymentId={id} hasNotes={hasNotes} />
-        </>
-    );
-};
-
 const renderDeploymentItem = (
     deployment: Deployment,
     teardownDeployment: (parameters: unknown) => void,
@@ -124,7 +76,7 @@ const renderDeploymentItem = (
     >
         <List.Item.Meta
           title={renderTitle(deployment)}
-          description={renderDescription(deployment)}
+          description={<DeploymentDescription deployment={deployment} />}
         />
     </List.Item>
 );
