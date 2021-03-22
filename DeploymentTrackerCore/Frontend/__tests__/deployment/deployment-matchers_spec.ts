@@ -3,6 +3,7 @@ import {
     DeploymentStatus,
 } from '../../src/deployment/deployment-definition';
 import deploymentIsForCurrentUser from '../../src/deployment/deployment-matchers';
+import JiraStatus from '../../src/jira/jira-status';
 import UserActionDetail from '../../src/shared/definitions/user-action-detail';
 import getCurrentUser from '../../src/utils/current-user';
 
@@ -45,6 +46,18 @@ describe('deployment-matchers', () => {
             id: 1,
             name: 'whu?',
         },
+        environmentId: 1,
+        jira: {
+            status: JiraStatus.Completed,
+            url: '',
+        },
+        properties: {},
+        publicURL: '',
+        siteLogin: {
+            password: '',
+            userName: '',
+        },
+        url: '',
     });
 
     describe('deploymentIsForCurrentUser', () => {

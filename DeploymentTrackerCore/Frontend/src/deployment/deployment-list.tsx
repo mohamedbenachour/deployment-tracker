@@ -27,23 +27,33 @@ import { getPageData } from '../utils/page-data';
 import getActionsForDeployment from './list-sections/getActionsForDeployment';
 
 import NoteIndicator from './notes/note-indicator';
+import {
+    Deployment,
+    DeploymentType,
+    JiraDetail,
+    SiteLogin,
+} from './deployment-definition';
 
-const renderJiraDetail = ({ url, status }) => (
+const renderJiraDetail = ({ url, status }: JiraDetail): JSX.Element => (
     <>
         <JiraUrl url={url} style={{ marginLeft: 10 }} />
         <JiraStatusBadge status={status} />
     </>
 );
 
-const renderType = ({ name }) => (
+const renderType = ({ name }: DeploymentType): JSX.Element => (
     <Tag style={{ marginLeft: 10 }} color="blue">
         {name}
     </Tag>
 );
 
 const renderTitle = ({
-    branchName, status, publicURL, jira, type,
-}) => {
+    branchName,
+    status,
+    publicURL,
+    jira,
+    type,
+}: Deployment): JSX.Element => {
     if (statusIsRunning(status)) {
         return (
             <>
@@ -60,14 +70,23 @@ const renderTitle = ({
     return <Typography.Text delete>{branchName}</Typography.Text>;
 };
 
-const copyValue = (value) => {
-    navigator.clipboard.writeText(value).then(() => notification.info({
+const copyValue = (value: string): void => {
+    void navigator.clipboard.writeText(value).then(() => notification.info({
         message: 'Copied to clipboard',
     }));
 };
 
-const renderLoginContent = (fieldName, value, allowCopy = false) => {
-    const labelStyle = {
+const renderLoginContent = (
+    fieldName: string,
+    value: string,
+    allowCopy = false,
+): JSX.Element => {
+    const labelStyle: {
+        paddingRight: number;
+        userSelect: 'none';
+        '-moz-user-select': 'none';
+        '-webkit-user-select': 'none';
+    } = {
         paddingRight: 5,
         userSelect: 'none',
         '-moz-user-select': 'none',
@@ -78,6 +97,7 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
         padding: 5,
         border: '1px solid',
         borderRadius: 2,
+        borderColor: '',
     };
 
     valueStyle.borderColor = valueStyle.backgroundColor;
@@ -91,25 +111,25 @@ const renderLoginContent = (fieldName, value, allowCopy = false) => {
             </label>
             <Typography.Text style={valueStyle}>{value}</Typography.Text>
             {allowCopy && (
-                <Button
-                  icon={<CopyOutlined />}
-                  onClick={() => copyValue(value)}
-                  style={{ marginLeft: 10 }}
-                  title="Copy to clipboard"
-                />
-            )}
+            <Button
+              icon={<CopyOutlined />}
+              onClick={() => copyValue(value)}
+              style={{ marginLeft: 10 }}
+              title="Copy to clipboard"
+            />
+      )}
         </div>
     );
 };
 
-const renderLoginDetail = ({ userName, password }) => (
+const renderLoginDetail = ({ userName, password }: SiteLogin): JSX.Element => (
     <Popover
       content={(
           <>
               {renderLoginContent('Username', userName)}
               {renderLoginContent('Password', password, true)}
           </>
-        )}
+    )}
       trigger="click"
     >
         <Button size="small" type="link">
@@ -118,7 +138,7 @@ const renderLoginDetail = ({ userName, password }) => (
     </Popover>
 );
 
-const getActualName = (name, userName) => {
+const getActualName = (name: string, userName: string): string | null => {
     if (name && name.length > 0) {
         return name;
     }
@@ -136,7 +156,7 @@ const renderDescription = ({
     siteLogin,
     id,
     hasNotes,
-}) => {
+}: Deployment): JSX.Element => {
     const actualName = getActualName(name, userName);
     const deploymentText = statusIsRunning(status) ? 'Deployed' : 'Torndown';
     const actualDeploymentText = actualName
@@ -156,12 +176,15 @@ const renderDescription = ({
     );
 };
 
-const renderDeploymentItem = (deployment, teardownDeployment) => (
+const renderDeploymentItem = (
+    deployment: Deployment,
+    teardownDeployment: (parameters: unknown) => void,
+): JSX.Element => (
     <List.Item
       actions={getActionsForDeployment({
-            deployment,
-            teardownDeployment,
-        })}
+      deployment,
+      teardownDeployment,
+    })}
     >
         <List.Item.Meta
           title={renderTitle(deployment)}
@@ -170,7 +193,7 @@ const renderDeploymentItem = (deployment, teardownDeployment) => (
     </List.Item>
 );
 
-const renderAddDeploymentButton = (addDeployment) => {
+const renderAddDeploymentButton = (addDeployment: () => void): JSX.Element => {
     if (getPageData().allowManualDeploymentsToBeAdded) {
         return (
             <Button
@@ -187,13 +210,17 @@ const renderAddDeploymentButton = (addDeployment) => {
     return <></>;
 };
 
-const renderTypeOptions = (types) => types.map(({ id, name }) => (
+const renderTypeOptions = (types: DeploymentType[]): JSX.Element[] => types.map(({ id, name }) => (
     <Select.Option key={id} value={id}>
         {name}
     </Select.Option>
 ));
 
-const renderTypeFilter = (typeFilter, types, onChange) => (
+const renderTypeFilter = (
+    typeFilter: string,
+    types: DeploymentType[],
+    onChange: (type: string) => void,
+): JSX.Element => (
     <Select
       value={typeFilter}
       onChange={onChange}
@@ -203,15 +230,24 @@ const renderTypeFilter = (typeFilter, types, onChange) => (
     </Select>
 );
 
-const renderStatusFilter = (statusFilter, onStatusFilterChange) => (
-    <Radio.Group onChange={onStatusFilterChange} value={statusFilter}>
+const renderStatusFilter = (
+    statusFilter: string,
+    onStatusFilterChange: (status: string) => void,
+): JSX.Element => (
+    <Radio.Group
+      onChange={({ target: { value } }) => onStatusFilterChange(value)}
+      value={statusFilter}
+    >
         <Radio.Button value="running">Running</Radio.Button>
         <Radio.Button value="completed">Completed</Radio.Button>
         <Radio.Button value="torndown">Torndown</Radio.Button>
     </Radio.Group>
 );
 
-const renderOnlyMineFilter = (onlyMineFilter, onOnlyMineFilterChange) => (
+const renderOnlyMineFilter = (
+    onlyMineFilter: boolean,
+    onOnlyMineFilterChange: (onlyMine: boolean) => void,
+): JSX.Element => (
     <Checkbox
       onChange={({ target: { checked } }) => onOnlyMineFilterChange(checked)}
       checked={onlyMineFilter}
@@ -222,17 +258,17 @@ const renderOnlyMineFilter = (onlyMineFilter, onOnlyMineFilterChange) => (
 );
 
 const renderHeader = (
-    branchNameFilter,
-    addDeployment,
-    onSearch,
-    statusFilter,
-    onStatusFilterChange,
-    typeFilter,
-    types,
-    onTypeFilterChange,
-    onlyMineFilter,
-    onOnlyMineFilterChange,
-) => (
+    branchNameFilter: string,
+    addDeployment: () => void,
+    onSearch: (type: string) => void,
+    statusFilter: string,
+    onStatusFilterChange: (type: string) => void,
+    typeFilter: string,
+    types: DeploymentType[],
+    onTypeFilterChange: (type: string) => void,
+    onlyMineFilter: boolean,
+    onOnlyMineFilterChange: (onlyMine: boolean) => void,
+): JSX.Element => (
     <>
         {renderAddDeploymentButton(addDeployment)}
         <Input.Search
@@ -241,42 +277,58 @@ const renderHeader = (
           style={{ width: 200, marginRight: 10 }}
           value={branchNameFilter}
         />
-        {renderStatusFilter(statusFilter, ({ target: { value } }) => onStatusFilterChange(value))}
+        {renderStatusFilter(statusFilter, onStatusFilterChange)}
         {renderTypeFilter(typeFilter, types, onTypeFilterChange)}
         {renderOnlyMineFilter(onlyMineFilter, onOnlyMineFilterChange)}
     </>
 );
 
+interface DeploymentListProps {
+    deployments: Deployment[];
+    isLoading: boolean;
+    branchNameFilter: string;
+    addDeployment: () => void;
+    onSearch: (type: string) => void;
+    statusFilter: string;
+    onStatusFilterChange: (type: string) => void;
+    typeFilter: string;
+    types: DeploymentType[];
+    onTypeFilterChange: (type: string) => void;
+    onlyMineFilter: boolean;
+    onOnlyMineFilterChange: (onlyMine: boolean) => void;
+    teardownDeployment: () => void;
+}
+
 const DeploymentList = ({
     deployments,
     isLoading,
-    addDeployment,
     branchNameFilter,
+    addDeployment,
     onSearch,
     statusFilter,
     onStatusFilterChange,
     typeFilter,
-    onlyMineFilter,
-    onOnlyMineFilterChange,
     types,
     onTypeFilterChange,
+    onlyMineFilter,
+    onOnlyMineFilterChange,
     teardownDeployment,
-}) => (
+}: DeploymentListProps): JSX.Element => (
     <>
         <NewDeploymentModal />
         <List
           header={renderHeader(
-                branchNameFilter,
-                addDeployment,
-                onSearch,
-                statusFilter,
-                onStatusFilterChange,
-                typeFilter,
-                types,
-                onTypeFilterChange,
-                onlyMineFilter,
-                onOnlyMineFilterChange,
-            )}
+        branchNameFilter,
+        addDeployment,
+        onSearch,
+        statusFilter,
+        onStatusFilterChange,
+        typeFilter,
+        types,
+        onTypeFilterChange,
+        onlyMineFilter,
+        onOnlyMineFilterChange,
+      )}
           bordered
           dataSource={deployments}
           loading={isLoading}

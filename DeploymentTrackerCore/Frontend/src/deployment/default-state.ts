@@ -1,4 +1,5 @@
 import UserActionDetail from '../shared/definitions/user-action-detail';
+import { Deployment } from './deployment-definition';
 
 interface Filters {
     branchName: string;
@@ -16,7 +17,7 @@ interface DeploymentNote {
 interface DeploymentState {
     addingADeployment: boolean;
     saveInProgress: boolean;
-    deploymentBeingAdded: unknown;
+    deploymentBeingAdded: Deployment | null;
     filters: Filters;
 }
 
