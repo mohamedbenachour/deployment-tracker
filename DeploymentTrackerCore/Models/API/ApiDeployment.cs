@@ -63,7 +63,7 @@ namespace DeploymentTrackerCore.Models.API {
                     Type = ApiType.FromInternal(toConvert.Type),
                     HasNotes = toConvert.DeploymentNotes?.Any(note => note.IsActive) ?? false,
                     Properties = String.IsNullOrEmpty(toConvert.Properties) ?
-                    new Dictionary<string, string>() :
+                    null :
                     JsonSerializer.Deserialize<Dictionary<string, string>>(toConvert.Properties)
             };
         }

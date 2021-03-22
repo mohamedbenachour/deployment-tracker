@@ -36,7 +36,7 @@ interface Deployment {
     managementUrls: DeploymentManagementUrls;
     hasNotes: boolean;
     type: DeploymentType;
-    properties: Record<string, string>;
+    properties: Record<string, string> | null;
     url: string;
     publicURL: string;
     jira: JiraDetail;
