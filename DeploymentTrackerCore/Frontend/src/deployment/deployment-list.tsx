@@ -51,7 +51,7 @@ const renderTitle = ({
     if (statusIsRunning(status)) {
         return (
             <>
-                <a href={publicURL} target="_blank">
+                <a href={publicURL} target="_blank" rel="noreferrer">
                     {`${branchName}`}
                     <SelectOutlined style={{ marginLeft: 10 }} />
                 </a>

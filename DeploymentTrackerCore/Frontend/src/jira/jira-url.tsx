@@ -8,7 +8,7 @@ interface JiraUrlProps {
 const JiraUrl = ({ url, style }: JiraUrlProps): JSX.Element => (
     <>
         {url && (
-        <a href={url} target="_blank" style={style}>
+        <a href={url} target="_blank" style={style} rel="noreferrer">
             <Button size="small" type="link">
                 Jira
             </Button>
