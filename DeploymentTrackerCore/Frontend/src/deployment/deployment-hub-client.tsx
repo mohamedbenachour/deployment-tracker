@@ -1,4 +1,4 @@
-import signalR from '@microsoft/signalr';
+import * as signalR from '@microsoft/signalr';
 
 import { notification } from 'antd';
 import { Store } from 'redux';

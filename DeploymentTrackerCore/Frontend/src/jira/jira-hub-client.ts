@@ -1,4 +1,4 @@
-import signalR from '@microsoft/signalr';
+import * as signalR from '@microsoft/signalr';
 import { Store } from 'redux';
 
 import { jiraStatusUpdate } from '../deployment/actions';
