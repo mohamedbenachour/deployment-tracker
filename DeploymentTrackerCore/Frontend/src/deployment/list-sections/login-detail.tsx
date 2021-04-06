@@ -1,4 +1,6 @@
+import { KeyOutlined } from '@ant-design/icons';
 import { Button, Popover } from 'antd';
+
 import { SiteLogin } from '../deployment-definition';
 import FieldValueSection from './field-value-section';
 
@@ -13,17 +15,13 @@ const LoginDetail = ({
       content={(
           <>
               <FieldValueSection fieldName="Username" value={userName} />
-              <FieldValueSection
-                fieldName="Password"
-                value={password}
-                allowCopy
-              />
+              <FieldValueSection fieldName="Password" value={password} allowCopy />
           </>
     )}
       trigger="click"
     >
-        <Button size="small" type="link">
-            Site Login
+        <Button size="small" type="link" title="Login details">
+            <KeyOutlined />
         </Button>
     </Popover>
 );

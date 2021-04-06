@@ -21,7 +21,7 @@ const getActionsForDeployment = ({
 
     if (statusIsRunning(status)) {
         const actionsArray = [
-            <a title="Teardown" href={teardownUrl} target="_blank">
+            <a title="Teardown" href={teardownUrl} target="_blank" rel="noreferrer">
                 <StopTwoTone twoToneColor="#ff0000" />
             </a>,
             <MoreActionsDropdown
@@ -34,7 +34,7 @@ const getActionsForDeployment = ({
             actionsArray.splice(
                 0,
                 0,
-                <a title="Redeploy" href={deploymentTriggerUrl} target="_blank">
+                <a title="Redeploy" href={deploymentTriggerUrl} target="_blank" rel="noreferrer">
                     <SyncOutlined twoToneColor="#0000ff" />
                 </a>,
                 <Divider type="vertical" />,

@@ -37,6 +37,7 @@ const StandardFooter = ({
                 <a
                   href="https://gitlab.com/pmdematagoda/deployment-tracker"
                   target="_blank"
+                  rel="noreferrer"
                 >
                     <Space>
                         See the Source
