@@ -142,6 +142,6 @@ namespace DeploymentTrackerCore.Services.Identity.Mock {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ApplicationUser> ListUsers() => UsersStore.Values;
+        public Task<IEnumerable<ApplicationUser>> ListUsers() => Task.FromResult<IEnumerable<ApplicationUser>>(UsersStore.Values);
     }
 }

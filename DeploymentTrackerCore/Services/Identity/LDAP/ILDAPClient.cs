@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DeploymentTrackerCore.Services.Identity.LDAP {
     public interface ILDAPClient {
-        LDAPUserEntry GetDetailsForUser(string userName);
-        bool Authenticate(string userName, string password);
-        IEnumerable<LDAPUserEntry> ListUsers();
+        Task<LDAPUserEntry> GetDetailsForUser(string userName);
+        Task<bool> Authenticate(string userName, string password);
+        Task<IEnumerable<LDAPUserEntry>> ListUsers();
 
     }
 }

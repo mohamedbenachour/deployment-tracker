@@ -33,8 +33,8 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
 
         private ILDAPClient LDAPClient { get; }
 
-        public override Task<bool> CheckPasswordAsync(ApplicationUser user, string password) {
-            return Task.FromResult(LDAPClient.Authenticate(user.UserName, password));
+        public override async Task<bool> CheckPasswordAsync(ApplicationUser user, string password) {
+            return await LDAPClient.Authenticate(user.UserName, password);
         }
     }
 }

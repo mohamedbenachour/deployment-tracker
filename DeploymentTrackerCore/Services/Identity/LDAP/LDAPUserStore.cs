@@ -49,14 +49,14 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
 
         }
 
-        private Task<ApplicationUser> GetUser(string userName) {
-            var userEntry = LDAPClient.GetDetailsForUser(userName);
+        private async Task<ApplicationUser> GetUser(string userName) {
+            var userEntry = await LDAPClient.GetDetailsForUser(userName);
 
             if (userEntry == null) {
-                return Task.FromResult<ApplicationUser>(null);
+                return null;
             }
 
-            return Task.FromResult(ConvertToUser(userEntry));
+            return ConvertToUser(userEntry);
         }
 
         private ApplicationUser ConvertToUser(LDAPUserEntry userEntry) => new ApplicationUser {
@@ -100,6 +100,6 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<ApplicationUser> ListUsers() => LDAPClient.ListUsers().Select(ConvertToUser).Where(user => !String.IsNullOrWhiteSpace(user.UserName));
+        public async Task<IEnumerable<ApplicationUser>> ListUsers() => (await LDAPClient.ListUsers()).Select(ConvertToUser).Where(user => !String.IsNullOrWhiteSpace(user.UserName));
     }
 }
