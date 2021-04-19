@@ -19,6 +19,7 @@ using System;
 
 using DeploymentTrackerCore.Services.Identity;
 using DeploymentTrackerCore.Services.Identity.LDAP;
+using DeploymentTrackerCore.Services.Identity.LDAP.DirectoryServices;
 using DeploymentTrackerCore.Services.Identity.Mock;
 
 using Microsoft.AspNetCore.Identity;
@@ -40,7 +41,7 @@ namespace DeploymentTrackerCore.Services.ServiceRegistration {
 
             } else if (idSourceType == "LDAP") {
                 services.AddSingleton<LDAPConfiguration>();
-                services.AddSingleton<LDAPClient>();
+                services.AddSingleton<ILDAPClient, LDAPClient>();
 
                 services.AddTransient<IUserCollection, LDAPUserStore>();
 

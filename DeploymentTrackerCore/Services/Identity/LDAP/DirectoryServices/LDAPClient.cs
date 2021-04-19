@@ -23,8 +23,8 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using SearchScope = System.DirectoryServices.SearchScope;
 
-namespace DeploymentTrackerCore.Services.Identity.LDAP {
-    public class LDAPClient {
+namespace DeploymentTrackerCore.Services.Identity.LDAP.DirectoryServices {
+    public class LDAPClient : ILDAPClient {
         private static readonly string[] RetrievedProperties = new string[] {
             LDAPProperties.UserName.Name,
             LDAPProperties.DisplayName.Name,
@@ -45,7 +45,7 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
                 using var dirEntry = ConstructDirectoryEntry(Configuration.BindUsername, Configuration.BindPassword);
                 DirectorySearcher ds = GetSearcher(dirEntry);
 
-                ds.Filter = String.Format(Configuration.UserFilter, userName);
+                ds.Filter = string.Format(Configuration.UserFilter, userName);
 
                 var result = ds.FindOne();
 

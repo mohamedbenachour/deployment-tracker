@@ -20,7 +20,7 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace DeploymentTrackerCore.Services.Identity.LDAP {
+namespace DeploymentTrackerCore.Services.Identity.LDAP.DirectoryServices {
     public class LDAPConfiguration {
         private const string DefaultUserFilter = "(&(objectclass=user)(SAMAccountName={0}))";
 

@@ -22,17 +22,19 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using DeploymentTrackerCore.Services.Identity.LDAP.DirectoryServices;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace DeploymentTrackerCore.Services.Identity.LDAP {
     public class LDAPUserStore : IUserStore<ApplicationUser>, IUserCollection {
-        public LDAPUserStore(LDAPClient ldapClient, ILogger<LDAPUserStore> logger) {
+        public LDAPUserStore(ILDAPClient ldapClient, ILogger<LDAPUserStore> logger) {
             LDAPClient = ldapClient;
             Logger = logger;
         }
 
-        private LDAPClient LDAPClient { get; }
+        private ILDAPClient LDAPClient { get; }
         private ILogger<LDAPUserStore> Logger { get; }
 
         public Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken) {
