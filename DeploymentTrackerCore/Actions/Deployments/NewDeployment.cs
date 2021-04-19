@@ -82,10 +82,10 @@ namespace DeploymentTrackerCore.Actions.Deployments {
 
         private async Task<Models.Entities.Type> GetTypeForNewDeployment(ApiNewDeployment deployment) {
             if (deployment.Type == null) {
-                return await Context.Types.FirstAsync();
+                return await Context.Types.AsQueryable().FirstAsync();
             }
 
-            return await Context.Types.SingleAsync(type => type.Id == deployment.Type.Id);
+            return await Context.Types.AsQueryable().SingleAsync(type => type.Id == deployment.Type.Id);
         }
 
         private async Task<bool> IsValidNewDeployment() {
@@ -114,13 +114,13 @@ namespace DeploymentTrackerCore.Actions.Deployments {
                 return false;
             }
 
-            if (!(await Context.Environments.AnyAsync(env => env.Id == Deployment.EnvironmentId))) {
+            if (!(await Context.Environments.AsQueryable().AnyAsync(env => env.Id == Deployment.EnvironmentId))) {
                 Error = "The specified environment does not exist.";
                 return false;
             }
 
             if (Deployment.Type != null) {
-                if (!(await Context.Types.AnyAsync(type => type.Id == Deployment.Type.Id))) {
+                if (!(await Context.Types.AsQueryable().AnyAsync(type => type.Id == Deployment.Type.Id))) {
                     Error = "The specified type does not exist";
                     return false;
                 }

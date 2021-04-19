@@ -19,8 +19,10 @@ namespace DeploymentTrackerCore.Services.DeploymentNotes.NoteActions {
             var converter = new NoteEntityToApiNote();
 
             return ActionOutcome<IEnumerable<ApiNote>>.WithResult(
-                (await AppContext.DeploymentNote.Where(note => note.IsActive && note.Deployment.Id == deploymentId)
+                (await AppContext.DeploymentNote
+                    .AsQueryable()
                     .Include(note => note.Deployment)
+                    .Where(note => note.IsActive && note.Deployment.Id == deploymentId)
                     .ToListAsync())
                 .Select(converter.Function));
         }
