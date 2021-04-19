@@ -20,12 +20,12 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace DeploymentTrackerCore.Services.Identity.LDAP {
-    public class LDAPConfiguration {
+namespace DeploymentTrackerCore.Services.Identity.LDAP.NetStandard {
+    public class LDAPv2Configuration {
         private const string DefaultUserFilter = "(&(objectclass=user)(SAMAccountName={0}))";
 
-        public LDAPConfiguration(IConfiguration configuration, ILogger<LDAPConfiguration> logger) {
-            var ldapSection = configuration.GetSection("IdentitySource").GetSection("Ldap");
+        public LDAPv2Configuration(IConfiguration configuration, ILogger<LDAPv2Configuration> logger) {
+            var ldapSection = configuration.GetSection("IdentitySource").GetSection("Ldapv2");
 
             if (ldapSection == null) {
                 logger.LogError("No LDAP configuration has been specified.");
@@ -38,16 +38,25 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
 
         public string Server { get; private set; }
 
+        public int Port { get; private set; }
+
         public string BindUsername { get; private set; }
         public string BindPassword { get; private set; }
+
+        public string BaseDN { get; private set; }
+
+        public string DefaultUserDomain { get; private set; }
 
         public string UserFilter { get; private set; }
 
         private void PopulateFromSection(IConfigurationSection section) {
             Server = section[nameof(Server)];
+            Port = int.Parse(section[nameof(Port)]);
             BindUsername = section[nameof(BindUsername)];
             BindPassword = section[nameof(BindPassword)];
             UserFilter = section[nameof(UserFilter)];
+            DefaultUserDomain = section[nameof(DefaultUserDomain)];
+            BaseDN = section[nameof(BaseDN)];
 
             if (String.IsNullOrWhiteSpace(UserFilter)) {
                 UserFilter = DefaultUserFilter;

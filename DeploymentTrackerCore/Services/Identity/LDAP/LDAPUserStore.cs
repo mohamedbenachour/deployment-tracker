@@ -22,17 +22,19 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using DeploymentTrackerCore.Services.Identity.LDAP.DirectoryServices;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace DeploymentTrackerCore.Services.Identity.LDAP {
     public class LDAPUserStore : IUserStore<ApplicationUser>, IUserCollection {
-        public LDAPUserStore(LDAPClient ldapClient, ILogger<LDAPUserStore> logger) {
+        public LDAPUserStore(ILDAPClient ldapClient, ILogger<LDAPUserStore> logger) {
             LDAPClient = ldapClient;
             Logger = logger;
         }
 
-        private LDAPClient LDAPClient { get; }
+        private ILDAPClient LDAPClient { get; }
         private ILogger<LDAPUserStore> Logger { get; }
 
         public Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken) {
@@ -47,14 +49,14 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
 
         }
 
-        private Task<ApplicationUser> GetUser(string userName) {
-            var userEntry = LDAPClient.GetDetailsForUser(userName);
+        private async Task<ApplicationUser> GetUser(string userName) {
+            var userEntry = await LDAPClient.GetDetailsForUser(userName);
 
             if (userEntry == null) {
-                return Task.FromResult<ApplicationUser>(null);
+                return null;
             }
 
-            return Task.FromResult(ConvertToUser(userEntry));
+            return ConvertToUser(userEntry);
         }
 
         private ApplicationUser ConvertToUser(LDAPUserEntry userEntry) => new ApplicationUser {
@@ -98,6 +100,6 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<ApplicationUser> ListUsers() => LDAPClient.ListUsers().Select(ConvertToUser).Where(user => !String.IsNullOrWhiteSpace(user.UserName));
+        public async Task<IEnumerable<ApplicationUser>> ListUsers() => (await LDAPClient.ListUsers()).Select(ConvertToUser).Where(user => !String.IsNullOrWhiteSpace(user.UserName));
     }
 }

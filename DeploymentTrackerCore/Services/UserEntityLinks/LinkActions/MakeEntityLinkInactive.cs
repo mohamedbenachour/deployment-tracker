@@ -36,6 +36,7 @@ namespace DeploymentTrackerCore.Services.UserEntityLinks.LinkActions {
 
         public async Task<ActionOutcome<bool>> Perform(int userEntityLinkId) {
             var userEntityLink = await AppContext.UserEntityLinks
+                .AsQueryable()
                 .Where(entityLink => entityLink.TargetUserName == RequestState.GetUser().Username)
                 .SingleOrDefaultAsync(entityLink => entityLink.Id == userEntityLinkId);
 

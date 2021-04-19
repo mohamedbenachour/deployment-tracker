@@ -19,12 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 using SearchScope = System.DirectoryServices.SearchScope;
 
-namespace DeploymentTrackerCore.Services.Identity.LDAP {
-    public class LDAPClient {
+namespace DeploymentTrackerCore.Services.Identity.LDAP.DirectoryServices {
+    public class LDAPClient : ILDAPClient {
         private static readonly string[] RetrievedProperties = new string[] {
             LDAPProperties.UserName.Name,
             LDAPProperties.DisplayName.Name,
@@ -40,49 +41,49 @@ namespace DeploymentTrackerCore.Services.Identity.LDAP {
 
         private ILogger<LDAPClient> Logger { get; }
 
-        public LDAPUserEntry GetDetailsForUser(string userName) {
+        public Task<LDAPUserEntry> GetDetailsForUser(string userName) {
             try {
                 using var dirEntry = ConstructDirectoryEntry(Configuration.BindUsername, Configuration.BindPassword);
                 DirectorySearcher ds = GetSearcher(dirEntry);
 
-                ds.Filter = String.Format(Configuration.UserFilter, userName);
+                ds.Filter = string.Format(Configuration.UserFilter, userName);
 
                 var result = ds.FindOne();
 
-                return FromLDAPResult(result?.Properties);
+                return Task.FromResult(FromLDAPResult(result?.Properties));
             } catch (Exception exc) {
                 Logger.LogError(exc, $"Error retrieving details for user '{userName}'");
             }
 
-            return null;
+            return Task.FromResult<LDAPUserEntry>(null);
         }
 
-        public IEnumerable<LDAPUserEntry> ListUsers() {
+        public Task<IEnumerable<LDAPUserEntry>> ListUsers() {
             try {
                 using var dirEntry = ConstructDirectoryEntry(Configuration.BindUsername, Configuration.BindPassword);
                 DirectorySearcher ds = GetSearcher(dirEntry);
 
                 var results = ds.FindAll();
 
-                return ConvertToListOfUserEntries(results);
+                return Task.FromResult(ConvertToListOfUserEntries(results));
             } catch (Exception exc) {
                 Logger.LogError(exc, $"Error listing available users.");
             }
 
-            return null;
+            return Task.FromResult<IEnumerable<LDAPUserEntry>>(null);
         }
 
-        public bool Authenticate(string userName, string password) {
+        public Task<bool> Authenticate(string userName, string password) {
             try {
                 using(var dirEntry = ConstructDirectoryEntry(userName, password)) {
                     FetchPropertyToValidateUserCredentials(dirEntry);
                 }
-                return true;
+                return Task.FromResult(true);
             } catch (Exception exc) {
                 Logger.LogError(exc, $"Error authenticating user '{userName}'");
             }
 
-            return false;
+            return Task.FromResult(false);
         }
 
         private static void FetchPropertyToValidateUserCredentials(DirectoryEntry directoryEntry) {

@@ -18,7 +18,7 @@
     },
     "ExternalToken": "<token-value>",
     "IdentitySource": {
-        "Type": "MockStore",
+        "Type": "MockStore|LDAP|LDAPv2",
         "Users": [{
             "Username": "<username>",
             "Name": "<name>",
@@ -29,6 +29,15 @@
             "BindUsername": "<username>",
             "BindPassword": "<password>",
             "UserFilter": "<user-filter-or-blank>"
+        },
+        "Ldapv2": {
+            "Server": "<server>",
+            "Port": 636,
+            "BindUsername": "<username-including-domain>",
+            "BindPassword": "<password>",
+            "UserFilter": "<user-filter-or-blank>",
+            "BaseDN": "<base-dn>",
+            "DefaultUserDomain": "@<default-domain>"
         }
     },
     "ConnectionStrings": {

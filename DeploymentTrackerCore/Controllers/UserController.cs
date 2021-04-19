@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using DeploymentTrackerCore.Models.API;
 using DeploymentTrackerCore.Services.Identity;
@@ -20,8 +21,8 @@ namespace DeploymentTrackerCore.Controllers {
         private IUserCollection UserCollection { get; }
 
         [HttpGet]
-        public IEnumerable<ApiUser> ListUsers() {
-            return UserCollection.ListUsers().Select(user => new ApiUser {
+        public async Task<IEnumerable<ApiUser>> ListUsers() {
+            return (await UserCollection.ListUsers()).Select(user => new ApiUser {
                 Name = user.Name,
                     Username = user.UserName
             });

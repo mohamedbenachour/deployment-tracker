@@ -1,22 +1,22 @@
 using System.Linq;
 using System.Threading.Tasks;
+
 using DeploymentTrackerCore.Actions;
 using DeploymentTrackerCore.Models.Entities;
+
 using Microsoft.EntityFrameworkCore;
 
-namespace DeploymentTrackerCore.Services.DeploymentNotes.NoteActions
-{
-    public class DeleteNoteForDeployment : IResultBasedAction<DeleteNoteRequest, int>
-    {
+namespace DeploymentTrackerCore.Services.DeploymentNotes.NoteActions {
+    public class DeleteNoteForDeployment : IResultBasedAction<DeleteNoteRequest, int> {
         private DeploymentAppContext AppContext { get; }
 
         public DeleteNoteForDeployment(DeploymentAppContext appContext) {
             AppContext = appContext;
         }
 
-        public async Task<ActionOutcome<int>> Perform(DeleteNoteRequest input)
-        {
+        public async Task<ActionOutcome<int>> Perform(DeleteNoteRequest input) {
             var matchingNotes = await AppContext.DeploymentNote
+                .AsQueryable()
                 .Where(deploymentNote => deploymentNote.Id == input.NoteId && deploymentNote.Deployment.Id == input.DeploymentId)
                 .ToListAsync();
 
@@ -32,7 +32,7 @@ namespace DeploymentTrackerCore.Services.DeploymentNotes.NoteActions
     }
 
     public class DeleteNoteRequest {
-        public int DeploymentId {get;set;}
-        public int NoteId {get;set;} 
+        public int DeploymentId { get; set; }
+        public int NoteId { get; set; }
     }
 }

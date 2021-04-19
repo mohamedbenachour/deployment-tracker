@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DeploymentTrackerCore.Services.Identity {
     public interface IUserCollection {
-        IEnumerable<ApplicationUser> ListUsers();
+        Task<IEnumerable<ApplicationUser>> ListUsers();
     }
 }

@@ -62,7 +62,7 @@ namespace DeploymentTrackerCore.Actions.Deployments {
         }
 
         private async Task<bool> IsValidDeployment() {
-            var matchingDeployment = await Context.Deployments.AnyAsync(deployment => deployment.SiteName == SiteName);
+            var matchingDeployment = await Context.Deployments.AsQueryable().AnyAsync(deployment => deployment.SiteName == SiteName);
 
             if (!matchingDeployment) {
                 Error = "A deployment with the specified site name does not exist.";
