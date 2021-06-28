@@ -97,13 +97,16 @@ module.exports = {
   // projects: null,
 
   // Use this configuration option to add custom reporters to Jest
-  "reporters": [ "default", [
-        "jest-junit", {
-          outputDirectory: "./__tests__",
-          outputName: './test-report.xml'
-        }
-      ]
+  reporters: [
+    "default",
+    [
+      "jest-junit",
+      {
+        outputDirectory: "./__tests__",
+        outputName: "./test-report.xml",
+      },
     ],
+  ],
 
   // Automatically reset mock state between every test
   // resetMocks: false,
@@ -138,7 +141,7 @@ module.exports = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  // testEnvironment: "jest-environment-jsdom",
+  testEnvironment: "jsdom",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},

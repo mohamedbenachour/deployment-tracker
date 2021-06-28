@@ -1,32 +1,33 @@
 /*
-* This file is part of Deployment Tracker.
-* 
-* Deployment Tracker is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* Deployment Tracker is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
-*/
-
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.SignalR;
+ * This file is part of Deployment Tracker.
+ * 
+ * Deployment Tracker is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Deployment Tracker is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Deployment Tracker. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-using DeploymentTrackerCore.Models;
-using DeploymentTrackerCore.Hubs;
 using DeploymentTrackerCore.Actions.Jira;
+using DeploymentTrackerCore.Hubs;
+using DeploymentTrackerCore.Models;
+
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace DeploymentTrackerCore.Services.Jira {
     public class JiraService : IJiraService {
@@ -80,20 +81,18 @@ namespace DeploymentTrackerCore.Services.Jira {
             return await new JiraStatusFetcher(GetFetcher(), GetStatusExtractor()).Fetch(jiraIssue);
         }
 
-        private string GetJiraKey(string source)
-            => new JiraIssueKeyExtractor(Configuration.SiteProjectKey).Extract(source);
+        private string GetJiraKey(string source) => new JiraIssueKeyExtractor(Configuration.SiteProjectKeys).Extract(source);
 
-        private JiraIssueFetcher GetFetcher()
-            => new JiraIssueFetcher(GetClient(), Cache, Updater);
+        private JiraIssueFetcher GetFetcher() => new JiraIssueFetcher(GetClient(), Cache, Updater);
 
-        private JiraIssueClient GetClient()
-            => new JiraIssueClient(Configuration.BaseUrl, Configuration.JiraLogin);
+        private JiraIssueClient GetClient() => new JiraIssueClient(Configuration.BaseUrl, Configuration.JiraLogin);
 
-        private JiraStatusExtractor GetStatusExtractor()
-            => new JiraStatusExtractor(StatusMapper);
+        private JiraStatusExtractor GetStatusExtractor() => new JiraStatusExtractor(StatusMapper);
     }
 
     class JiraConfiguration {
+        private const string LegacySiteProjectKeyFieldName = "SiteProjectKey";
+
         public JiraConfiguration(IConfiguration configuration, ILogger logger) {
             var jiraConfiguration = configuration.GetSection("Jira");
 
@@ -111,7 +110,7 @@ namespace DeploymentTrackerCore.Services.Jira {
                 logger.LogError("[SECURITY-ISSUE] Jira URL does not use HTTPS");
             }
 
-            SiteProjectKey = jiraConfiguration[nameof(SiteProjectKey)];
+            PopulateSiteProjectKeys(jiraConfiguration, logger);
 
             var userConfiguration = jiraConfiguration.GetSection("User");
 
@@ -144,9 +143,25 @@ namespace DeploymentTrackerCore.Services.Jira {
             logger.LogInformation($"Refreshing Jira information every {MinutesBetweenRefresh} minutes");
         }
 
+        private void PopulateSiteProjectKeys(IConfiguration configuration, ILogger logger) {
+            var siteProjectKeysSection = configuration.GetSection(nameof(SiteProjectKeys)).Get<HashSet<string>>();
+
+            if (siteProjectKeysSection != null) {
+                logger.LogInformation($"Using defined site project keys: {String.Join(", ", siteProjectKeysSection)}");
+
+                SiteProjectKeys = siteProjectKeysSection;
+            } else {
+                var siteProjectKey = configuration[LegacySiteProjectKeyFieldName];
+
+                SiteProjectKeys.Add(siteProjectKey);
+                logger.LogWarning($"Using legacy site project key specified: {siteProjectKey}");
+            }
+        }
+
         public bool Enabled { get; private set; }
         public string BaseUrl { get; private set; }
-        public string SiteProjectKey { get; private set; }
+
+        public ISet<string> SiteProjectKeys { get; private set; } = new HashSet<string>();
         public LoginInformation JiraLogin { get; private set; }
         public IDictionary<JiraStatus, ISet<int>> StatusMapping { get; } = new Dictionary<JiraStatus, ISet<int>>();
         public int MinutesBetweenRefresh { get; private set; }
