@@ -13,6 +13,9 @@ stages:
 server-build:
   stage: build
   needs: []
+  variables:
+    IdentitySource__Type: "MockStore"
+    ConnectionStrings__Application: "Data Source=deployment.db"
   before_script:
   - dotnet tool restore
   script:
@@ -69,6 +72,9 @@ server-unit-test:
 server-integration-test:
   stage: test
   needs: []
+  variables:
+    IdentitySource__Type: "MockStore"
+    ConnectionStrings__Application: "Data Source=deployment.db"
   before_script:
   - cd IntegrationTests
   script:
