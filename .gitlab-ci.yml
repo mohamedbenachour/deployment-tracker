@@ -75,6 +75,8 @@ server-integration-test:
   variables:
     IdentitySource__Type: "MockStore"
     ConnectionStrings__Application: "Data Source=deployment.db"
+    AllowManualDeploymentsToBeAdded: "true"
+    Jira__Enabled: "false"
   before_script:
   - cd IntegrationTests
   script:
