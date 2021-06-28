@@ -8,6 +8,7 @@ stages:
 - build
 - test
 - publish-artifacts
+
 server-build:
   stage: build
   needs: []
@@ -52,6 +53,7 @@ client-test:
   artifacts:
     reports:
       junit: DeploymentTrackerCore/Frontend/__tests__/test-report.xml
+
 server-unit-test:
   stage: test
   needs: []
@@ -62,6 +64,7 @@ server-unit-test:
   artifacts:
     reports:
       junit: UnitTests/junit-test-report.xml
+
 server-integration-test:
   stage: test
   needs: []
@@ -72,6 +75,7 @@ server-integration-test:
   artifacts:
     reports:
       junit: IntegrationTests/junit-test-report.xml
+
 linux-publish:
   stage: publish-artifacts
   needs:
