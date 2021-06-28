@@ -49,6 +49,7 @@
         "MinutesBetweenRefresh": 10,
         "BaseUrl": "https://<jira-url>",
         "SiteProjectKey": "<project-key>",
+        "SiteProjectKeys": ["<project-key-1", "project-key-2"],
         "User": {
             "UserName": "<user-name-or-blank>",
             "Password": "<password-or-blank>"
