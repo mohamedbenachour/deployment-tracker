@@ -1,104 +1,109 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: mcr.microsoft.com/dotnet/sdk:5.0
-
 stages:
-  - build
-  - test
-  - publish-artifacts
-
+- build
+- test
+- publish-artifacts
 server-build:
   stage: build
   needs: []
   before_script:
-    - dotnet tool restore
+  - dotnet tool restore
   script:
-    - dotnet build
-    - dotnet dotnet-ef database update --project DeploymentTrackerCore
-    - mv DeploymentTrackerCore/deployment.db .
-    - dotnet dotnet-ef migrations script -o database-upgrade.sql --project DeploymentTrackerCore
+  - dotnet build
+  - dotnet dotnet-ef database update --project DeploymentTrackerCore
+  - mv DeploymentTrackerCore/deployment.db .
+  - dotnet dotnet-ef migrations script -o database-upgrade.sql --project DeploymentTrackerCore
   artifacts:
     name: server-database
     paths:
-      - deployment.db
-      - database-upgrade.sql
-
+    - deployment.db
+    - database-upgrade.sql
 client-build:
   stage: build
   needs: []
   image: node
   before_script:
-    - cd DeploymentTrackerCore/Frontend
-    - npm ci
+  - cd DeploymentTrackerCore/Frontend
+  - npm ci
   script:
-    - npm run build-production
+  - npm run build-production
   artifacts:
     name: frontend-resources
     paths:
-      - DeploymentTrackerCore/wwwroot
-
+    - DeploymentTrackerCore/wwwroot
 client-test:
   stage: test
   needs: []
   image: node
   before_script:
-    - cd DeploymentTrackerCore/Frontend
-    - npm ci
+  - cd DeploymentTrackerCore/Frontend
+  - npm ci
   script:
-    - npm test
+  - npm test
   artifacts:
     reports:
       junit: DeploymentTrackerCore/Frontend/__tests__/test-report.xml
-
 server-unit-test:
   stage: test
   needs: []
   before_script:
-    - cd UnitTests
+  - cd UnitTests
   script:
-    - dotnet test --logger "junit;LogFilePath=junit-test-report.xml"
+  - dotnet test --logger "junit;LogFilePath=junit-test-report.xml"
   artifacts:
     reports:
       junit: UnitTests/junit-test-report.xml
-
 server-integration-test:
   stage: test
   needs: []
   before_script:
-    - cd IntegrationTests
+  - cd IntegrationTests
   script:
-    - dotnet test --logger "junit;LogFilePath=junit-test-report.xml"
+  - dotnet test --logger "junit;LogFilePath=junit-test-report.xml"
   artifacts:
     reports:
       junit: IntegrationTests/junit-test-report.xml
-
 linux-publish:
   stage: publish-artifacts
-  needs: ["client-build", "server-build"]
+  needs:
+  - client-build
+  - server-build
   dependencies:
-    - client-build
-    - server-build
+  - client-build
+  - server-build
   script:
-    - dotnet publish DeploymentTrackerCore -c Release -r linux-x64 -o deployment-tracker/
-    - cp deployment.db deployment-tracker/
-    - cp database-upgrade.sql deployment-tracker/
-    - mv deployment-tracker/DeploymentTrackerCore deployment-tracker/deployment-tracker
+  - dotnet publish DeploymentTrackerCore -c Release -r linux-x64 -o deployment-tracker/
+  - cp deployment.db deployment-tracker/
+  - cp database-upgrade.sql deployment-tracker/
+  - mv deployment-tracker/DeploymentTrackerCore deployment-tracker/deployment-tracker
   artifacts:
     name: deployment-tracker-linux-x64
     paths:
-      - deployment-tracker/
+    - deployment-tracker/
     expire_in: 1 week
-
 windows-publish:
   stage: publish-artifacts
-  needs: ["client-build", "server-build"]
+  needs:
+  - client-build
+  - server-build
   dependencies:
-    - client-build
-    - server-build
+  - client-build
+  - server-build
   script:
-    - dotnet publish DeploymentTrackerCore -c Release -r win-x64 -o deployment-tracker/
-    - cp deployment.db deployment-tracker/
-    - mv deployment-tracker/DeploymentTrackerCore.exe deployment-tracker/deployment-tracker.exe
+  - dotnet publish DeploymentTrackerCore -c Release -r win-x64 -o deployment-tracker/
+  - cp deployment.db deployment-tracker/
+  - mv deployment-tracker/DeploymentTrackerCore.exe deployment-tracker/deployment-tracker.exe
   artifacts:
     name: deployment-tracker-windows-x64
     paths:
-      - deployment-tracker/
+    - deployment-tracker/
     expire_in: 1 week
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
