@@ -8,6 +8,7 @@ stages:
 - build
 - test
 - publish-artifacts
+- publish-docker-release
 
 server-build:
   stage: build
@@ -119,7 +120,7 @@ docker-publish:
   - docker push $CI_REGISTRY_IMAGE:latest
 
 docker-publish-release-tag:
-  stage: publish-artifacts
+  stage: publish-docker-release
   only:
   - tags
   services:
