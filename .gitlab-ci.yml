@@ -23,6 +23,8 @@ server-build:
     paths:
     - deployment.db
     - database-upgrade.sql
+    expire_in: 1 week
+
 client-build:
   stage: build
   needs: []
@@ -36,6 +38,8 @@ client-build:
     name: frontend-resources
     paths:
     - DeploymentTrackerCore/wwwroot
+    expire_in: 1 week
+
 client-test:
   stage: test
   needs: []
